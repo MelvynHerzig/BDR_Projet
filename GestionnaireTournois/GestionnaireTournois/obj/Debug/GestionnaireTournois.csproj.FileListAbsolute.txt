@@ -1,0 +1,13 @@
+C:\Users\Dudude\Google Drive\HEIG-VD\BDR\Projet\BDR_Projet\GestionnaireTournois\GestionnaireTournois\bin\Debug\GestionnaireTournois.exe.config
+C:\Users\Dudude\Google Drive\HEIG-VD\BDR\Projet\BDR_Projet\GestionnaireTournois\GestionnaireTournois\bin\Debug\GestionnaireTournois.exe
+C:\Users\Dudude\Google Drive\HEIG-VD\BDR\Projet\BDR_Projet\GestionnaireTournois\GestionnaireTournois\bin\Debug\GestionnaireTournois.pdb
+C:\Users\Dudude\Google Drive\HEIG-VD\BDR\Projet\BDR_Projet\GestionnaireTournois\GestionnaireTournois\obj\Debug\GestionnaireTournois.csprojAssemblyReference.cache
+C:\Users\Dudude\Google Drive\HEIG-VD\BDR\Projet\BDR_Projet\GestionnaireTournois\GestionnaireTournois\obj\Debug\GestionnaireTournois.Properties.Resources.resources
+C:\Users\Dudude\Google Drive\HEIG-VD\BDR\Projet\BDR_Projet\GestionnaireTournois\GestionnaireTournois\obj\Debug\GestionnaireTournois.csproj.GenerateResource.cache
+C:\Users\Dudude\Google Drive\HEIG-VD\BDR\Projet\BDR_Projet\GestionnaireTournois\GestionnaireTournois\obj\Debug\GestionnaireTournois.csproj.CoreCompileInputs.cache
+C:\Users\Dudude\Google Drive\HEIG-VD\BDR\Projet\BDR_Projet\GestionnaireTournois\GestionnaireTournois\obj\Debug\GestionnaireTournois.exe
+C:\Users\Dudude\Google Drive\HEIG-VD\BDR\Projet\BDR_Projet\GestionnaireTournois\GestionnaireTournois\obj\Debug\GestionnaireTournois.pdb
+C:\Users\Dudude\Google Drive\HEIG-VD\BDR\Projet\BDR_Projet\GestionnaireTournois\GestionnaireTournois\obj\Debug\GestionnaireTournois.frmMain.resources
+C:\Users\Dudude\Google Drive\HEIG-VD\BDR\Projet\BDR_Projet\GestionnaireTournois\GestionnaireTournois\obj\Debug\GestionnaireTournois.frmUser.resources
+C:\Users\Dudude\Google Drive\HEIG-VD\BDR\Projet\BDR_Projet\GestionnaireTournois\GestionnaireTournois\obj\Debug\GestionnaireTournois.frmAdmin.resources
+C:\Users\Dudude\Google Drive\HEIG-VD\BDR\Projet\BDR_Projet\GestionnaireTournois\GestionnaireTournois\obj\Debug\GestionnaireTournois.frmSignUp.resources
