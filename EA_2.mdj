@@ -153,7 +153,7 @@
 											"top": 141,
 											"width": 104.75537109375,
 											"height": 13,
-											"text": "dateTimeDebut",
+											"text": "dateHeureDebut",
 											"horizontalAlignment": 0
 										},
 										{
@@ -170,7 +170,7 @@
 											"top": 156,
 											"width": 104.75537109375,
 											"height": 13,
-											"text": "dateTimeFin",
+											"text": "dateHeureFin",
 											"horizontalAlignment": 0
 										},
 										{
@@ -2888,7 +2888,7 @@
 											"width": 115.603515625,
 											"height": 13,
 											"underline": true,
-											"text": "dateTimeArrive",
+											"text": "dateHeureArrive",
 											"horizontalAlignment": 0
 										},
 										{
@@ -2905,7 +2905,7 @@
 											"top": 413,
 											"width": 115.603515625,
 											"height": 13,
-											"text": "dateTimeDepart",
+											"text": "dateHeureDepart",
 											"horizontalAlignment": 0
 										}
 									],
@@ -3185,7 +3185,7 @@
 									"hostEdge": {
 										"$ref": "AAAAAAF1nYme3SIZycI="
 									},
-									"text": "0..3"
+									"text": "1..3"
 								},
 								{
 									"_type": "UMLQualifierCompartmentView",
@@ -5876,8 +5876,7 @@
 							"_parent": {
 								"$ref": "AAAAAAF1nWnDY7O50UM="
 							},
-							"name": "dateTimeDebut",
-							"type": ""
+							"name": "dateHeureDebut"
 						},
 						{
 							"_type": "UMLAttribute",
@@ -5885,8 +5884,7 @@
 							"_parent": {
 								"$ref": "AAAAAAF1nWnDY7O50UM="
 							},
-							"name": "dateTimeFin",
-							"type": ""
+							"name": "dateHeureFin"
 						},
 						{
 							"_type": "UMLAttribute",
@@ -5903,7 +5901,8 @@
 							"_parent": {
 								"$ref": "AAAAAAF1nWnDY7O50UM="
 							},
-							"name": "nbEquipeMax"
+							"name": "nbEquipeMax",
+							"type": ""
 						}
 					]
 				},
@@ -6381,7 +6380,7 @@
 								"reference": {
 									"$ref": "AAAAAAF1nWrMrrSU4Lo="
 								},
-								"multiplicity": "0..3"
+								"multiplicity": "1..3"
 							}
 						},
 						{
@@ -6405,9 +6404,8 @@
 							"_parent": {
 								"$ref": "AAAAAAF1nYme3CIKkno="
 							},
-							"name": "dateTimeArrive",
-							"isStatic": true,
-							"type": ""
+							"name": "dateHeureArrive",
+							"isStatic": true
 						},
 						{
 							"_type": "UMLAttribute",
@@ -6415,8 +6413,7 @@
 							"_parent": {
 								"$ref": "AAAAAAF1nYme3CIKkno="
 							},
-							"name": "dateTimeDepart",
-							"type": ""
+							"name": "dateHeureDepart"
 						}
 					]
 				},
