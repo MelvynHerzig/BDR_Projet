@@ -204,7 +204,7 @@
 											"top": 186,
 											"width": 104.75537109375,
 											"height": 13,
-											"text": "nbEquipe",
+											"text": "nbEquipeMax",
 											"horizontalAlignment": 0
 										}
 									],
@@ -5876,7 +5876,8 @@
 							"_parent": {
 								"$ref": "AAAAAAF1nWnDY7O50UM="
 							},
-							"name": "dateTimeDebut"
+							"name": "dateTimeDebut",
+							"type": ""
 						},
 						{
 							"_type": "UMLAttribute",
@@ -5884,7 +5885,8 @@
 							"_parent": {
 								"$ref": "AAAAAAF1nWnDY7O50UM="
 							},
-							"name": "dateTimeFin"
+							"name": "dateTimeFin",
+							"type": ""
 						},
 						{
 							"_type": "UMLAttribute",
@@ -5901,8 +5903,7 @@
 							"_parent": {
 								"$ref": "AAAAAAF1nWnDY7O50UM="
 							},
-							"name": "nbEquipe",
-							"type": ""
+							"name": "nbEquipeMax"
 						}
 					]
 				},
@@ -6405,7 +6406,8 @@
 								"$ref": "AAAAAAF1nYme3CIKkno="
 							},
 							"name": "dateTimeArrive",
-							"isStatic": true
+							"isStatic": true,
+							"type": ""
 						},
 						{
 							"_type": "UMLAttribute",
@@ -6413,7 +6415,8 @@
 							"_parent": {
 								"$ref": "AAAAAAF1nYme3CIKkno="
 							},
-							"name": "dateTimeDepart"
+							"name": "dateTimeDepart",
+							"type": ""
 						}
 					]
 				},
