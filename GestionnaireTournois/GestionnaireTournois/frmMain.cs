@@ -19,16 +19,39 @@ namespace GestionnaireTournois
 
         private void btnAdmin_Click(object sender, EventArgs e)
         {
+            frmAdmin admin = new frmAdmin();
 
+            this.Hide();
+
+            if (admin.ShowDialog() != DialogResult.OK)
+            {
+                Application.Exit();
+            }
+
+            this.Show();
         }
 
         private void btnSignUp_Click(object sender, EventArgs e)
         {
 
-            Form signUp = new frmSignUp();
+            frmSignUp signUp = new frmSignUp();
 
 
-            signUp.ShowDialog();
+            if (signUp.ShowDialog() == DialogResult.OK)
+            {
+                // Recupère info + envoie bdd
+                signUp.GetName();
+                signUp.GetFirstName();
+                signUp.GetEmail();
+                signUp.GetPseudo();
+                signUp.GetBirthday();
+                signUp.GetCountryKey();
+
+
+
+                // Si erreur, changer texte du label 
+                lblSignUp.Visible = true;
+            }
 
             lblSignUp.Enabled = true;
         }
@@ -55,5 +78,6 @@ namespace GestionnaireTournois
         {
             btnSignIn.Enabled = tbxEmail.TextLength > 0;
         }
+
     }
 }

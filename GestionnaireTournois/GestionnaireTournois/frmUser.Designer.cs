@@ -29,8 +29,10 @@ namespace GestionnaireTournois
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.mstrpUser = new System.Windows.Forms.MenuStrip();
-            this.fichierToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmiFile = new System.Windows.Forms.ToolStripMenuItem();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.tsmiModeChoice = new System.Windows.Forms.ToolStripMenuItem();
             this.mstrpUser.SuspendLayout();
             this.SuspendLayout();
@@ -38,25 +40,30 @@ namespace GestionnaireTournois
             // mstrpUser
             // 
             this.mstrpUser.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.fichierToolStripMenuItem});
+            this.tsmiFile});
             this.mstrpUser.Location = new System.Drawing.Point(0, 0);
             this.mstrpUser.Name = "mstrpUser";
             this.mstrpUser.Size = new System.Drawing.Size(800, 24);
             this.mstrpUser.TabIndex = 0;
             this.mstrpUser.Text = "menuStrip1";
             // 
-            // fichierToolStripMenuItem
+            // tsmiFile
             // 
-            this.fichierToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsmiFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsmiModeChoice});
-            this.fichierToolStripMenuItem.Name = "fichierToolStripMenuItem";
-            this.fichierToolStripMenuItem.Size = new System.Drawing.Size(54, 20);
-            this.fichierToolStripMenuItem.Text = "Fichier";
+            this.tsmiFile.Name = "tsmiFile";
+            this.tsmiFile.Size = new System.Drawing.Size(54, 20);
+            this.tsmiFile.Text = "Fichier";
+            // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(61, 4);
             // 
             // tsmiModeChoice
             // 
             this.tsmiModeChoice.Name = "tsmiModeChoice";
-            this.tsmiModeChoice.Size = new System.Drawing.Size(156, 22);
+            this.tsmiModeChoice.Size = new System.Drawing.Size(180, 22);
             this.tsmiModeChoice.Text = "Choix du mode";
             this.tsmiModeChoice.Click += new System.EventHandler(this.tsmiModeChoice_Click);
             // 
@@ -68,7 +75,6 @@ namespace GestionnaireTournois
             this.Controls.Add(this.mstrpUser);
             this.MainMenuStrip = this.mstrpUser;
             this.Name = "frmUser";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "frmUser";
             this.mstrpUser.ResumeLayout(false);
             this.mstrpUser.PerformLayout();
@@ -80,7 +86,8 @@ namespace GestionnaireTournois
         #endregion
 
         private System.Windows.Forms.MenuStrip mstrpUser;
-        private System.Windows.Forms.ToolStripMenuItem fichierToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem tsmiFile;
         private System.Windows.Forms.ToolStripMenuItem tsmiModeChoice;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
     }
 }

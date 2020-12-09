@@ -17,13 +17,10 @@ namespace GestionnaireTournois
             InitializeComponent();
         }
 
-
         private void tsmiModeChoice_Click(object sender, EventArgs e)
         {
-
             this.DialogResult = DialogResult.OK;
             this.Close();
         }
-
     }
 }

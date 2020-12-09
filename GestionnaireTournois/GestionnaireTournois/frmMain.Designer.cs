@@ -114,7 +114,7 @@ namespace GestionnaireTournois
             // lblEmail
             // 
             this.lblEmail.AutoSize = true;
-            this.lblEmail.Location = new System.Drawing.Point(25, 44);
+            this.lblEmail.Location = new System.Drawing.Point(37, 44);
             this.lblEmail.Name = "lblEmail";
             this.lblEmail.Size = new System.Drawing.Size(87, 16);
             this.lblEmail.TabIndex = 1;
@@ -122,9 +122,10 @@ namespace GestionnaireTournois
             // 
             // tbxEmail
             // 
-            this.tbxEmail.Location = new System.Drawing.Point(173, 41);
+            this.tbxEmail.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbxEmail.Location = new System.Drawing.Point(143, 41);
             this.tbxEmail.Name = "tbxEmail";
-            this.tbxEmail.Size = new System.Drawing.Size(100, 22);
+            this.tbxEmail.Size = new System.Drawing.Size(130, 21);
             this.tbxEmail.TabIndex = 0;
             this.tbxEmail.TextChanged += new System.EventHandler(this.tbxEmail_TextChanged);
             // 

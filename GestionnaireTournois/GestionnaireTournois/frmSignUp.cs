@@ -16,5 +16,43 @@ namespace GestionnaireTournois
         {
             InitializeComponent();
         }
+
+        private void frmSignUp_Load(object sender, EventArgs e)
+        {
+            // On load les pays qui sont dans la base de données dans le combobox
+
+            dtpBirthday.MaxDate = DateTime.Now;
+        }
+
+        public String GetName()
+        {
+            return tbxName.Text;
+        }
+
+        public String GetFirstName()
+        {
+            return tbxFirstName.Text;
+        }
+
+        public String GetEmail()
+        {
+            return tbxEmail.Text;
+        }
+
+        public String GetPseudo()
+        {
+            return tbxPseudo.Text;
+        }
+
+        public DateTime GetBirthday()
+        {
+            return dtpBirthday.Value;
+        }
+
+        public int GetCountryKey()
+        {
+            // A revoir
+            return cbxCountry.SelectedIndex;
+        }
     }
 }
