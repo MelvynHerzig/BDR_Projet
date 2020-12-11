@@ -91,7 +91,7 @@ CREATE TABLE `Equipe_Joueur`
 (
   `acronymeEquipe` VARCHAR(3) NOT NULL,
   `idJoueur` INT NOT NULL,
-  `dateHeureArrivee` DATETIME NOT NULL DEFAULT `0000-00-00 00:00:00`,
+  `dateHeureArrivee` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
   `dateHeureDepart` DATETIME NOT NULL,
   CONSTRAINT `PK_Equipe_Joueur` PRIMARY KEY (`acronymeEquipe`, `idJoueur`, `dateHeureArrivee`)
 );
@@ -259,7 +259,7 @@ ALTER TABLE `Tournoi_Equipe` ADD INDEX `FK_Tournoi_Equipe_idTournoi_idx` (`idTou
 ---------------------------------------------------------
 -- Ajout de contraintes + index  pour la table Prix_Objet
 ---------------------------------------------------------
-ALTER TABLE `Prix_Objet` ADD CONSTRAINT `FK_Prix_Objet_idPrix`
+ALTER TABLE `Prix_Objet` ADD CONSTRAINT`FK_Prix_Objet_idPrix`
     FOREIGN KEY (`idPrix`)
     REFERENCES `Prix` (`id`)
     ON DELETE CASCADE
