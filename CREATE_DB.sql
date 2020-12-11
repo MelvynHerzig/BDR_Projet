@@ -218,6 +218,7 @@ ALTER TABLE `Equipe_Joueur` ADD CONSTRAINT `FK_Equipe_Joueur_idJoueur`
 
 ALTER TABLE `Equipe_Joueur` ADD INDEX `FK_Equipe_Joueur_idJoueur_idx` (`idJoueur` ASC);
 ALTER TABLE `Equipe_Joueur` ADD INDEX `FK_Equipe_Joueur_idEquipe_idx` (`acronymeEquipe` ASC);
+ALTER TABLE `Equipe_Joueur` ADD INDEX `FK_Equipe_Joueur_dateHeureArrivee_idx` (`dateHeureArrivee` ASC);
 
 -----------------------------------------------------------
 -- Ajout de contraintes + index  pour la table Match_Joueur
@@ -258,13 +259,13 @@ ALTER TABLE `Tournoi_Equipe` ADD INDEX `FK_Tournoi_Equipe_idTournoi_idx` (`idTou
 ---------------------------------------------------------
 -- Ajout de contraintes + index  pour la table Prix_Objet
 ---------------------------------------------------------
-ALTER TABLE `Prix_Objet` ADD INDEX CONSTRAINT `FK_Prix_Objet_idPrix`
+ALTER TABLE `Prix_Objet` ADD CONSTRAINT `FK_Prix_Objet_idPrix`
     FOREIGN KEY (`idPrix`)
     REFERENCES `Prix` (`id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE;
 
-ALTER TABLE `Prix_Objet` ADD INDEX CONSTRAINT `FK_Prix_Objet_idObjet`
+ALTER TABLE `Prix_Objet` ADD CONSTRAINT `FK_Prix_Objet_idObjet`
     FOREIGN KEY (`idObjet`)
     REFERENCES `Objet` (`id`)
     ON DELETE RESTRICT
