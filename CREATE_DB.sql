@@ -12,7 +12,7 @@ USE GestionnaireDeTournoisRocketLeague ;
 CREATE TABLE Prix 
 (
   id INT AUTO_INCREMENT,
-  montantArgent DECIMAL(2) NOT NULL,
+  montantArgent DECIMAL(10,2) NOT NULL,
   CONSTRAINT PK_Prix PRIMARY KEY (id)
 );
 
@@ -21,7 +21,7 @@ CREATE TABLE Tournoi
 (
   id INT AUTO_INCREMENT,
   dateHeureDebut DATETIME NOT NULL,
-  dateHeureFin DATETIME NOT NULL,
+  dateHeureFin DATETIME,
   nom VARCHAR(50) NOT NULL,
   nbEquipesMax INT NOT NULL,
   idPrixPremier INT NULL,
@@ -32,7 +32,7 @@ CREATE TABLE Tournoi
 
 CREATE TABLE Tour
 (
-  no INT AUTO_INCREMENT,
+  no INT,
   longueurMaxSerie INT NOT NULL,
   idTournoi INT NOT NULL,
   CONSTRAINT PK_Tour PRIMARY KEY (no, idTournoi)
@@ -41,7 +41,7 @@ CREATE TABLE Tour
 
 CREATE TABLE Serie
 (
-  id INT AUTO_INCREMENT,
+  id INT,
   noTour INT NOT NULL,
   idTournoi INT NOT NULL,
   CONSTRAINT PK_Serie PRIMARY KEY (id, noTour, idTournoi)
@@ -50,7 +50,7 @@ CREATE TABLE Serie
 
 CREATE TABLE `Match`
 (
-  id INT AUTO_INCREMENT,
+  id INT,
   idSerie INT NOT NULL,
   noTour INT NOT NULL,
   idTournoi INT NOT NULL,
@@ -92,7 +92,7 @@ CREATE TABLE Equipe_Joueur
   acronymeEquipe VARCHAR(3) NOT NULL,
   idJoueur INT NOT NULL,
   dateHeureArrivee DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  dateHeureDepart DATETIME NOT NULL,
+  dateHeureDepart DATETIME,
   CONSTRAINT PK_Equipe_Joueur PRIMARY KEY (acronymeEquipe, idJoueur, dateHeureArrivee)
 );
 
