@@ -274,6 +274,11 @@ ALTER TABLE Prix_Objet ADD CONSTRAINT FK_Prix_Objet_idObjet
 ALTER TABLE Prix_Objet ADD INDEX FK_Prix_Objet_idObjet_idx (idObjet);
 ALTER TABLE Prix_Objet ADD INDEX FK_Prix_Objet_idPrix_idx (idPrix);
 
+---------------------------------------------------------
+-- Ajout de contraintes + index  pour la table Objet
+---------------------------------------------------------
+ALTER TABLE Objet ADD UNIQUE INDEX UC_Objet_nom_idx (nom);
+
 -----------------------------------------------------------
 -- Ajout de contraintes + index  pour la table Serie_Equipe
 -----------------------------------------------------------
@@ -296,4 +301,3 @@ ALTER TABLE Serie_Equipe ADD INDEX FK_Serie_Equipe_idSerie_idx (idSerie, noTour,
 -- Ajout de contraintes + index  pour la table Joueur
 -----------------------------------------------------
 ALTER TABLE Joueur ADD UNIQUE INDEX UC_Joueur_email_idx (email);
-ALTER TABLE Objet ADD UNIQUE INDEX UC_Objet_nom_idx (nom);
