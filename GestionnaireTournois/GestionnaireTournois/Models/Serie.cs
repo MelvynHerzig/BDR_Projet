@@ -25,7 +25,7 @@ namespace GestionnaireTournois.Models
 
         public List<Equipe> GetEquipes()
         {
-            return new List<Equipe>() { new Equipe("ROC", "Real Original Crack", null), new Equipe("MMLP", "Mange moi le poiro", null) };
+            return DataBaseConnector.GetEquipesFromSerie(Tour.Tournoi.Id, Tour.No, Id);
         }
 
         public Match GetMatchById(int id)

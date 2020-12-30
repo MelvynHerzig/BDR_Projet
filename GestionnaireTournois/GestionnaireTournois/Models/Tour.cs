@@ -29,9 +29,9 @@ namespace GestionnaireTournois.Models
 
         }
 
-        public Serie GetSerieById(int id)
+        public List<Serie> GetSerieOrderByIdASC()
         {
-            return new Serie(id, this);
+            return DataBaseConnector.GetSeries(Tournoi.Id, No);
         }
     }
 }

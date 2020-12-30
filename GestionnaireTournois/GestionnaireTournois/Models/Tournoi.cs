@@ -39,9 +39,9 @@ namespace GestionnaireTournois.Models
         }
 
         // Méthodes..
-        public int GetNbTour()
+        public int GetNbTours()
         {
-            return 3;
+            return DataBaseConnector.GetNbToursTournoi(this.Id);
         }
 
         public Equipe GetGagnant()
@@ -49,9 +49,14 @@ namespace GestionnaireTournois.Models
             return new Equipe("ROC", "Real Original Crack", null);
         }
 
-        public Tour GetTourByNo(int no)
+        public List<Tour> GetTourOrderByNoASC()
         {
-            return new Tour(no, 1, this);
+            return DataBaseConnector.GetTours(Id);
+        }
+        
+        public override string ToString()
+        {
+            return nom;
         }
     }
 }
