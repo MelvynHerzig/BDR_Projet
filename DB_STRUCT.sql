@@ -655,6 +655,21 @@ BEGIN
 	END IF;
 END
 $$
+DELIMITER $$
+CREATE TRIGGER gernerateTournamentTree
+AFTER INSERT
+ON Tournoi
+FOR EACH ROW
+BEGIN
+	DECLARE vNoTour INT DEFAULT 1;
+    
+    WHILE vNoTour <= calculerNbTours(NEW.nbEquipesMAx) DO
+		INSERT INTO Tour VALUES (vNoTour, 1, NEW.id);
+        
+        SET vNoTour = vNoTour + 1;
+	END WHILE;
+END
+$$
 
 -------------------- TOURNOI_EQUIPE ----------------------
 DELIMITER $$
@@ -926,3 +941,4 @@ BEGIN
     WHERE Tournoi.dateHeureFin = Tournoi.dateHeureDebut AND DATEDIFF(NOW(), Tournoi.dateHeureDebut) >= 7;
 END
 $$
+
