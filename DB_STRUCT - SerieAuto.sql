@@ -44,8 +44,8 @@ CREATE TABLE Serie
   id INT,
   noTour INT NOT NULL,
   idTournoi INT NOT NULL,
-  acronymeEquipe1 VARCHAR(3) NOT NULL,
-  acronymeEquipe2 VARCHAR(3) NOT NULL,
+  acronymeEquipe1 VARCHAR(3),
+  acronymeEquipe2 VARCHAR(3),
   CONSTRAINT PK_Serie PRIMARY KEY (id, noTour, idTournoi)
 );
 
@@ -119,7 +119,6 @@ CREATE TABLE Tournoi_Equipe
   dateInscription DATETIME NOT NULL,
   CONSTRAINT PK_Tournoi_Equipe PRIMARY KEY (idTournoi, acronymeEquipe)
 );
-
 
 CREATE TABLE Prix_Objet 
 (
@@ -293,50 +292,6 @@ ALTER TABLE Joueur ADD UNIQUE INDEX UC_Joueur_email_idx (email);
 -----------------------------------------------------
 -- FONCTIONS ET PROCEDURES STOCKEES
 -----------------------------------------------------
-
--- Pour un tournoi données vérifie si la limite d'équipe est valide.
-DELIMITER $$
-CREATE PROCEDURE verifierNbEquipesMax(pNbEquipe INT)
-BEGIN
-	 IF FIND_IN_SET( LOG2(pNbEquipe) , "1,2,3,4,5,6,7,8") = 0 THEN 
-		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'nbEquipesMax doit être une puissance de 2 entre 2 et 256.';
-	 END IF;
-END
-$$
-
--- Vérifie que la date en paramètre est plus petite que la date courante.
-DELIMITER $$
-CREATE PROCEDURE verifierDatePassee(pDate DATETIME)
-BEGIN
-	 IF pDate <= NOW() THEN 
-		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Le début du tournoi ne peut être plus petit que le temps présent.';
-	END IF;
-END
-$$
-
--- Vérifie que la date en paramètre est plus grande que la date courante.
-DELIMITER $$
-CREATE PROCEDURE verifierDateFuture(pDate DATETIME)
-BEGIN
-	 IF pDate > NOW() THEN 
-		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'La date de naissance est dans le future.';
-	END IF;
-END
-$$
-
--- Vérification que la date de début du tournoi soit plus petite que la date de fin 
-ALTER TABLE Tournoi ADD CONSTRAINT CHK_Tournoi_datesDebutFin CHECK (dateHeureDebut <= dateHeureFin);
-
--- Vérifie si la date d'inscription est cohérente pour le tournoi en paramètre
-DELIMITER $$
-CREATE PROCEDURE verifierDateInscriptionTournoi(pDateToCompare DATETIME, pIdTournoi INT)
-BEGIN
-	 IF pDateToCompare >= (SELECT dateHeureDebut FROM Tournoi WHERE id = pIdTournoi) THEN 
-		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Le tournoi a déjà commencé au moment de l\'inscription';
-	END IF;
-END
-$$
-
 -- Vérifie si l'équipe en paramètre est inscrite à un trounoi
 DELIMITER $$
 CREATE FUNCTION aUneInscriptionEnCours(pAcronymeParam VARCHAR(3))
@@ -353,35 +308,20 @@ BEGIN
 END
 $$
 
--- Vérifier si la longueur maximale d'une série est bonne.
+-- Calcul le nombre de tour en fonction du nombre d'équipes maximal.
 DELIMITER $$
-CREATE PROCEDURE verifierLongueurMaxSerie(pLongueurSerie INT)
+CREATE FUNCTION calculerNbTours(pNbEquipeMax INT)
+RETURNS INT
+DETERMINISTIC
 BEGIN
-	 IF FIND_IN_SET( pLongueurSerie , "1,3,5,7") = 0 
-     THEN 
-		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Une série ne peut se dérouler qu\'en 3,5 ou 7 matchs';
-	 END IF;
-END
-$$
-
--- Vérifie si l'équipe est inscrite au tournoi en paramètre
-DELIMITER $$
-CREATE PROCEDURE verifierInscription(pAcronyme VARCHAR(3), pIdTournoi INT)
-BEGIN
-	 IF NOT EXISTS( SELECT * FROM Tournoi_Equipe WHERE idTournoi = pIdTournoi AND pAcronyme = acronymeEquipe) 
-     THEN 
-		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'L\'equipe n\'est pas inscrite au tournoi';
-	 END IF;
-END
-$$
-
--- Vérifie si deux équipe sont les mêmes
-DELIMITER $$
-CREATE PROCEDURE verifierMemeEquipe(pAcronymeEquipe1 VARCHAR(3), pAcronymeEquipe2 VARCHAR(3))
-BEGIN
-	 IF pAcronymeEquipe1 IS NOT NULL AND pAcronymeEquipe2 IS NOT NULL AND pAcronymeEquipe1 = pAcronymeEquipe2  
-     THEN 
-		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Une equipe ne peut pas s\'affronter elle même';
+	 SET @nbTour = LOG2(pNbEquipeMax);
+     
+     -- Vérification si nombre entier et valeur correcte. 
+	 IF ( CEIL(@nbTour) = @nbTour AND @nbTour <= 8 AND @nbTour >= 1)
+     THEN
+		RETURN @nbTour;
+	 ELSE 
+		RETURN 0;
 	 END IF;
 END
 $$
@@ -398,9 +338,79 @@ BEGIN
 							  INNER JOIN `Match`
 								 ON `Match`.idSerie = Serie.id AND `Match`.noTour = Serie.noTour AND `Match`.idTournoi = Serie.idTournoi
 							  WHERE Serie.id = pIdSerie AND Serie.noTour = pNoTour AND Serie.idTournoi = pIdTournoi) AS vainqueurs
-					    WHERE vainqueurs.Vainqueur = acronymeEquipeParam);
+					    WHERE vainqueurs.Vainqueur = pAcronymeEquipe);
     
     RETURN @nbVictoires;
+END
+$$
+
+-- Retourne le nom de l'équipe pour un joueur à une date.
+DELIMITER $$
+CREATE FUNCTION equipeDuJoueurLorsDu(pIdJoueur INT, pDate DATETIME)
+RETURNS VARCHAR(3)
+DETERMINISTIC
+BEGIN
+	DECLARE nomEquipe VARCHAR(3);
+	SELECT Equipe_Joueur.acronymeEquipe INTO nomEquipe
+	FROM Equipe_Joueur
+	WHERE idJoueur = pIdJoueur AND dateHeureArrivee = (SELECT MAX(dateHeureArrivee) 
+													   FROM Equipe_Joueur 
+                                                       WHERE idJoueur = pIdJoueur AND dateHeureArrivee < pDate AND (dateHeureDepart IS NULL OR dateHeureDepart > pDate));
+    RETURN nomEquipe;
+END
+$$
+
+-- Retourne vrai si l'équip est complète sinon faux
+DELIMITER $$
+CREATE FUNCTION estComplete(pAcronymeEquipe VARCHAR(3))
+RETURNS BOOLEAN
+DETERMINISTIC
+BEGIN
+	IF ( 3 = (SELECT COUNT(*) 
+			  FROM Equipe_Joueur 
+              WHERE Equipe_Joueur.acronymeEquipe = pAcronymeEquipe AND Equipe_Joueur.dateHeureDepart IS NULL AND Equipe_Joueur.dateHeureArrivee <> '0000-00-00 00:00:00'))
+	THEN RETURN 1;
+    ELSE RETURN 0;
+    END IF;
+END
+$$
+
+-- Vérifie si le tournoi est en "Attente"
+DELIMITER $$
+CREATE FUNCTION estEnAttente(pIdTournoi INT)
+RETURNS BOOLEAN
+DETERMINISTIC
+BEGIN
+	RETURN NOW() < (SELECT Tournoi.dateHeureDebut FROM Tournoi WHERE Tournoi.id = pIdTournoi);
+END
+$$
+
+-- Vérifie si les deux équipes peuvent jouer la série.
+DELIMITER $$ 
+CREATE FUNCTION seedingCorrect(pAcronymeEquipe1 VARCHAR(3), pAcronymeEquipe2 VARCHAR(3), pIdSerie INT, pNoTour INT, pIdTournoi INT)
+RETURNS BOOLEAN
+DETERMINISTIC
+BEGIN
+	DECLARE equipe1OK BOOLEAN DEFAULT FALSE;
+    DECLARE equipe2OK BOOLEAN DEFAULT FALSE;
+	-- Si premier tour du tournoi aucune vérification n'est nécessaire
+    SET @nbEquipe = (SELECT Tournoi.nbEquipesMax FROM Tournoi WHERE Tournoi.id = pIdTournoi);
+    IF ( calculerNbTours(@nbEquipe) = pNoTour)
+    THEN
+		RETURN TRUE;
+	END IF;
+   
+    IF ( pAcronymeEquipe1 IS NULL OR pAcronymeEquipe1 = vainqueurSerie( (pIdSerie * 2) - 1, pNoTour + 1, pIdTournoi))
+    THEN 
+		SET equipe1OK = TRUE;
+	END IF;
+    
+    IF ( pAcronymeEquipe2 IS NULL OR  pAcronymeEquipe2 = vainqueurSerie( pIdSerie * 2, pNoTour + 1, pIdTournoi))
+    THEN 
+		SET equipe2OK = TRUE;
+	END IF;
+    
+    RETURN equipe1OK AND equipe2OK;
 END
 $$
 
@@ -414,16 +424,17 @@ BEGIN
     DECLARE ae1, ae2 VARCHAR(3); -- Acronymes des équipes de la série
     DECLARE maxVictoire INT;
     SELECT Serie.acronymeEquipe1, Serie.acronymeEquipe2 INTO ae1, ae2 FROM Serie WHERE Serie.id = pIdSerie AND Serie.noTour = pNoTour AND Serie.idTournoi = pIdTournoi;
+    
+    IF(ae1 IS NULL OR ae2 IS NULL)
+    THEN
+		RETURN NULL;
+	END IF;
+    
     SELECT longueurMaxSerie INTO maxVictoire FROM Tour WHERE Tour.no = pNoTour AND Tour.idTournoi = pIdTournoi;
 	SET @nbVictoireE1 = compterVictoireDansSerie(ae1, pIdSerie, pNoTour, pIdTournoi);
     SET @nbVictoireE2 = compterVictoireDansSerie(ae2, pIdSerie, pNoTour, pIdTournoi);
 	
     SET @taux = (maxVictoire + 1) / 2;
-    
-    IF(@nbVictoireE1 + @nbVictoireE2 > maxVictoire OR @nbVictoireE1 > @taux OR @nbVictoireE2 > @taux )
-    THEN
-		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Une erreur est survenue, trop de match on été gagné pour cette série.';
-    END IF;
     
     IF(@nbVictoireE1 = @taux)
     THEN
@@ -436,27 +447,6 @@ BEGIN
 	END IF;
     
 	RETURN NULL;
-END
-$$
-
--- Vérifie si l'équipe a perdu un match dans le tournoi
-DELIMITER $$
-CREATE FUNCTION aPerduUneSerie(pAcronymeEquipe VARCHAR(3), pIdTournoi INT)
-RETURNS BOOLEAN
-DETERMINISTIC
-BEGIN
-    SET @nbDefaites = (SELECT COUNT(vainqueurs.vainqueur) 
-    FROM ( SELECT vainqueurSerie(Serie.id, Serie.noTour, Serie.idTournoi) AS vainqueur
-		   FROM Serie
-		   WHERE Serie.idTournoi = pIdTournoi AND (Serie.acronymeEquipe1 = pAcronymeEquipe OR Serie.acronymeEquipe2 = pAcronymeEquipe)) AS vainqueurs
-	WHERE vainqueurs.vainqueur <> acronymeEquipeParam);
-    
-    IF(@nbDefaites > 0)
-    THEN
-		RETURN 1;
-	ELSE
-		RETURN 0;
-	END IF;
 END
 $$
 
@@ -494,50 +484,39 @@ BEGIN
 END
 $$
 
--- Retourne vrai si l'équip est complète sinon faux
+-- Vérifie que la date en paramètre est plus grande que la date courante.
 DELIMITER $$
-CREATE FUNCTION estComplete(pAcronymeEquipe VARCHAR(3))
-RETURNS BOOLEAN
-DETERMINISTIC
+CREATE PROCEDURE verifierDateFuture(pDate DATETIME)
 BEGIN
-	IF ( 3 = (SELECT COUNT(*) 
-			  FROM Equipe_Joueur 
-              WHERE Equipe_Joueur.acronymeEquipe = pAcronymeEquipe AND Equipe_Joueur.dateHeureDepart IS NULL AND Equipe_Joueur.dateHeureArrivee <> '0000-00-00 00:00:00'))
-	THEN RETURN 1;
-    ELSE RETURN 0;
-    END IF;
+	 IF pDate > NOW() THEN 
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'La date de naissance est dans le future.';
+	END IF;
 END
 $$
 
--- Retourne le nom de l'équipe pour un joueur à une date.
+-- Vérifie que la date en paramètre est plus petite que la date courante.
 DELIMITER $$
-CREATE FUNCTION equipeDuJoueurLorsDu(pIdJoueur INT, pDate DATETIME)
-RETURNS VARCHAR(3)
-DETERMINISTIC
+CREATE PROCEDURE verifierDatePassee(pDate DATETIME)
 BEGIN
-	DECLARE nomEquipe VARCHAR(3);
-	SELECT Equipe_Joueur.acronymeEquipe INTO nomEquipe
-	FROM Equipe_Joueur
-	WHERE idJoueur = pIdJoueur AND dateHeureArrivee = (SELECT MAX(dateHeureArrivee) 
-													   FROM Equipe_Joueur 
-                                                       WHERE idJoueur = pIdJoueur AND dateHeureArrivee < pDate AND (dateHeureDepart IS NULL OR dateHeureDepart > pDate));
-    RETURN nomEquipe;
+	 IF pDate <= NOW() THEN 
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Le début du tournoi ne peut être plus petit que le temps présent.';
+	END IF;
 END
 $$
 
--- Vérifier que la première date soit plus petite que la seconde
 DELIMITER $$
-CREATE PROCEDURE verifierDateArriveeDepart(pArrivee DATETIME, pDepart DATETIME)
+CREATE PROCEDURE verifierDatePlusPetite (pDateHeureDebut DATETIME, pDateHeureFin DATETIME)
 BEGIN
-	 IF pArrivee > pDepart THEN 
-		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'La date d\'arrivée ne peut être plus grande que la date de départ de l\´équipe.';
-	 END IF;
+	IF( pDateHeureFin IS NOT NULL AND pDateHeureDebut > pDateHeureFin)
+    THEN
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'La date de début ne peut être plus grande que la date de fin';
+	END IF;
 END
 $$
 
 -- Vérifie si la joueur en paramètre a déjà une équipe
 DELIMITER $$
-CREATE PROCEDURE estDejaDansUneEquipe(pIdJoueur INT)
+CREATE PROCEDURE verifierDejaDansUneEquipe(pIdJoueur INT)
 BEGIN
 	 IF EXISTS( SELECT * 
 				FROM Equipe_Joueur 
@@ -545,6 +524,28 @@ BEGIN
 	THEN 
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Le joueur est déjà dans une équipe';
 	END IF;
+END
+$$
+
+-- Vérifie si une équipe est complète
+DELIMITER $$
+CREATE PROCEDURE verifierEquipeComplete(pAcronymeEquipe VARCHAR(3))
+BEGIN
+	IF( NOT estComplete(pAcronymeEquipe))
+	THEN
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'L\'équipe n\'a pas trois joueur et ne peut donc pas s\'inscrire.';
+	END IF;
+END
+$$
+
+-- Vérifie si l'équipe est inscrite au tournoi en paramètre
+DELIMITER $$
+CREATE PROCEDURE verifierInscription(pAcronyme VARCHAR(3), pIdTournoi INT)
+BEGIN
+	 IF (pAcronyme IS NOT NULL AND  NOT EXISTS( SELECT * FROM Tournoi_Equipe WHERE idTournoi = pIdTournoi AND pAcronyme = acronymeEquipe))
+     THEN 
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'L\'equipe n\'est pas inscrite au tournoi';
+	 END IF;
 END
 $$
 
@@ -571,6 +572,49 @@ BEGIN
 END
 $$
 
+-- Vérifier si la longueur maximale d'une série est bonne.
+DELIMITER $$
+CREATE PROCEDURE verifierLongueurMaxSerie(pLongueurSerie INT)
+BEGIN
+	 IF FIND_IN_SET( pLongueurSerie , "1,3,5,7") = 0 
+     THEN 
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Une série ne peut se dérouler qu\'en 3,5 ou 7 matchs';
+	 END IF;
+END
+$$
+
+-- Vérifie si deux équipe sont les mêmes
+DELIMITER $$
+CREATE PROCEDURE verifierMemeEquipe(pAcronymeEquipe1 VARCHAR(3), pAcronymeEquipe2 VARCHAR(3))
+BEGIN
+	 IF pAcronymeEquipe1 IS NOT NULL AND pAcronymeEquipe2 IS NOT NULL AND pAcronymeEquipe1 = pAcronymeEquipe2  
+     THEN 
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Une equipe ne peut pas s\'affronter elle même';
+	 END IF;
+END
+$$
+
+-- Vérifie si le seeding est correct sinon lève une exception.
+DELIMITER $$
+CREATE PROCEDURE verifierSeedingIncorrect(pAcronymeEquipe1 VARCHAR(3), pAcronymeEquipe2 VARCHAR(3), pIdSerie INT, pNoTour INT, pIdTournoi INT)
+BEGIN
+	IF (seedingCorrect(pAcronymeEquipe1, pAcronymeEquipe2, pIdSerie, pNoTour, pIdTournoi ) = FALSE) 
+    THEN
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'L\'équipe ne peut pas occuper cette position dans cette série';
+	END IF;
+END
+$$
+
+-- Vérifie si le tournoi est en attente.
+DELIMITER $$
+CREATE PROCEDURE verifierTournoiEnAttente(pIdTournoi INT)
+BEGIN
+	 IF NOT estEnAttente(pIdTournoi) THEN 
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Le tournoi a déjà commencé inscription impossible';
+	END IF;
+END
+$$
+
 -----------------------------------------------------
 -- TRIGGER
 -----------------------------------------------------
@@ -582,18 +626,34 @@ BEFORE INSERT
 ON Tournoi
 FOR EACH ROW
 BEGIN
-    CALL verifierNbEquipesMax(NEW.nbEquipesMax);
+	-- Vérification du nombre max d'équipe.
+	IF calculerNbTours(NEW.nbEquipesMax) = 0 
+    THEN 
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'nbEquipesMax doit être une puissance de 2 entre 2 et 256.';
+	END IF;
+    
     CALL verifierDatePassee(NEW.dateHeureDebut);
+    CALL verifierDatePlusPetite(NEW.dateHeureDebut, NEW.dateHeureFin);
 END
 $$
 DELIMITER $$
 CREATE TRIGGER tournoiMiseAJour
-BEFORE INSERT
+BEFORE UPDATE
 ON Tournoi
 FOR EACH ROW
 BEGIN
-    CALL verifierNbEquipesMax(NEW.nbEquipesMax);
+	IF (OLD.nbEquipesMax <> NEW.nbEquipesMax) 
+    THEN
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Impossible de modifier le nombre maximal d\'équipes.';
+	END IF;
     CALL verifierDatePassee(NEW.dateHeureDebut);
+    CALL verifierDatePlusPetite(NEW.dateHeureDebut, NEW.dateHeureFin);
+    
+    -- On vérifie si la finale est correcte en essayant de récupérer le vainqueur.
+    IF (NEW.dateHeureFin IS NOT NULL AND NEW.dateHeureFin <> NEW.dateHeureDebut)
+    THEN
+		SET @try = vainqueurSerie(1, 1, NEW.id);
+	END IF;
 END
 $$
 DELIMITER $$
@@ -602,10 +662,31 @@ BEFORE DELETE
 ON Tournoi
 FOR EACH ROW
 BEGIN
-	IF ((OLD.dateHeureDebut < NOW() AND old.dateHeureFin IS NULL) OR OLD.dateHeureDebut <> OLD.dateHeureFin)
+	IF ((OLD.dateHeureDebut < NOW() AND OLD.dateHeureFin IS NULL) OR OLD.dateHeureDebut <> OLD.dateHeureFin)
     THEN
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "Impossible de supprimer un tournoi déjà commencé et non annulé";
 	END IF;
+END
+$$
+DELIMITER $$
+CREATE TRIGGER gernerateTournamentTree
+AFTER INSERT
+ON Tournoi
+FOR EACH ROW
+BEGIN
+	DECLARE vNoTour INT DEFAULT 1;
+    DECLARE vNoSerie INT DEFAULT 1;
+    
+    WHILE vNoTour <= calculerNbTours(NEW.nbEquipesMAx) DO
+		INSERT INTO Tour VALUES (vNoTour, 1, NEW.id);
+        
+        WHILE vNoSerie <= vNoTour DO
+			INSERT INTO Serie VALUES (vNoSerie, vNoTour, NEW.id, NULL, NULL);
+            SET vNoSerie = vNoSerie + 1;
+        END WHILE;
+        SET vNoSerie = 1;
+        SET vNoTour = vNoTour + 1;
+	END WHILE;
 END
 $$
 
@@ -616,15 +697,26 @@ BEFORE INSERT
 ON Tournoi_Equipe
 FOR EACH ROW
 BEGIN
-    CALL verifierDateInscriptionTournoi(NEW.dateInscription, NEW.idTournoi);
+	-- Nombre d'équipes max atteint ? 
+    SET @maxEquipe = (SELECT Tournoi.nbEquipesMax FROM Tournoi WHERE Tournoi.id = NEW.idTournoi);
+    SET @nbEquipe = (SELECT COUNT(1) FROM Tournoi_Equipe WHERE Tournoi_Equipe.idTournoi = NEW.idTournoi);
+	IF( @maxEquipe = @nbEquipe)
+    THEN
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Les inscriptions du tournoi sont complètes';
+	END IF;
+
+	-- Le tournoi est-il encore en attente
+    CALL verifierTournoiEnAttente(NEW.idTournoi);
+    
+    -- Equipe déjà inscrite à un autre tournoi ? 
     IF (aUneInscriptionEnCours(NEW.acronymeEquipe))
     THEN
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'L\'équipe participe déjà à un tournoi';
     END IF;
-    IF( NOT estComplete(NEW.acronymeEquipe))
-	THEN
-		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'L\'équipe n\'a pas trois joueur et ne peut donc pas s\'inscrire.';
-	END IF;
+    
+    -- Equipe complète ? 
+	CALL verifierEquipeComplete(NEW.acronymeEquipe);
+    
 END
 $$
 DELIMITER $$
@@ -633,10 +725,13 @@ BEFORE UPDATE
 ON Tournoi_Equipe
 FOR EACH ROW
 BEGIN
-    CALL verifierDateInscriptionTournoi(NEW.dateInscription, new.idTournoi);
-     IF (NEW.acronymeEquipe <> OLD.acronymeEquipe AND aUneInscriptionEnCours(NEW.acronymeEquipe))
+    -- Le tournoi est-il encore en attente ?
+    CALL verifierTournoiEnAttente(NEW.idTournoi);
+	IF (NEW.acronymeEquipe <> OLD.acronymeEquipe AND aUneInscriptionEnCours(NEW.acronymeEquipe))
 		THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'L\'equipe participe déjà à un tournoi';
     END IF;
+    
+    CALL verifierEquipeComplete(NEW.acronymeEquipe);
 END
 $$
 
@@ -652,22 +747,31 @@ END
 $$
 DELIMITER $$
 CREATE TRIGGER tourSerieMiseAJour
-BEFORE INSERT
+BEFORE UPDATE
 ON Tour
 FOR EACH ROW
 BEGIN
+	-- Si le tournoi a débuté on ne modifie pas
+    SET @debutTournoi = (SELECT Tournoi.dateHeureDebut FROM Tournoi WHERE Tournoi.id = NEW.idTournoi);
+    IF(@debutTournoi < NOW())
+    THEN
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Mise à jour du tour impossible, le tournoi a débuté';
+	END IF;
     CALL verifierLongueurMaxSerie(NEW.longueurMaxSerie);
 END
 $$
 
--- --------------------- SERIE --------------------
+----------------------- SERIE --------------------
 DELIMITER $$
 CREATE TRIGGER serieInsertion
 BEFORE INSERT
 ON serie
 FOR EACH ROW
 BEGIN
+	CALL verifierInscription(NEW.acronymeEquipe1, new.idTournoi);
+    CALL verifierInscription(NEW.acronymeEquipe2, new.idTournoi);
 	CALL verifierMemeEquipe(NEW.acronymeEquipe1, NEW.acronymeEquipe2);
+    CALL verifierSeedingIncorrect(NEW.acronymeEquipe1, NEW.acronymeEquipe2, NEW.id, NEW.noTour, NEW.idTournoi);
 END
 $$
 DELIMITER $$
@@ -676,11 +780,24 @@ BEFORE UPDATE
 ON serie
 FOR EACH ROW
 BEGIN
+	CALL verifierInscription(NEW.acronymeEquipe1, new.idTournoi);
+    CALL verifierInscription(NEW.acronymeEquipe2, new.idTournoi);
 	CALL verifierMemeEquipe(NEW.acronymeEquipe1, NEW.acronymeEquipe2);
+    CALL verifierSeedingIncorrect(NEW.acronymeEquipe1, NEW.acronymeEquipe2, NEW.id, NEW.noTour, NEW.idTournoi);
 END
 $$
 
 ----------------------- EQUIPE --------------------
+DELIMITER $$
+CREATE TRIGGER equipeInsertion
+AFTER INSERT
+ON Equipe
+FOR EACH ROW
+BEGIN
+	INSERT INTO Equipe_Joueur (acronymeEquipe, idJoueur, dateHeureArrivee, dateHeureDepart)
+    VALUE(NEW.acronyme, NEW.idResponsable, NOW(), NULL);
+END
+$$
 DELIMITER $$
 CREATE TRIGGER equipeMiseAJour
 BEFORE UPDATE
@@ -722,12 +839,12 @@ BEFORE INSERT
 ON Equipe_Joueur
 FOR EACH ROW
 BEGIN
-    CALL  verifierDateArriveeDepart(NEW.dateHeureArrivee,NEW.dateHeureDepart);
+    CALL  verifierDatePlusPetite(NEW.dateHeureArrivee,NEW.dateHeureDepart);
     IF ( estComplete(NEW.acronymeEquipe) )
     THEN 
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Impossible de rejoindre l\'equipe, elle est complète';
     END IF;
-    CALL estDejaDansUneEquipe(NEW.idJoueur);
+    CALL verifierDejaDansUneEquipe(NEW.idJoueur);
 END
 $$
 
@@ -737,12 +854,30 @@ BEFORE UPDATE
 ON Equipe_Joueur
 FOR EACH ROW
 BEGIN
-    CALL verifierDateArriveeDepart(NEW.dateHeureArrivee,NEW.dateHeureDepart);
+	IF(OLD.idJoueur <> NEW.idJoueur)
+    THEN
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Impossible de modifier l\'id du joueur dans un enregistrement Equipe_joueur';
+	END IF;
+    
+    IF(OLD.acronymeEquipe <> NEW.acronymeEquipe)
+    THEN
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Impossible de modifier l\'équipe du joueur dans un enregistremen Equipe_joueur';
+	END IF;
+    
+    CALL verifierDatePlusPetite(NEW.dateHeureArrivee,NEW.dateHeureDepart);
+    
+    -- Le joueur rejoint l'équipe
+    IF(OLD.dateHeureArrivee = '0000-00-00 00:00:00' AND NEW.dateHeureArrivee <> OLD.dateHeureArrivee)
+    THEN
+		DELETE FROM Equipe_Joueur WHERE Equipe_Joueur.dateHeureArrivee = '0000-00-00 00:00:00' AND Equipe_Joueur.idJoueur = NEW.idJoueur;
+    END IF;
+    
     -- Si on tente de lui le re-refaire rejoindre l'équipe avec le même enregistrement
     IF (NEW.dateHeureDepart IS NULL AND OLD.dateHeureDepart IS NOT NULL) 
 	THEN 
-		CALL estDejaDansUneEquipe(OLD.idJoueur);
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Impossible de rejoindre a nouveau l\'équipe avec le même enregistrement';
 	END IF;
+    
     -- Si on tente de lui faire quitter l'équipe
     IF (NEW.dateHeureDepart IS NOT NULL AND OLD.dateHeureDepart IS NULL)
     THEN
@@ -751,9 +886,27 @@ BEGIN
 			SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Le joueur ne peut pas quitter une équipe inscrite à un tournoi.';
         END IF;
 	END IF;
+    
     IF(OLD.idJoueur = (SELECT idResponsable FROM Equipe WHERE Equipe.acronyme = OLD.acronymeEquipe) AND NEW.dateHeureDepart IS NOT NULL)
     THEN 
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Le responsable ne peut pas quitter son équiper, on a besoin de lui.';
+	END IF;
+END
+$$
+
+------------------------- MATCH --------------------
+DELIMITER $$
+CREATE TRIGGER matchInsertion
+BEFORE INSERT
+ON `Match`
+FOR EACH ROW
+BEGIN
+	
+	SET @maxMatchSerie = (SELECT Tour.longueurMaxSerie FROM Tour WHERE Tour.idTournoi = NEW.idTournoi AND Tour.no = NEW.noTour);
+    SET @nbMatchSerie = (SELECT COUNT(1) FROM `Match` WHERE `Match`.idSerie = NEW.idSerie AND `Match`.noTour = NEW.noTour AND `Match`.idTournoi = NEW.idTournoi);
+	IF( @maxMatchSerie = @nbMatchSerie)
+    THEN
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'La série est complète';
 	END IF;
 END
 $$
@@ -791,7 +944,9 @@ DO
 BEGIN 
 	UPDATE Tournoi 
     SET Tournoi.dateHeureFin = Tournoi.dateHeureDebut
-    WHERE Tournoi.dateHeureFin IS NULL AND Tournoi.dateHeureDebut < NOW();
+    WHERE Tournoi.dateHeureFin IS NULL AND Tournoi.dateHeureDebut < NOW() 
+		  AND Tournoi.nbEquipesMax > (SELECT COUNT(1) FROM Tournoi_Equipe
+									  WHERE Tournoi_Equipe = Tournoi.id);
 END
 $$
 
@@ -806,11 +961,6 @@ BEGIN
 END
 $$
 
-
-
------------------------------------------------------
--- DONNEES
-------------------------------------------------------
 INSERT INTO Objet (nom)
 VALUES 
 ( "Clavier Roccat" ),
@@ -868,8 +1018,8 @@ VALUES
 ( "Berdin", "Ario", "arju@galaxyracer.com", "arju", "2002-11-04" ),
 ( "Bosch", "Marc", "Stake@giantsgaming.com", "Stake", "2000-07-20" ),
 ( "Cortés", "Samuel", "Zamué@giantsgaming.com", "Zamué", "2000-10-19" ),
-( "Benayachi", "Amine", "itachi@giantsgaming.com", "itachi", "2003-08-13" ),
-( "Benayachi2", "Amine", "itachi@giantsgaming2.com", "itachi", "2003-08-13" );
+( "Benayachi", "Amine", "itachi@giantsgaming.com", "itachi", "2003-08-13" );
+
 
 INSERT INTO Equipe
 VALUES 
@@ -882,196 +1032,34 @@ VALUES
 ( "DIG", "Dignitas", 19 ),
 ( "FCB", "FC Barcelona", 22 ),
 ( "GAR", "Galaxy Racer", 25 ),
-( "GIA", "Giants Gaming", 28 ),
-( "TRC", "Truc",  31);
+( "GIA", "Giants Gaming", 28 );
 
 
 INSERT INTO Equipe_Joueur
 VALUES 
-( "EE", 3,  "2016-01-01 00-00-00","2016-02-01 00-00-00"),
-( "ROC", 1,  "2020-01-01 00-00-00", NULL),
 ( "ROC", 2,  "2020-01-01 00-00-00", NULL),
 ( "ROC", 3,  "2020-01-01 00-00-00", NULL),
-( "LSE", 4,  "2020-01-01 00-00-00", NULL),
 ( "LSE", 5,  "2020-01-01 00-00-00", NULL),
 ( "LSE", 6,  "2020-01-01 00-00-00", NULL),
-( "SLY", 7,  "2020-01-01 00-00-00", NULL),
 ( "SLY", 8,  "2020-01-01 00-00-00", NULL),
 ( "SLY", 9,  "2020-01-01 00-00-00", NULL),
-( "TL", 10,  "2020-01-01 00-00-00", NULL),
 ( "TL", 11,  "2020-01-01 00-00-00", NULL),
 ( "TL", 12,  "2020-01-01 00-00-00", NULL),
-( "EE", 13,  "2020-01-01 00-00-00", NULL),
 ( "EE", 14,  "2020-01-01 00-00-00", NULL),
 ( "EE", 15,  "2020-01-01 00-00-00", NULL),
-( "VIT", 16,  "2020-01-01 00-00-00", NULL),
 ( "VIT", 17,  "2020-01-01 00-00-00", NULL),
 ( "VIT", 18,  "2020-01-01 00-00-00", NULL),
-( "DIG", 19,  "2020-01-01 00-00-00", NULL),
 ( "DIG", 20,  "2020-01-01 00-00-00", NULL),
 ( "DIG", 21,  "2020-01-01 00-00-00", NULL),
-( "FCB", 22,  "2020-01-01 00-00-00", NULL),
 ( "FCB", 23,  "2020-01-01 00-00-00", NULL),
 ( "FCB", 24,  "2020-01-01 00-00-00", NULL),
-( "GAR", 25,  "2020-01-01 00-00-00", NULL),
 ( "GAR", 26,  "2020-01-01 00-00-00", NULL),
 ( "GAR", 27,  "2020-01-01 00-00-00", NULL),
-( "GIA", 28,  "2020-01-01 00-00-00", NULL),
 ( "GIA", 29,  "2020-01-01 00-00-00", NULL),
 ( "GIA", 30,  "2020-01-01 00-00-00", NULL);
 
 
-INSERT INTO Tournoi (dateHeureDebut, nom, nbEquipesMax, dateHeureFin)
+INSERT INTO Tournoi (dateHeureDebut, nom, nbEquipesMax)
 VALUES 
-( "2021-02-01 20:00:00", 'Le Franco-Suisse', 4, '2021-02-01 23:00:00' ),
-( "2021-03-01 20:00:00", 'IEM', 8, NULL );
-
-INSERT INTO Tour
-VALUES 
-( 2, 1, 1 ),
-( 1, 3, 1 ),
-( 3, 1, 2 ),
-( 2, 1, 2 ),
-( 1, 3, 2 );
-
-INSERT INTO Serie
-VALUES 
-( 1, 2, 1, 'ROC', 'SLY' ),
-( 2, 2, 1, 'EE', 'VIT' ),
-( 1, 1, 1, 'ROC', 'EE'),
-( 1, 3, 2, 'ROC', 'TL'),
-( 2, 3, 2, 'EE', 'VIT' ),
-( 3, 3, 2, 'DIG', 'LSE' ),
-( 4, 3, 2, 'FCB', 'SLY' ),
-( 1, 2, 2, 'ROC', 'EE' ),
-( 2, 2, 2, 'LSE', 'SLY' ),
-( 1, 1, 2, 'ROC', 'LSE' );
-
-
-INSERT INTO `Match`
-VALUES 
-( 1, 1, 2, 1 ),
-( 1, 2, 2, 1 ),
-( 1, 1, 1, 1 ),
-( 2, 1, 1, 1 ),
-( 3, 1, 1, 1 ),
-( 1, 1, 3, 2 ),
-( 1, 2, 3, 2 ),
-( 1, 3, 3, 2 ),
-( 1, 4, 3, 2 ),
-( 1, 1, 2, 2 ),
-( 1, 2, 2, 2 ),
-( 1, 1, 1, 2 ),
-( 2, 1, 1, 2 );
-
-
-INSERT INTO Match_Joueur (idJoueur, nbButs, nbArrets, idMatch, idSerie, noTour, idTournoi)
-VALUES 
-( 1, 3, 1, 1, 1, 2, 1 ),
-( 2, 0, 3, 1, 1, 2, 1 ),
-( 3, 1, 2, 1, 1, 2, 1 ),
-( 7, 0, 2, 1, 1, 2, 1 ),
-( 8, 1, 0, 1, 1, 2, 1 ),
-( 9, 1, 4, 1, 1, 2, 1 ),
-
-( 13, 3, 1, 1, 2, 2, 1 ),
-( 14, 0, 3, 1, 2, 2, 1 ),
-( 15, 4, 2, 1, 2, 2, 1 ),
-( 16, 1, 2, 1, 2, 2, 1 ),
-( 17, 1, 0, 1, 2, 2, 1 ),
-( 18, 1, 4, 1, 2, 2, 1 ),
-
-( 1, 1, 5, 1, 1, 1, 1 ),
-( 2, 0, 3, 1, 1, 1, 1 ),
-( 3, 1, 2, 1, 1, 1, 1 ),
-( 13, 0, 2, 1, 1, 1, 1 ),
-( 14, 0, 3, 1, 1, 1, 1 ),
-( 15, 0, 4, 1, 1, 1, 1 ),
-
-( 1, 0, 1, 2, 1, 1, 1 ),
-( 2, 2, 3, 2, 1, 1, 1 ),
-( 3, 1, 2, 2, 1, 1, 1 ),
-( 13, 8, 5, 2, 1, 1, 1 ),
-( 14, 0, 1, 2, 1, 1, 1 ),
-( 15, 1, 4, 2, 1, 1, 1 ),
-
-( 1, 6, 1, 3, 1, 1, 1 ),
-( 2, 2, 3, 3, 1, 1, 1 ),
-( 3, 4, 2, 3, 1, 1, 1 ),
-( 13, 12, 5, 3, 1, 1, 1 ),
-( 14, 0, 1, 3, 1, 1, 1 ),
-( 15, 1, 4, 3, 1, 1, 1 ),
-
-( 1, 0, 5, 1, 1, 3, 2 ),
-( 2, 3, 1, 1, 1, 3, 2 ),
-( 3, 4, 2, 1, 1, 3, 2 ),
-( 10, 0, 1, 1, 1, 3, 2 ),
-( 11, 1, 3, 1, 1, 3, 2 ),
-( 12, 2, 0, 1, 1, 3, 2 ),
-
-( 13, 2, 8, 1, 2, 3, 2 ),
-( 14, 3, 2, 1, 2, 3, 2 ),
-( 15, 1, 0, 1, 2, 3, 2 ),
-( 16, 1, 4, 1, 2, 3, 2 ),
-( 17, 0, 1, 1, 2, 3, 2 ),
-( 18, 1, 3, 1, 2, 3, 2 ),
-
-( 19, 0, 0, 1, 3, 3, 2 ),
-( 20, 0, 3, 1, 3, 3, 2 ),
-( 21, 1, 0, 1, 3, 3, 2 ),
-( 4, 3, 3, 1, 3, 3, 2 ),
-( 5, 6, 2, 1, 3, 3, 2 ),
-( 6, 1, 9, 1, 3, 3, 2 ),
-
-( 22, 3, 1, 1, 4, 3, 2 ),
-( 23, 0, 4, 1, 4, 3, 2 ),
-( 24, 1, 1, 1, 4, 3, 2 ),
-( 7, 4, 1, 1, 4, 3, 2 ),
-( 8, 2, 2, 1, 4, 3, 2 ),
-( 9, 0, 7, 1, 4, 3, 2 ),
-
-( 1, 3, 4, 1, 1, 2, 2 ),
-( 2, 2, 0, 1, 1, 2, 2 ),
-( 3, 1, 5, 1, 1, 2, 2 ),
-( 13, 0, 4, 1, 1, 2, 2 ),
-( 14, 2, 1, 1, 1, 2, 2 ),
-( 15, 1, 3, 1, 1, 2, 2 ),
-
-( 4, 3, 2, 1, 2, 2, 2 ),
-( 5, 0, 7, 1, 2, 2, 2 ),
-( 6, 5, 1, 1, 2, 2, 2 ),
-( 7, 1, 3, 1, 2, 2, 2 ),
-( 8, 1, 6, 1, 2, 2, 2 ),
-( 9, 2, 2, 1, 2, 2, 2 ),
-
-( 1, 1, 3, 1, 1, 1, 2 ),
-( 2, 1, 4, 1, 1, 1, 2 ),
-( 3, 0, 5, 1, 1, 1, 2 ),
-( 4, 0, 2, 1, 1, 1, 2 ),
-( 5, 1, 3, 1, 1, 1, 2 ),
-( 6, 0, 4, 1, 1, 1, 2 ),
-
-( 1, 1, 1, 2, 1, 1, 2 ),
-( 2, 1, 5, 2, 1, 1, 2 ),
-( 3, 1, 2, 2, 1, 1, 2 ),
-( 4, 0, 1, 2, 1, 1, 2 ),
-( 5, 1, 3, 2, 1, 1, 2 ),
-( 6, 1, 6, 2, 1, 1, 2 );
-
-
-INSERT INTO Tournoi_Equipe
-VALUES 
-( 1, "ROC", "2020-01-01 20-00-00" ),
-( 1, "SLY", "2020-01-01 20-01-00" ),
-( 1, "EE", "2020-01-01 20-02-00" ),
-( 1, "VIT", "2020-01-01 20-02-00" ),
-
-( 2, "ROC", "2020-02-01 20-00-00" ),
-( 2, "TL", "2020-02-01 20-01-00" ),
-( 2, "EE", "2020-02-01 20-02-00" ),
-( 2, "VIT", "2020-02-01 20-03-00" ),
-( 2, "DIG", "2020-02-01 20-04-00" ),
-( 2, "LSE", "2020-02-01 20-05-00" ),
-( 2, "FCB", "2020-02-01 20-05-00" ),
-( 2, "SLY", "2020-02-01 20-06-00" );
-
+( "2021-02-01 20:00:00", "Le Franco-Suisse", 4),
+( "2021-03-01 20:00:00", "IEM", 8 );

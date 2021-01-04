@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GestionnaireTournois.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -27,8 +28,10 @@ namespace GestionnaireTournois
         {
             cbxFilter.SelectedIndex = 0;
 
-            wbrTreeStruct.DocumentText = TournamentArborescenceGenerator.Generate(4, "Editer");
+            lbxTournament.SelectedIndex = 0;
+
         }
+
 
     
         private void wbrTreeStruct_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
@@ -46,6 +49,31 @@ namespace GestionnaireTournois
             {
                 // Do something
             }
+        }
+
+        private void cbxFilter_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            lbxTournament.Items.Clear();
+            foreach (Tournoi t in DataBaseConnector.GetTournois())
+            {
+                lbxTournament.Items.Add(t);
+            }
+        }
+
+        private void lbxTournament_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            wbrTreeStruct.DocumentText = TournamentArborescenceGenerator.Generate((Tournoi)lbxTournament.SelectedItem, "Editer");
+        }
+
+        private void btnProperties_Click(object sender, EventArgs e)
+        {
+            Tournoi t = (Tournoi)lbxTournament.SelectedItem;
+
+            frmTournamentProperties properties = new frmTournamentProperties(t.Id);
+
+            properties.ShowDialog();
+
+            lbxTournament.SelectedIndex = lbxTournament.SelectedIndex;
         }
     }
 }

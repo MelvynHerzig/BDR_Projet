@@ -10,17 +10,11 @@ using System.Windows.Forms;
 
 namespace GestionnaireTournois
 {
-    public partial class frmUser : Form
+    public partial class frmTournamentProperties : Form
     {
-        public frmUser(int userId)
+        public frmTournamentProperties(int idTournoi)
         {
             InitializeComponent();
-        }
-
-        private void tsmiModeChoice_Click(object sender, EventArgs e)
-        {
-            this.DialogResult = DialogResult.OK;
-            this.Close();
         }
     }
 }

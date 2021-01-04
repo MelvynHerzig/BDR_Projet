@@ -1,19 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using GestionnaireTournois.Models;
+using MySql.Data.MySqlClient;
 
 namespace GestionnaireTournois
 {
     public class TournamentArborescenceGenerator
     {
-                      
-        public static string Generate(int idTournoi, string infoMatch)
+
+        public static string Generate(Tournoi t, string infoMatch)
         {
+
             // Récupere le tournoi dans la db
-            Tournoi t = new Tournoi(1, DateTime.Now, DateTime.Now, "test", 8);
 
             int match_white_span;
             int match_span;
@@ -22,8 +24,8 @@ namespace GestionnaireTournois
             int effective_row;
             int col_match_num;
             int cumulative_matches;
-            int effective_match_id;
-            int rounds = t.GetNbTour();
+            int effective_serie_id;
+            int rounds = t.GetNbTours();
             int teams = t.NbEquipesMax;
             int max_rows = teams << 1;
             StringBuilder HTMLTable = new StringBuilder();
@@ -39,6 +41,7 @@ namespace GestionnaireTournois
             HTMLTable.AppendLine("    .vs button:hover {background-color: #e7e7e7;}");
             HTMLTable.AppendLine("</style>");
 
+            HTMLTable.AppendLine("<h1>Tournoi : " + t.Nom + "</h1>");
             HTMLTable.AppendLine("<table border=\"0\" cellspacing=\"0\">");
 
             for (int row = 0; row <= max_rows; row++)
@@ -50,11 +53,14 @@ namespace GestionnaireTournois
                     match_span = 1 << (col + 1);
                     match_white_span = (1 << col) - 1;
                     column_stagger_offset = match_white_span >> 1;
+
+                    int noTour = (rounds - col + 1);
+
                     if (row == 0)
                     {
                         if (col <= rounds)
                         {
-                            HTMLTable.AppendLine("        <th class=\"thd\">Round " + col + "</th>");
+                            HTMLTable.AppendLine("        <th class=\"thd\">Tour " + noTour + "</th>");
                         }
                         else
                         {
@@ -73,16 +79,16 @@ namespace GestionnaireTournois
                             position_in_match_span = effective_row % match_span;
                             position_in_match_span = (position_in_match_span == 0) ? match_span : position_in_match_span;
                             col_match_num = (effective_row / match_span) + ((position_in_match_span < match_span) ? 1 : 0);
-                            effective_match_id = cumulative_matches + col_match_num;
+                            effective_serie_id = cumulative_matches + col_match_num;
+
+
                             if ((position_in_match_span == 1) && (effective_row % match_span == position_in_match_span))
                             {
                                 HTMLTable.AppendLine("        <td class=\"white_span\" rowspan=\"" + match_white_span + "\">&nbsp;</td>");
                             }
                             else if ((position_in_match_span == (match_span >> 1)) && (effective_row % match_span == position_in_match_span))
                             {
-                                HTMLTable.AppendLine("        <td class=\"team\">" + t.GetTourByNo(col-1).GetSerieById(effective_match_id-1).GetEquipes()[0].Acronyme + "</td>");
-                                //HTMLTable.AppendLine("        <td class=\"team\">" + t.Tours[0].Series[0].GetEquipes()[0].Acronyme + "</td>");
-                                //HTMLTable.AppendLine("        <td class=\"team\">Team " + 1 + "</td>");
+                                HTMLTable.AppendLine("        <td class=\"team\">" + t.GetTourOrderByNoASC()[noTour - 1].GetSerieOrderByIdASC()[effective_serie_id - 1].GetEquipes()[0].Acronyme + "</td>");
                             }
                             else if ((position_in_match_span == ((match_span >> 1) + 1)) && (effective_row % match_span == position_in_match_span))
                             {
@@ -90,15 +96,14 @@ namespace GestionnaireTournois
                             }
                             else if ((position_in_match_span == match_span) && (effective_row % match_span == 0))
                             {
-                                HTMLTable.AppendLine("        <td class=\"team\">" + t.GetTourByNo(col - 1).GetSerieById(effective_match_id - 1).GetEquipes()[1].Acronyme + "</td>");
+                                HTMLTable.AppendLine("        <td class=\"team\">" + t.GetTourOrderByNoASC()[noTour - 1].GetSerieOrderByIdASC()[effective_serie_id - 1].GetEquipes()[1].Acronyme + "</td>");
                             }
                         }
                         else
                         {
                             if (row == column_stagger_offset + 2)
                             {
-                                //HTMLTable.AppendLine("        <td class=\"winner\">Team " + tournament.TournamentRoundMatches[rounds][cumulative_matches].winner + "</td>");
-                                HTMLTable.AppendLine("        <td class=\"winner\">" + t.GetGagnant().Acronyme+ "</td>");
+                                HTMLTable.AppendLine("        <td class=\"winner\">" + t.GetGagnant().Acronyme + "</td>");
                             }
                             else if (row == column_stagger_offset + 3)
                             {
@@ -106,18 +111,14 @@ namespace GestionnaireTournois
                             }
                         }
                     }
-                    if (col <= rounds)
-                    {
-                        //cumulative_matches += tournament.TournamentRoundMatches[col].Count;
-                    }
                 }
                 HTMLTable.AppendLine("    </tr>");
             }
             HTMLTable.AppendLine("</table>");
 
-            
+
             return HTMLTable.ToString();
         }
-        
+
     }
 }
