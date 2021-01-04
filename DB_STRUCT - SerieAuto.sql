@@ -615,6 +615,45 @@ BEGIN
 END
 $$
 
+-- Indique que le no de tour ne peut pas être modifié
+DELIMITER $$
+CREATE PROCEDURE verifierNoTour(pNoTour INT, pIdTournoi INT)
+BEGIN
+	 
+     SET @maxTeam = (SELECT Tournoi.nbEquipesMax FROM Tournoi WHERE Tournoi.id = pIdTournoi);
+	 IF (pNoTour < 0 OR pNoTour > calculerNbTours(@maxTeam))
+     THEN
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Nouvel id de tour invalide';
+	 END IF;
+END
+$$
+
+-- Indique que le id de série ne peut pas être modifié
+DELIMITER $$
+CREATE PROCEDURE verifierIdSerie(pIdSerie INT, pNoTour INT, pIdTournoi INT)
+BEGIN
+	 IF pIdSerie < 0 OR pIdSerie > pNoTour
+     THEN 
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Nouvel id de série invalide';
+	 END IF;
+END
+$$
+
+-- Indique que le id de match ne peut pas être modifié
+DELIMITER $$
+CREATE PROCEDURE verifierIdMatch(pIdMatch INT, pIdSerie INT, pNoTour INT, pIdTournoi INT)
+BEGIN
+	 SET @maxMatch = (SELECT Tour.longueurMaxSerie FROM Tour WHERE Tour.idTournoi = pIdTournoi AND Tour.id = pIdTour);
+     SET @noDernierMatch = (SELECT MAX(`Match`.id) FROM `Match` WHERE `Match`.idSerie = pIdSerie AND `Match`.noTour = pNoTour AND `Match`.idTournoi = pIdTournoi);
+	 IF pIdMatch > @maxMatch OR  ( @noDernierMatch IS NULL AND pIdMatch <> 1 ) OR ( @noDernierMatch IS NOT NULL AND pIdMatch <> (@noDernierMatch + 1) )
+     THEN
+ 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Nouvel id de match invalide';
+	 END IF;
+END
+$$
+
+
+
 -----------------------------------------------------
 -- TRIGGER
 -----------------------------------------------------
@@ -742,15 +781,17 @@ BEFORE INSERT
 ON Tour
 FOR EACH ROW
 BEGIN
+	CALL verifierNoTour(NEW.no, NEW.idTournoi);
     CALL verifierLongueurMaxSerie(NEW.longueurMaxSerie);
 END
 $$
 DELIMITER $$
-CREATE TRIGGER tourSerieMiseAJour
+CREATE TRIGGER touMiseAJour
 BEFORE UPDATE
 ON Tour
 FOR EACH ROW
 BEGIN
+	CALL verifierNoTour(NEW.no, NEW.idTournoi);
 	-- Si le tournoi a débuté on ne modifie pas
     SET @debutTournoi = (SELECT Tournoi.dateHeureDebut FROM Tournoi WHERE Tournoi.id = NEW.idTournoi);
     IF(@debutTournoi < NOW())
@@ -768,6 +809,7 @@ BEFORE INSERT
 ON serie
 FOR EACH ROW
 BEGIN
+	CALL verifierIdSerie(NEW.id, NEW.noTour, NEW.idTournoi);
 	CALL verifierInscription(NEW.acronymeEquipe1, new.idTournoi);
     CALL verifierInscription(NEW.acronymeEquipe2, new.idTournoi);
 	CALL verifierMemeEquipe(NEW.acronymeEquipe1, NEW.acronymeEquipe2);
@@ -780,6 +822,7 @@ BEFORE UPDATE
 ON serie
 FOR EACH ROW
 BEGIN
+	CALL verifierIdSerie(NEW.id, NEW.noTour, NEW.idTournoi);
 	CALL verifierInscription(NEW.acronymeEquipe1, new.idTournoi);
     CALL verifierInscription(NEW.acronymeEquipe2, new.idTournoi);
 	CALL verifierMemeEquipe(NEW.acronymeEquipe1, NEW.acronymeEquipe2);
@@ -901,13 +944,21 @@ BEFORE INSERT
 ON `Match`
 FOR EACH ROW
 BEGIN
-	
-	SET @maxMatchSerie = (SELECT Tour.longueurMaxSerie FROM Tour WHERE Tour.idTournoi = NEW.idTournoi AND Tour.no = NEW.noTour);
-    SET @nbMatchSerie = (SELECT COUNT(1) FROM `Match` WHERE `Match`.idSerie = NEW.idSerie AND `Match`.noTour = NEW.noTour AND `Match`.idTournoi = NEW.idTournoi);
-	IF( @maxMatchSerie = @nbMatchSerie)
+	IF(vainqueurSerie(NEW.idSerie, NEW.noTour, NEW.idTournoi) IS NOT NULL)
     THEN
-		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'La série est complète';
-	END IF;
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Serie terminée, ajout de match impossible';
+    END IF;
+	CALL verifierIdMatch(NEW.id, NEW.idSerie, NEW.noTour, NEW.idTournoi);
+END
+$$
+
+DELIMITER $$
+CREATE TRIGGER matchMiseAJour
+BEFORE UPDATE
+ON `Match`
+FOR EACH ROW
+BEGIN
+	CALL verifierIdMatch(NEW.id, NEW.idSerie, NEW.noTour, NEW.idTournoi);
 END
 $$
 
