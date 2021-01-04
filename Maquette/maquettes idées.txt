@@ -1,0 +1,5 @@
+inscription d'une équipe à un tournoi -> interface responsable
+responsable gestion équipe
+responsable inscription tournois
+rejoindre une équipe
+vue équipe / quitter
