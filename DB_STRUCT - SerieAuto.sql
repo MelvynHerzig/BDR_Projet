@@ -698,10 +698,10 @@ BEGIN
     CALL verifierDatePlusPetite(NEW.dateHeureDebut, NEW.dateHeureFin);
     
     -- On vérifie si la finale est correcte en essayant de récupérer le vainqueur.
-    IF (NEW.dateHeureFin IS NOT NULL AND NEW.dateHeureFin <> NEW.dateHeureDebut)
-    THEN
-		SET @try = vainqueurSerie(1, 1, NEW.id);
-	END IF;
+    -- IF (NEW.dateHeureFin IS NOT NULL AND NEW.dateHeureFin <> NEW.dateHeureDebut)
+    -- THEN
+	--	SET @try = vainqueurSerie(1, 1, NEW.id);
+	-- END IF;
 END
 $$
 DELIMITER $$
@@ -763,8 +763,9 @@ BEGIN
     END IF;
     
     -- Equipe complète ? 
-	CALL verifierEquipeComplete(NEW.acronymeEquipe);
-    
+	CALL verifierEquipeComplete(NEW.acronymeEquipe); 
+	
+	SET NEW.dateInscription = NOW();
 END
 $$
 DELIMITER $$
@@ -795,7 +796,7 @@ BEGIN
 END
 $$
 DELIMITER $$
-CREATE TRIGGER touMiseAJour
+CREATE TRIGGER tourMiseAJour
 BEFORE UPDATE
 ON Tour
 FOR EACH ROW
