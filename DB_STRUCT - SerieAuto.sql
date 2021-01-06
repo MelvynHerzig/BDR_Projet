@@ -632,7 +632,7 @@ $$
 DELIMITER $$
 CREATE PROCEDURE verifierIdSerie(pIdSerie INT, pNoTour INT, pIdTournoi INT)
 BEGIN
-	 IF pIdSerie < 0 OR pIdSerie > pNoTour
+	 IF pIdSerie <= 0 OR pIdSerie > POWER(2, pNoTour - 1)
      THEN 
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Nouvel id de série invalide';
 	 END IF;
