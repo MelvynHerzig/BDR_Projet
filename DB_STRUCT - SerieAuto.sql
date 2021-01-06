@@ -727,8 +727,8 @@ BEGIN
     
     WHILE vNoTour <= calculerNbTours(NEW.nbEquipesMAx) DO
 		INSERT INTO Tour VALUES (vNoTour, 1, NEW.id);
-        
-        WHILE vNoSerie <= vNoTour DO
+        SET @maxSerieDuTour = POWER(2, vNoTour - 1);
+        WHILE vNoSerie <= @maxSerieDuTour DO
 			INSERT INTO Serie VALUES (vNoSerie, vNoTour, NEW.id, NULL, NULL);
             SET vNoSerie = vNoSerie + 1;
         END WHILE;
