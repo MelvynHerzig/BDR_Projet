@@ -484,6 +484,18 @@ BEGIN
 END
 $$
 
+DELIMITER $$
+CREATE FUNCTION estComplet(pIdTournoi INT)
+RETURNS BOOLEAN
+DETERMINISTIC
+BEGIN
+	-- Nombre d'équipes max atteint ? 
+    SET @maxEquipe = (SELECT Tournoi.nbEquipesMax FROM Tournoi WHERE Tournoi.id = pIdTournoi );
+    SET @nbEquipe = (SELECT COUNT(1) FROM Tournoi_Equipe WHERE Tournoi_Equipe.idTournoi = pIdTournoi);
+	RETURN @maxEquipe = @nbEquipe;
+END
+$$
+
 -- Vérifie que la date en paramètre est plus grande que la date courante.
 DELIMITER $$
 CREATE PROCEDURE verifierDateFuture(pDate DATETIME)
@@ -663,6 +675,84 @@ BEGIN
 END
 $$
 
+-- Démarre le tournoi
+DELIMITER $$
+CREATE PROCEDURE demarrerTournoi(pIdTournoi INT)
+BEGIN
+	-- Curseurs
+    DECLARE done INT DEFAULT FALSE;
+	DECLARE equipe1Inscrite VARCHAR(3);
+    DECLARE equipe2Inscrite VARCHAR(3);
+	DECLARE curInscription CURSOR FOR SELECT Tournoi_Equipe.acronymeEquipe FROM Tournoi_Equipe WHERE Tournoi_Equipe.idTournoi = pIdTournoi ORDER BY Tournoi_Equipe.dateInscription ASC;
+	DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+
+	IF estEnAttente(pIdTournoi) 
+    THEN
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "Il est trop tôt pour démarrer le tournoi";
+	END IF;
+    
+    IF NOT estComplet(pIdTournoi)
+	THEN
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "Pas suffisament d\'équipes inscrites pour lancer le tournoi";
+	END IF; 
+
+	-- création du seeding 
+    SET @noSerie = 1; 
+    SET @noTour = calculerNbTours( (SELECT Tournoi.nbEquipesMax FROM Tournoi WHERE Tournoi.id = pIdTournoi) );
+    OPEN curInscription;
+    inscription_loop : LOOP
+		FETCH curInscription INTO equipe1Inscrite;
+        FETCH curInscription INTO equipe2Inscrite;
+        
+        IF done 
+			THEN LEAVE inscription_loop; 
+		END IF;
+        
+        UPDATE Serie SET Serie.acronymeEquipe1 = equipe1Inscrite,  Serie.acronymeEquipe2 = equipe2Inscrite WHERE Serie.id = @noSerie AND Serie.noTour = @noTour AND Serie.idTournoi = pIdTournoi;
+        SET @noSerie = @noSerie + 1;
+        
+    END LOOP;
+    CLOSE curInscription;
+END
+$$
+
+-- Vérifie si un enregistrement de match_joueur idSerie, noTour et idTournoi peut être modifié
+DELIMITER $$
+CREATE PROCEDURE verifierSerieSuivanteCommencee(pIdSerie INT, pNoTour INT, pIdTournoi INT)
+BEGIN
+	SET @serieSuivante = CEIL(pIdSerie / 2);
+	IF 0 <> (SELECT COUNT(1) FROM Match_Joueur WHERE Match_Joueur.idSerie = @serieSuivante AND Match_Joueur.noTour = pNoTour AND Match_Joueur.idTournoi = pIdTournoi)
+    THEN
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = " Modification/insertion du score du joueur impossible, la serie suivante a déjà commencée.";
+	END IF;
+END
+$$
+
+-- Après insertion du 6ème joueur, vérifie si la série est finie et fait progresser l'arbre de tournoi
+DELIMITER $$
+CREATE PROCEDURE tenterPromotion(pIdMatch INT, pIdSerie INT, pNoTour INT, pIdTournoi INT)
+BEGIN
+	-- Promotion impossible en finale ou si les 6 joueurs n'ont pas de résultats
+	IF pNoTour <> 1 AND 6 = (SELECT COUNT(1) FROM Match_Joueur WHERE Match_Joueur.idMatch = pIdMatch AND Match_Joueur.idSerie = pIdSerie AND Match_Joueur.noTour = pNoTour AND Match_Joueur.idTournoi = pIdTournoi)
+    THEN 
+		SET @nextSerie = CEIL(pIdSerie / 2);
+		SET @vainqueur = vainqueurSerie(pIdSerie, pNoTour, pIdTournoi);
+        
+        -- La série est terminée on promeut le vainqueur
+        IF @vainqueur IS NOT NULL
+        THEN
+			-- Si la serie était impair -> acronymeEquipe1 dans la suivante sinon acronymeEquipe2
+            IF (pIdSerie % 2 <> 0)
+            THEN
+				UPDATE Serie SET Serie.acronymeEquipe1 = @vainqueur WHERE Serie.id = @nextSerie AND Serie.noTour = pNoTour - 1 AND Serie.idTournoi = pIdTournoi;
+            ELSE
+				UPDATE Serie SET Serie.acronymeEquipe2 = @vainqueur WHERE Serie.id = @nextSerie AND Serie.noTour = pNoTour - 1 AND Serie.idTournoi = pIdTournoi;
+            END IF;
+        END IF;
+    END IF;
+END
+$$
+
 -----------------------------------------------------
 -- TRIGGER
 -----------------------------------------------------
@@ -694,17 +784,12 @@ BEGIN
     THEN
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Impossible de modifier le nombre maximal d\'équipes.';
 	END IF;
-    IF(NEW.dateHeureDebut <> NEW.dateHeureFin)
+    
+    IF(NEW.dateHeureDebut <> OLD.dateHeureDebut)
     THEN
 		CALL verifierDatePassee(NEW.dateHeureDebut);
 	END IF;
     CALL verifierDatePlusPetite(NEW.dateHeureDebut, NEW.dateHeureFin);
-    
-    -- On vérifie si la finale est correcte en essayant de récupérer le vainqueur.
-    -- IF (NEW.dateHeureFin IS NOT NULL AND NEW.dateHeureFin <> NEW.dateHeureDebut)
-    -- THEN
-	-- SET @try = vainqueurSerie(1, 1, NEW.id);
-	-- END IF;
 END
 $$
 DELIMITER $$
@@ -748,10 +833,7 @@ BEFORE INSERT
 ON Tournoi_Equipe
 FOR EACH ROW
 BEGIN
-	-- Nombre d'équipes max atteint ? 
-    SET @maxEquipe = (SELECT Tournoi.nbEquipesMax FROM Tournoi WHERE Tournoi.id = NEW.idTournoi);
-    SET @nbEquipe = (SELECT COUNT(1) FROM Tournoi_Equipe WHERE Tournoi_Equipe.idTournoi = NEW.idTournoi);
-	IF( @maxEquipe = @nbEquipe)
+	IF estComplet(NEW.idTournoi)
     THEN
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Les inscriptions du tournoi sont complètes';
 	END IF;
@@ -993,7 +1075,6 @@ END
 $$
 
 ----------------------- MATCH_JOUEUR --------------------
-
 DELIMITER $$
 CREATE TRIGGER matchJoueurInsertion
 BEFORE INSERT
@@ -1013,14 +1094,15 @@ BEGIN
 	-- Est ce que la finale est terminée
 	IF NEW.noTour = 1 AND NEW.idSerie = 1 
  	THEN 
- 		SET @nbPerformance = (SELECT COUNT(1) FROM Match_Joueur WHERE Match_Joueur.idSerie = NEW.idSerie AND Match_Joueur.noTour = NEW.noTour AND Match_Joueur.idTournoi = NEW.idTournoi);
-         IF @nbPerformance = 6
-         THEN 
+		IF 6 = (SELECT COUNT(1) FROM Match_Joueur WHERE Match_Joueur.idSerie = NEW.idSerie AND Match_Joueur.noTour = NEW.noTour AND Match_Joueur.idTournoi = NEW.idTournoi)
+		THEN 
  			IF vainqueurSerie(NEW.idSerie, NEW.noTour, NEW.idTournoi) IS NOT NULL
-             THEN
- 				 UPDATE Tournoi SET Tournoi.dateHeureFin = NOW() WHERE Tournoi.id = NEW.idTournoi;
-			 END IF;
-         END IF;
+			THEN
+				UPDATE Tournoi SET Tournoi.dateHeureFin = NOW() WHERE Tournoi.id = NEW.idTournoi;
+			END IF;
+		END IF;
+	 ELSE
+		CALL tenterPromotion(NEW.idMatch, NEW.idSerie, NEW.noTour, NEW.idTournoi);
      END IF;
 END
 $$
@@ -1031,7 +1113,9 @@ BEFORE UPDATE
 ON Match_Joueur
 FOR EACH ROW
 BEGIN
+    CALL verifierSerieSuivanteCommencee(NEW.idSerie, NEW.noTour, NEW.idTournoi);
     CALL verifierJoueurEstDansEquipeSerie(NEW.idJoueur, NEW.idSerie, NEW.noTour, NEW.idTournoi);
+	CALL tenterPromotion(NEW.idMatch, NEW.idSerie, NEW.noTour, NEW.idTournoi);
 END
 $$
 
@@ -1063,116 +1147,116 @@ BEGIN
 END
 $$
 
--- INSERT INTO Objet (nom)
--- VALUES 
--- ( "Clavier Roccat" ),
--- ( "Souris Roccat" ),
--- ( "Casque Logitec" ),
--- ( "Ecran BenQ" ),
--- ( "PC  Alienware" );
+INSERT INTO Objet (nom)
+VALUES 
+( "Clavier Roccat" ),
+( "Souris Roccat" ),
+( "Casque Logitec" ),
+( "Ecran BenQ" ),
+( "PC  Alienware" );
 
--- INSERT INTO Prix (montantArgent)
--- VALUES 
--- ( 50.00 ),
--- ( 100.00 ),
--- ( 150.00 ),
--- ( 500.00 ),
--- ( 1500.00 ),
--- ( 200.00 ),
--- ( 300.00 );
+INSERT INTO Prix (montantArgent)
+VALUES 
+( 50.00 ),
+( 100.00 ),
+( 150.00 ),
+( 500.00 ),
+( 1500.00 ),
+( 200.00 ),
+( 300.00 );
 
--- INSERT INTO Prix_Objet 
--- VALUES 
--- ( 1, 1 ),
--- ( 2, 2 ),
--- ( 3, 3 ),
--- ( 4, 4 ),
--- ( 5, 5 );
+INSERT INTO Prix_Objet 
+VALUES 
+( 1, 1 ),
+( 2, 2 ),
+( 3, 3 ),
+( 4, 4 ),
+( 5, 5 );
 
--- INSERT INTO Joueur (nom, prenom, email, pseudo, dateNaissance)
--- VALUES 
--- ( "Forestier", "Qunetin", "quentin.forestier@heig-vd.ch", "Dudude", "2001-05-16" ),
--- ( "Herzig", "Melvyn", "melvyn.herzig@heig-vd.ch", "Wheald", "1997-09-11" ),
--- ( "Crausaz", "Nicolas", "nicolas.crausaz@heig-vd.ch", "itsaboi", "1999-08-03" ),
--- ( "Brescard", "Julien", "Jujuju@lse.ch", "Jujuju", "2002-09-16" ),
--- ( "Baggiolini", "Jonas", "Arcko0o@lse.ch", "Arcko0o", "2000-11-15" ),
--- ( "Eggenberger", "Kevin", "Keever@lse.ch", "Keever", "1999-01-10" ),
--- ( "Candolfi", "Kérian", "Kerian@solary.fr", "Kérian", "2003-08-21" ),
--- ( "Bigeard", "Brice", "ExoTiiK@solary.fr", "ExoTiiK", "2002-10-31" ),
--- ( "Schäfer", "Damian", "Tox@solary.fr", "Tox", "2003-06-08" ),
--- ( "Packwood-Clarke", "Jack", "Speed@teamliquid.com", "Speed", "2001-02-26" ),
--- ( "Moselund", "Emil", "fruity@teamliquid.com", "fruity", "1996-02-22" ),
--- ( "Hodzic", "Aldin", "Ronaky@teamliquid.com", "Ronaky", "2000-09-21" ),
--- ( "Jakober", "Lukas", "Zaphare@eldelweiss.ch", "Zaphare", "2000-04-07" ),
--- ( "Lentz", "Quentin", "Mirror@eldelweiss.ch", "Mirror", "2002-09-05" ),
--- ( "Sauvey", "Baptiste", "BatOu@eldelweiss.ch", "BatOu", "2001-10-28" ),
--- ( "Courant", "Alexandre", "Kaydop@vitality.fr", "Kaydop", "1998-05-22" ),
--- ( "Champenois", "Yanis", "Alpha54@vitality.fr", "Alpha54", "2003-05-27" ),
--- ( "Loquet", "Victor", "Fairy_Peak@vitality.fr", "Fairy Peak!", "1998-05-26" ),
--- ( "Van Meurs", "Jos", "ViolentPanda@dignitas.com", "ViolentPanda", "1998-11-02" ),
--- ( "Robben", "Joris", "Joreuz@dignitas.com", "Joreuz", "2005-03-08" ),
--- ( "Benton", "Jack", "ApparentlyJack@dignitas.com", "ApparentlyJack", "2003-09-23" ),
--- ( "Oosting", "Ronald", "Tahz@fcbarcelona.com", "Tahz", "1999-08-03" ),
--- ( "Lazarus", "Fredi", "Blurry@fcbarcelona.com", "Blurry", "2004-06-30" ),
--- ( "Gimenez", "Nacho", "Nachitow@fcbarcelona.com", "Nachitow", "2000-06-20" ),
--- ( "Driessen", "Mitchell", "Mittaen@galaxyracer.com", "Mittaen", "2000-06-20" ),
--- ( "Pickering", "Dylan", "eekso@galaxyracer.com", "eekso", "2002-06-29" ),
--- ( "Berdin", "Ario", "arju@galaxyracer.com", "arju", "2002-11-04" ),
--- ( "Bosch", "Marc", "Stake@giantsgaming.com", "Stake", "2000-07-20" ),
--- ( "Cortés", "Samuel", "Zamué@giantsgaming.com", "Zamué", "2000-10-19" ),
--- ( "Benayachi", "Amine", "itachi@giantsgaming.com", "itachi", "2003-08-13" ),
--- ( "Forestier2", "Qunetin2", "quentin.forestier@heig-vd.ch3", "Dudude", "2001-05-16" );
-
-
--- INSERT INTO Equipe
--- VALUES 
--- ( "ROC", "Real Original Cracks", 1 ),
--- ( "LSE", "Lausanne eSports", 4 ),
--- ( "SLY", "Solary", 7 ),
--- ( "TL", "Team Liquid", 10 ),
--- ( "EE", "Eldelweiss ESports", 13 ),
--- ( "VIT", "Renault Vitality", 16 ),
--- ( "DIG", "Dignitas", 19 ),
--- ( "FCB", "FC Barcelona", 22 ),
--- ( "GAR", "Galaxy Racer", 25 ),
--- ( "GIA", "Giants Gaming", 28 ),
--- ( ".", "Giants Gaming", 31 );
+INSERT INTO Joueur (nom, prenom, email, pseudo, dateNaissance)
+VALUES 
+( "Forestier", "Qunetin", "quentin.forestier@heig-vd.ch", "Dudude", "2001-05-16" ),
+( "Herzig", "Melvyn", "melvyn.herzig@heig-vd.ch", "Wheald", "1997-09-11" ),
+( "Crausaz", "Nicolas", "nicolas.crausaz@heig-vd.ch", "itsaboi", "1999-08-03" ),
+( "Brescard", "Julien", "Jujuju@lse.ch", "Jujuju", "2002-09-16" ),
+( "Baggiolini", "Jonas", "Arcko0o@lse.ch", "Arcko0o", "2000-11-15" ),
+( "Eggenberger", "Kevin", "Keever@lse.ch", "Keever", "1999-01-10" ),
+( "Candolfi", "Kérian", "Kerian@solary.fr", "Kérian", "2003-08-21" ),
+( "Bigeard", "Brice", "ExoTiiK@solary.fr", "ExoTiiK", "2002-10-31" ),
+( "Schäfer", "Damian", "Tox@solary.fr", "Tox", "2003-06-08" ),
+( "Packwood-Clarke", "Jack", "Speed@teamliquid.com", "Speed", "2001-02-26" ),
+( "Moselund", "Emil", "fruity@teamliquid.com", "fruity", "1996-02-22" ),
+( "Hodzic", "Aldin", "Ronaky@teamliquid.com", "Ronaky", "2000-09-21" ),
+( "Jakober", "Lukas", "Zaphare@eldelweiss.ch", "Zaphare", "2000-04-07" ),
+( "Lentz", "Quentin", "Mirror@eldelweiss.ch", "Mirror", "2002-09-05" ),
+( "Sauvey", "Baptiste", "BatOu@eldelweiss.ch", "BatOu", "2001-10-28" ),
+( "Courant", "Alexandre", "Kaydop@vitality.fr", "Kaydop", "1998-05-22" ),
+( "Champenois", "Yanis", "Alpha54@vitality.fr", "Alpha54", "2003-05-27" ),
+( "Loquet", "Victor", "Fairy_Peak@vitality.fr", "Fairy Peak!", "1998-05-26" ),
+( "Van Meurs", "Jos", "ViolentPanda@dignitas.com", "ViolentPanda", "1998-11-02" ),
+( "Robben", "Joris", "Joreuz@dignitas.com", "Joreuz", "2005-03-08" ),
+( "Benton", "Jack", "ApparentlyJack@dignitas.com", "ApparentlyJack", "2003-09-23" ),
+( "Oosting", "Ronald", "Tahz@fcbarcelona.com", "Tahz", "1999-08-03" ),
+( "Lazarus", "Fredi", "Blurry@fcbarcelona.com", "Blurry", "2004-06-30" ),
+( "Gimenez", "Nacho", "Nachitow@fcbarcelona.com", "Nachitow", "2000-06-20" ),
+( "Driessen", "Mitchell", "Mittaen@galaxyracer.com", "Mittaen", "2000-06-20" ),
+( "Pickering", "Dylan", "eekso@galaxyracer.com", "eekso", "2002-06-29" ),
+( "Berdin", "Ario", "arju@galaxyracer.com", "arju", "2002-11-04" ),
+( "Bosch", "Marc", "Stake@giantsgaming.com", "Stake", "2000-07-20" ),
+( "Cortés", "Samuel", "Zamué@giantsgaming.com", "Zamué", "2000-10-19" ),
+( "Benayachi", "Amine", "itachi@giantsgaming.com", "itachi", "2003-08-13" ),
+( "Forestier2", "Qunetin2", "quentin.forestier@heig-vd.ch3", "Dudude", "2001-05-16" );
 
 
--- INSERT INTO Equipe_Joueur
--- VALUES 
--- ( "ROC", 2,  "2020-01-01 00-00-00", NULL),
--- ( "ROC", 3,  "2020-01-01 00-00-00", NULL),
--- ( "LSE", 5,  "2020-01-01 00-00-00", NULL),
--- ( "LSE", 6,  "2020-01-01 00-00-00", NULL),
--- ( "SLY", 8,  "2020-01-01 00-00-00", NULL),
--- ( "SLY", 9,  "2020-01-01 00-00-00", NULL),
--- ( "TL", 11,  "2020-01-01 00-00-00", NULL),
--- ( "TL", 12,  "2020-01-01 00-00-00", NULL),
--- ( "EE", 14,  "2020-01-01 00-00-00", NULL),
--- ( "EE", 15,  "2020-01-01 00-00-00", NULL),
--- ( "VIT", 17,  "2020-01-01 00-00-00", NULL),
--- ( "VIT", 18,  "2020-01-01 00-00-00", NULL),
--- ( "DIG", 20,  "2020-01-01 00-00-00", NULL),
--- ( "DIG", 21,  "2020-01-01 00-00-00", NULL),
--- ( "FCB", 23,  "2020-01-01 00-00-00", NULL),
--- ( "FCB", 24,  "2020-01-01 00-00-00", NULL),
--- ( "GAR", 26,  "2020-01-01 00-00-00", NULL),
--- ( "GAR", 27,  "2020-01-01 00-00-00", NULL),
--- ( "GIA", 29,  "2020-01-01 00-00-00", NULL),
--- ( "GIA", 30,  "2020-01-01 00-00-00", NULL);
+INSERT INTO Equipe
+VALUES 
+( "ROC", "Real Original Cracks", 1 ),
+( "LSE", "Lausanne eSports", 4 ),
+( "SLY", "Solary", 7 ),
+( "TL", "Team Liquid", 10 ),
+( "EE", "Eldelweiss ESports", 13 ),
+( "VIT", "Renault Vitality", 16 ),
+( "DIG", "Dignitas", 19 ),
+( "FCB", "FC Barcelona", 22 ),
+( "GAR", "Galaxy Racer", 25 ),
+( "GIA", "Giants Gaming", 28 ),
+( ".", "Giants Gaming", 31 );
 
 
--- INSERT INTO Tournoi (dateHeureDebut, nom, nbEquipesMax)
--- VALUES 
--- ( "2021-02-01 20:00:00", "Le Franco-Suisse", 4);
+INSERT INTO Equipe_Joueur
+VALUES 
+( "ROC", 2,  "2020-01-01 00-00-00", NULL),
+( "ROC", 3,  "2020-01-01 00-00-00", NULL),
+( "LSE", 5,  "2020-01-01 00-00-00", NULL),
+( "LSE", 6,  "2020-01-01 00-00-00", NULL),
+( "SLY", 8,  "2020-01-01 00-00-00", NULL),
+( "SLY", 9,  "2020-01-01 00-00-00", NULL),
+( "TL", 11,  "2020-01-01 00-00-00", NULL),
+( "TL", 12,  "2020-01-01 00-00-00", NULL),
+( "EE", 14,  "2020-01-01 00-00-00", NULL),
+( "EE", 15,  "2020-01-01 00-00-00", NULL),
+( "VIT", 17,  "2020-01-01 00-00-00", NULL),
+( "VIT", 18,  "2020-01-01 00-00-00", NULL),
+( "DIG", 20,  "2020-01-01 00-00-00", NULL),
+( "DIG", 21,  "2020-01-01 00-00-00", NULL),
+( "FCB", 23,  "2020-01-01 00-00-00", NULL),
+( "FCB", 24,  "2020-01-01 00-00-00", NULL),
+( "GAR", 26,  "2020-01-01 00-00-00", NULL),
+( "GAR", 27,  "2020-01-01 00-00-00", NULL),
+( "GIA", 29,  "2020-01-01 00-00-00", NULL),
+( "GIA", 30,  "2020-01-01 00-00-00", NULL);
 
--- INSERT INTO Tournoi_Equipe
--- VALUES 
--- ( 1, "ROC", "2020-01-01 20-00-00" ),
--- ( 1, "SLY", "2020-01-01 20-01-00" ),
--- ( 1, "EE", "2020-01-01 20-02-00" ),
--- ( 1, "VIT", "2020-01-01 20-02-00" );
+
+INSERT INTO Tournoi (dateHeureDebut, nom, nbEquipesMax)
+VALUES 
+( "2021-01-08 22:48:30", "Le Franco-Suisse", 4);
+
+INSERT INTO Tournoi_Equipe
+VALUES 
+( 1, "ROC", NULL ),
+( 1, "SLY", NULL ),
+( 1, "EE", NULL ),
+( 1, "VIT", NULL );
 
 -- UPDATE Serie SET acronymeEquipe1 = "ROC", acronymeEquipe2 = "SLY" WHERE id = 1 AND noTour = 2 AND idTournoi = 1;
 -- INSERT INTO `Match` VALUES ( 1, 1, 2, 1 );
