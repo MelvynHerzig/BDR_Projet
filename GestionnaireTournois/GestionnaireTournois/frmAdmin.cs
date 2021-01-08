@@ -30,14 +30,11 @@ namespace GestionnaireTournois
 
             lbxTournament.SelectedIndex = 0;
 
-        }
-
-
-    
-        private void wbrTreeStruct_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
-        {
             wbrTreeStruct.Document.Click += Document_Click;
+
         }
+
+
 
         private void Document_Click(object sender, HtmlElementEventArgs e)
         {
@@ -45,9 +42,9 @@ namespace GestionnaireTournois
 
             HtmlElement elem = doc.ActiveElement;
 
-            if(elem.Name == "edit")
+            if(elem.InnerHtml == "Editer")
             {
-                // Do something
+                Console.WriteLine(elem.GetAttribute("name"));
             }
         }
 
@@ -74,6 +71,15 @@ namespace GestionnaireTournois
             properties.ShowDialog();
 
             lbxTournament.SelectedIndex = lbxTournament.SelectedIndex;
+        }
+
+        private void tsmiAjoutTournoi_Click(object sender, EventArgs e)
+        {
+            frmAjoutTournoi frm = new frmAjoutTournoi();
+
+            frm.ShowDialog();
+
+
         }
     }
 }

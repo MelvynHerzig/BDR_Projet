@@ -23,7 +23,6 @@ namespace GestionnaireTournois
             int column_stagger_offset;
             int effective_row;
             int col_match_num;
-            int cumulative_matches;
             int effective_serie_id;
             int rounds = t.GetNbTours();
             int teams = t.NbEquipesMax;
@@ -44,9 +43,10 @@ namespace GestionnaireTournois
             HTMLTable.AppendLine("<h1>Tournoi : " + t.Nom + "</h1>");
             HTMLTable.AppendLine("<table border=\"0\" cellspacing=\"0\">");
 
+
+
             for (int row = 0; row <= max_rows; row++)
             {
-                cumulative_matches = 0;
                 HTMLTable.AppendLine("    <tr>");
                 for (int col = 1; col <= rounds + 1; col++)
                 {
@@ -79,31 +79,51 @@ namespace GestionnaireTournois
                             position_in_match_span = effective_row % match_span;
                             position_in_match_span = (position_in_match_span == 0) ? match_span : position_in_match_span;
                             col_match_num = (effective_row / match_span) + ((position_in_match_span < match_span) ? 1 : 0);
-                            effective_serie_id = cumulative_matches + col_match_num;
+
+                            effective_serie_id = col_match_num;
 
 
                             if ((position_in_match_span == 1) && (effective_row % match_span == position_in_match_span))
                             {
                                 HTMLTable.AppendLine("        <td class=\"white_span\" rowspan=\"" + match_white_span + "\">&nbsp;</td>");
                             }
-                            else if ((position_in_match_span == (match_span >> 1)) && (effective_row % match_span == position_in_match_span))
-                            {
-                                HTMLTable.AppendLine("        <td class=\"team\">" + t.GetTourOrderByNoASC()[noTour - 1].GetSerieOrderByIdASC()[effective_serie_id - 1].GetEquipes()[0].Acronyme + "</td>");
-                            }
                             else if ((position_in_match_span == ((match_span >> 1) + 1)) && (effective_row % match_span == position_in_match_span))
                             {
-                                HTMLTable.AppendLine("        <td class=\"vs\" rowspan=\"" + match_white_span + "\">VS <br><button name=\"edit\" id=" + col + ">" + infoMatch + "</button></td>");
+                                HTMLTable.AppendLine("        <td class=\"vs\" rowspan=\"" + match_white_span + "\"> VS <br><button name=\"" + t.Id + ";" + noTour + ";" + effective_serie_id + "\">" + infoMatch + "</button></td>");
                             }
-                            else if ((position_in_match_span == match_span) && (effective_row % match_span == 0))
+                            else
                             {
-                                HTMLTable.AppendLine("        <td class=\"team\">" + t.GetTourOrderByNoASC()[noTour - 1].GetSerieOrderByIdASC()[effective_serie_id - 1].GetEquipes()[1].Acronyme + "</td>");
+                                Tour tour = t.GetTourByNo(noTour);
+
+                                if (effective_serie_id <= (2 << tour.No))
+                                {
+
+                                    Serie serie = tour.GetSerieById(effective_serie_id);
+
+                                    if (serie != null)
+                                    {
+                                        List<Equipe> equipes = serie.GetEquipes();
+
+                                        if ((position_in_match_span == (match_span >> 1)) && (effective_row % match_span == position_in_match_span))
+                                        {
+                                            HTMLTable.AppendLine("        <td class=\"team\">" + (equipes[0] == null ? "N.A" : equipes[0].Acronyme) + "</td>"); 
+                                        }
+                                        else if ((position_in_match_span == match_span) && (effective_row % match_span == 0))
+                                        {
+                                            HTMLTable.AppendLine("        <td class=\"team\">" + (equipes[1] == null ? "N.A" : equipes[1].Acronyme) + "</td>"); 
+                                        }
+                                    }
+                                }
                             }
                         }
                         else
                         {
                             if (row == column_stagger_offset + 2)
                             {
-                                HTMLTable.AppendLine("        <td class=\"winner\">" + t.GetGagnant().Acronyme + "</td>");
+                                Equipe gagnant = t.GetGagnant();
+
+
+                                HTMLTable.AppendLine("        <td class=\"winner\">" + (gagnant == null ? "N.A" : gagnant.Acronyme) + "</td>");
                             }
                             else if (row == column_stagger_offset + 3)
                             {

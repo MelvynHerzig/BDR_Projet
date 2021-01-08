@@ -46,12 +46,17 @@ namespace GestionnaireTournois.Models
 
         public Equipe GetGagnant()
         {
-            return new Equipe("ROC", "Real Original Crack", null);
+            return DataBaseConnector.GetWinnerOfSerie(Id, 1, 1);
         }
 
-        public List<Tour> GetTourOrderByNoASC()
+        public List<Tour> GetTours()
         {
             return DataBaseConnector.GetTours(Id);
+        }
+
+        public Tour GetTourByNo(int noTour)
+        {
+            return DataBaseConnector.GetTourByNo(Id, noTour);
         }
         
         public override string ToString()

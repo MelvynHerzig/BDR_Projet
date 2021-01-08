@@ -33,5 +33,10 @@ namespace GestionnaireTournois.Models
         {
             return DataBaseConnector.GetSeries(Tournoi.Id, No);
         }
+
+        public Serie GetSerieById(int idSerie)
+        {
+            return DataBaseConnector.GetSerieById(Tournoi.Id, No, idSerie);
+        }
     }
 }

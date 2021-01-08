@@ -32,6 +32,7 @@ namespace GestionnaireTournois
             this.mstrpAdmin = new System.Windows.Forms.MenuStrip();
             this.tsmiFile = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmiModeChoice = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmiAjoutTournoi = new System.Windows.Forms.ToolStripMenuItem();
             this.lbxTournament = new System.Windows.Forms.ListBox();
             this.cbxFilter = new System.Windows.Forms.ComboBox();
             this.lblFilter = new System.Windows.Forms.Label();
@@ -43,7 +44,8 @@ namespace GestionnaireTournois
             // mstrpAdmin
             // 
             this.mstrpAdmin.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsmiFile});
+            this.tsmiFile,
+            this.tsmiAjoutTournoi});
             this.mstrpAdmin.Location = new System.Drawing.Point(0, 0);
             this.mstrpAdmin.Name = "mstrpAdmin";
             this.mstrpAdmin.Size = new System.Drawing.Size(818, 24);
@@ -64,6 +66,13 @@ namespace GestionnaireTournois
             this.tsmiModeChoice.Size = new System.Drawing.Size(156, 22);
             this.tsmiModeChoice.Text = "Choix du mode";
             this.tsmiModeChoice.Click += new System.EventHandler(this.tsmiModeChoice_Click);
+            // 
+            // tsmiAjoutTournoi
+            // 
+            this.tsmiAjoutTournoi.Name = "tsmiAjoutTournoi";
+            this.tsmiAjoutTournoi.Size = new System.Drawing.Size(117, 20);
+            this.tsmiAjoutTournoi.Text = "Ajouter un tournoi";
+            this.tsmiAjoutTournoi.Click += new System.EventHandler(this.tsmiAjoutTournoi_Click);
             // 
             // lbxTournament
             // 
@@ -105,7 +114,6 @@ namespace GestionnaireTournois
             this.wbrTreeStruct.Name = "wbrTreeStruct";
             this.wbrTreeStruct.Size = new System.Drawing.Size(487, 498);
             this.wbrTreeStruct.TabIndex = 4;
-            this.wbrTreeStruct.DocumentCompleted += new System.Windows.Forms.WebBrowserDocumentCompletedEventHandler(this.wbrTreeStruct_DocumentCompleted);
             // 
             // btnProperties
             // 
@@ -150,5 +158,6 @@ namespace GestionnaireTournois
         private System.Windows.Forms.Label lblFilter;
         private System.Windows.Forms.WebBrowser wbrTreeStruct;
         private System.Windows.Forms.Button btnProperties;
+        private System.Windows.Forms.ToolStripMenuItem tsmiAjoutTournoi;
     }
 }
