@@ -694,13 +694,16 @@ BEGIN
     THEN
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Impossible de modifier le nombre maximal d\'équipes.';
 	END IF;
-    CALL verifierDatePassee(NEW.dateHeureDebut);
+    IF(NEW.dateHeureDebut <> NEW.dateHeureFin)
+    THEN
+		CALL verifierDatePassee(NEW.dateHeureDebut);
+	END IF;
     CALL verifierDatePlusPetite(NEW.dateHeureDebut, NEW.dateHeureFin);
     
     -- On vérifie si la finale est correcte en essayant de récupérer le vainqueur.
     -- IF (NEW.dateHeureFin IS NOT NULL AND NEW.dateHeureFin <> NEW.dateHeureDebut)
     -- THEN
-	--	SET @try = vainqueurSerie(1, 1, NEW.id);
+	-- SET @try = vainqueurSerie(1, 1, NEW.id);
 	-- END IF;
 END
 $$
