@@ -48,40 +48,46 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataBaseConnector.cs" />
-    <Compile Include="frmAdmin.cs">
+    <Compile Include="Views\Admin\frmAdmin.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmAdmin.Designer.cs">
+    <Compile Include="Views\Admin\frmAdmin.Designer.cs">
       <DependentUpon>frmAdmin.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmAjoutTournoi.cs">
+    <Compile Include="Views\Admin\frmAjoutTournoi.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmAjoutTournoi.Designer.cs">
+    <Compile Include="Views\Admin\frmAjoutTournoi.Designer.cs">
       <DependentUpon>frmAjoutTournoi.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmMain.cs">
+    <Compile Include="Views\Admin\frmEditionSerie.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmMain.Designer.cs">
+    <Compile Include="Views\Admin\frmEditionSerie.Designer.cs">
+      <DependentUpon>frmEditionSerie.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\frmMain.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\frmMain.Designer.cs">
       <DependentUpon>frmMain.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmSignUp.cs">
+    <Compile Include="Views\Users\frmSignUp.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmSignUp.Designer.cs">
+    <Compile Include="Views\Users\frmSignUp.Designer.cs">
       <DependentUpon>frmSignUp.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmTournamentProperties.cs">
+    <Compile Include="Views\Admin\frmTournamentProperties.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmTournamentProperties.Designer.cs">
+    <Compile Include="Views\Admin\frmTournamentProperties.Designer.cs">
       <DependentUpon>frmTournamentProperties.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmUser.cs">
+    <Compile Include="Views\Users\frmUser.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmUser.Designer.cs">
+    <Compile Include="Views\Users\frmUser.Designer.cs">
       <DependentUpon>frmUser.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\Equipe.cs" />
@@ -93,22 +99,25 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TournamentArborescenceGenerator.cs" />
-    <EmbeddedResource Include="frmAdmin.resx">
+    <EmbeddedResource Include="Views\Admin\frmAdmin.resx">
       <DependentUpon>frmAdmin.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmAjoutTournoi.resx">
+    <EmbeddedResource Include="Views\Admin\frmAjoutTournoi.resx">
       <DependentUpon>frmAjoutTournoi.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmMain.resx">
+    <EmbeddedResource Include="Views\Admin\frmEditionSerie.resx">
+      <DependentUpon>frmEditionSerie.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\frmMain.resx">
       <DependentUpon>frmMain.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmSignUp.resx">
+    <EmbeddedResource Include="Views\Users\frmSignUp.resx">
       <DependentUpon>frmSignUp.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmTournamentProperties.resx">
+    <EmbeddedResource Include="Views\Admin\frmTournamentProperties.resx">
       <DependentUpon>frmTournamentProperties.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmUser.resx">
+    <EmbeddedResource Include="Views\Users\frmUser.resx">
       <DependentUpon>frmUser.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">

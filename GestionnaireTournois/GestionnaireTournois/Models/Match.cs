@@ -11,18 +11,26 @@ namespace GestionnaireTournois.Models
         // Champs..
         private int id;
 
-        private Serie serie;
+        private int idSerie;
+
+        private int noTour;
+
+        private int idTournoi;
 
         // Propriétés..
         public int Id { get => id; set => id = value; }
-        internal Serie Serie { get => serie; set => serie = value; }
+        internal int IdSerie { get => idSerie; set => idSerie = value; }
+        public int NoTour { get => noTour; set => noTour = value; }
+        public int IdTournoi { get => idTournoi; set => idTournoi = value; }
 
         // Constructeurs..
 
-        public Match(int id, Serie serie)
+        public Match(int id, int idTournoi, int noTour, int idSerie)
         {
             Id = id;
-            Serie = serie;
+            IdSerie = idSerie;
+            NoTour = noTour;
+            IdTournoi = idTournoi;
         }
     }
 }

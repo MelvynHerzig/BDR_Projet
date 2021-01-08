@@ -64,7 +64,7 @@ namespace GestionnaireTournois
                         }
                         else
                         {
-                            HTMLTable.AppendLine("        <th class=\"thd\">Winner</th>");
+                            HTMLTable.AppendLine("        <th class=\"thd\">Vainqueur</th>");
                         }
                     }
                     else if (row == 1)

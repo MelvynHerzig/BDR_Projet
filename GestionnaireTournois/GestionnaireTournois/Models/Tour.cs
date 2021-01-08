@@ -12,31 +12,31 @@ namespace GestionnaireTournois.Models
 
         private int no;
         private int longueurMaxSerie;
-        private Tournoi tournoi;
+        private int idTournoi;
 
 
         // Propriétés..
         public int No { get => no; set => no = value; }
         public int LongueurMaxSerie { get => longueurMaxSerie; set => longueurMaxSerie = value; }
-        internal Tournoi Tournoi { get => tournoi; set => tournoi = value; }
+        public int IdTournoi { get => idTournoi; set => idTournoi = value; }
 
         // Constructeurs..
-        public Tour(int no, int longueurMaxSerie, Tournoi tournoi)
+        public Tour(int no, int longueurMaxSerie, int idTournoi)
         {
             No = no;
             LongueurMaxSerie = longueurMaxSerie;
-            Tournoi = tournoi;
+            IdTournoi = idTournoi;
 
         }
 
         public List<Serie> GetSerieOrderByIdASC()
         {
-            return DataBaseConnector.GetSeries(Tournoi.Id, No);
+            return DataBaseConnector.GetSeries(IdTournoi, No);
         }
 
         public Serie GetSerieById(int idSerie)
         {
-            return DataBaseConnector.GetSerieById(Tournoi.Id, No, idSerie);
+            return DataBaseConnector.GetSerieById(IdTournoi, No, idSerie);
         }
     }
 }

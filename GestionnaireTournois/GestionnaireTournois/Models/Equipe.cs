@@ -14,19 +14,19 @@ namespace GestionnaireTournois.Models
 
         private string nom;
 
-        private Joueur responsable;
+        private int idResponsable;
 
         // Propriétés..
         public string Acronyme { get => acronyme; set => acronyme = value; }
         public string Nom { get => nom; set => nom = value; }
-        internal Joueur Responsable { get => responsable; set => responsable = value; }
+        public int IdResponsable { get => idResponsable; set => idResponsable = value; }
 
         // Constructeurs..
-        public Equipe(string acronyme, string nom, Joueur responsable)
+        public Equipe(string acronyme, string nom, int idResponsable)
         {
             Acronyme = acronyme;
             Nom = nom;
-            Responsable = responsable;
+            IdResponsable = idResponsable;
         }
     }
 }

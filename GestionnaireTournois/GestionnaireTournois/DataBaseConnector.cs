@@ -17,7 +17,7 @@ namespace GestionnaireTournois
 
         #region Tournois
 
-        public static List<Tournoi> GetTournois()
+        public static List<Tournoi> GetTournois(string condition)
         {
             List<Tournoi> tournois = new List<Tournoi>();
 
@@ -29,8 +29,7 @@ namespace GestionnaireTournois
 
             try
             {
-                cmd.CommandText = "SELECT id, dateHeureDebut, dateHeureFin, nom, nbEquipesMax FROM tournoi;";
-
+                cmd.CommandText = "SELECT id, dateHeureDebut, dateHeureFin, nom, nbEquipesMax FROM tournoi " + condition + ";";
 
                 cmd.Prepare();
 
@@ -257,7 +256,7 @@ namespace GestionnaireTournois
                     int noTour = reader.GetInt32("no");
                     int longueurMax = reader.GetInt32("longueurMaxSerie");
 
-                    tours.Add(new Tour(noTour, longueurMax, t));
+                    tours.Add(new Tour(noTour, longueurMax, t.Id));
 
                 }
 
@@ -302,7 +301,7 @@ namespace GestionnaireTournois
                 {
                     int longueurMax = reader.GetInt32("longueurMaxSerie");
 
-                    tour = new Tour(noTour, longueurMax, t);
+                    tour = new Tour(noTour, longueurMax, t.Id);
 
                 }
 
@@ -338,7 +337,7 @@ namespace GestionnaireTournois
 
             try
             {
-                cmd.CommandText = "SELECT id FROM serie WHERE noTour = @noTour AND idTournoi = @idTournoi ORDER BY id ASC;";
+                cmd.CommandText = "SELECT id, acronymeEquipe1, acronymeEquipe2 FROM serie WHERE noTour = @noTour AND idTournoi = @idTournoi ORDER BY id ASC;";
 
                 cmd.Parameters.AddWithValue("@idTournoi", idTournoi);
                 cmd.Parameters.AddWithValue("@noTour", noTour);
@@ -349,14 +348,7 @@ namespace GestionnaireTournois
 
                 while (reader.Read())
                 {
-                    int idSerie = reader.GetInt32("id");
-
-                    List<Equipe> equipes = GetEquipesFromSerie(idTournoi, noTour, idSerie);
-
-                    if (equipes.Count > 0)
-                        series.Add(new Serie(idSerie, tour, equipes[0], equipes[1]));
-                    else
-                        series.Add(new Serie(idSerie, tour, null, null));
+                    series.Add(new Serie(reader.GetInt32("id"), idTournoi, noTour, reader.GetString("acronymeEquipe1"), reader.GetString("acronymeEquipe2")));
                 }
 
             }
@@ -387,7 +379,7 @@ namespace GestionnaireTournois
             try
             {
 
-                cmd.CommandText = "SELECT id, noTour, idTournoi, acronymeEquipe1, acronymeEquipe2 FROM serie WHERE idTournoi = @idTournoi AND noTour = @noTour and id = @idSerie ORDER BY id ASC; ";
+                cmd.CommandText = "SELECT id, acronymeEquipe1, acronymeEquipe2 FROM serie WHERE idTournoi = @idTournoi AND noTour = @noTour and id = @idSerie ORDER BY id ASC; ";
 
                 cmd.Parameters.AddWithValue("@idTournoi", idTournoi);
                 cmd.Parameters.AddWithValue("@noTour", noTour);
@@ -399,13 +391,10 @@ namespace GestionnaireTournois
 
                 while (reader.Read())
                 {
-                    List<Equipe> equipes = GetEquipesFromSerie(idTournoi, noTour, idSerie);
-
-                    if (equipes.Count > 0)
-                        s = new Serie(idSerie, t, equipes[0], equipes[1]);
+                    if (!reader.IsDBNull(1) || !reader.IsDBNull(2))
+                        s = new Serie(idSerie, idTournoi, noTour, reader.GetString("acronymeEquipe1"), reader.GetString("acronymeEquipe2"));
                     else
-                        s = new Serie(idSerie, t, null, null);
-
+                        s = new Serie(idSerie, idTournoi, noTour, null, null);
                 }
 
             }
@@ -546,7 +535,7 @@ namespace GestionnaireTournois
 
                 while (rdr.Read())
                 {
-                    result = new Equipe(rdr.GetString("acronyme"), rdr.GetString("nom"), null);
+                    result = new Equipe(rdr.GetString("acronyme"), rdr.GetString("nom"), rdr.GetInt32("idResponsable"));
                 }
             }
             catch (Exception e)
