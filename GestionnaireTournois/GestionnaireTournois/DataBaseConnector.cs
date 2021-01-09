@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using GestionnaireTournois.Models;
 using System.Data.SqlClient;
 using System.Data;
+using static GestionnaireTournois.Models.Tournoi;
 
 namespace GestionnaireTournois
 {
@@ -17,11 +18,31 @@ namespace GestionnaireTournois
 
         #region Tournois
 
-        public static List<Tournoi> GetTournois(string condition)
+        public static List<Tournoi> GetTournoisFiltres(EtatTournoi etat)
         {
             List<Tournoi> tournois = new List<Tournoi>();
 
             MySqlConnection myConnection = new MySqlConnection(connection);
+
+            string condition = "";
+
+            switch (etat)
+            {
+
+                case EtatTournoi.EN_ATTENTE:
+                    condition = "WHERE Tournoi.dateHeureDebut > NOW() AND Tournoi.dateHeureFin IS NULL";
+                    break;
+                case EtatTournoi.EN_COURS:
+                    condition = "WHERE Tournoi.dateHeureDebut <= NOW() AND Tournoi.dateHeureFin IS NULL";
+                    break;
+                case EtatTournoi.TERMINES:
+                    condition = "WHERE Tournoi.dateHeureDebut <= NOW() AND Tournoi.dateHeureFin IS NOT NULL AND Tournoi.dateHeureFin <> Tournoi.dateHeureDebut";
+                    break;
+                case EtatTournoi.ANNULES:
+                    condition = "WHERE Tournoi.dateHeureDebut = Tournoi.dateHeureFin";
+                    break;
+            }
+
 
             myConnection.Open();
 
@@ -174,6 +195,7 @@ namespace GestionnaireTournois
 
 
         #endregion
+
         private void templateTransaction()
         {
             MySqlConnection myConnection = new MySqlConnection(connection);
@@ -228,9 +250,8 @@ namespace GestionnaireTournois
 
         #region Tours
 
-        public static List<Tour> GetTours(int idTournoi)
+        public static List<Tour> GetTours(Tournoi t)
         {
-            Tournoi t = GetTournoiById(idTournoi);
             List<Tour> tours = new List<Tour>();
 
 
@@ -245,7 +266,7 @@ namespace GestionnaireTournois
 
                 cmd.CommandText = "SELECT no, longueurMaxSerie FROM tour WHERE idTournoi = @idTournoi ORDER BY no ASC; ";
 
-                cmd.Parameters.AddWithValue("@idTournoi", idTournoi);
+                cmd.Parameters.AddWithValue("@idTournoi", t.Id);
 
                 cmd.Prepare();
 
@@ -273,9 +294,8 @@ namespace GestionnaireTournois
             return tours;
         }
 
-        public static Tour GetTourByNo(int idTournoi, int noTour)
+        public static Tour GetTourByNo(Tournoi t, int noTour)
         {
-            Tournoi t = GetTournoiById(idTournoi);
             Tour tour = null;
 
 
@@ -290,7 +310,7 @@ namespace GestionnaireTournois
 
                 cmd.CommandText = "SELECT no, longueurMaxSerie FROM tour WHERE idTournoi = @idTournoi AND no = @noTour ORDER BY no ASC; ";
 
-                cmd.Parameters.AddWithValue("@idTournoi", idTournoi);
+                cmd.Parameters.AddWithValue("@idTournoi", t.Id);
                 cmd.Parameters.AddWithValue("@noTour", noTour);
 
                 cmd.Prepare();
@@ -322,11 +342,8 @@ namespace GestionnaireTournois
 
         #region Series
 
-        public static List<Serie> GetSeries(int idTournoi, int noTour)
+        public static List<Serie> GetSeries(Tour tour)
         {
-            Tournoi tournoi = GetTournoiById(idTournoi);
-            Tour tour = GetTours(idTournoi)[noTour - 1];
-
             List<Serie> series = new List<Serie>();
 
             MySqlConnection myConnection = new MySqlConnection(connection);
@@ -339,8 +356,8 @@ namespace GestionnaireTournois
             {
                 cmd.CommandText = "SELECT id, acronymeEquipe1, acronymeEquipe2 FROM serie WHERE noTour = @noTour AND idTournoi = @idTournoi ORDER BY id ASC;";
 
-                cmd.Parameters.AddWithValue("@idTournoi", idTournoi);
-                cmd.Parameters.AddWithValue("@noTour", noTour);
+                cmd.Parameters.AddWithValue("@idTournoi", tour.IdTournoi);
+                cmd.Parameters.AddWithValue("@noTour", tour.No);
 
                 cmd.Prepare();
 
@@ -348,7 +365,7 @@ namespace GestionnaireTournois
 
                 while (reader.Read())
                 {
-                    series.Add(new Serie(reader.GetInt32("id"), idTournoi, noTour, reader.GetString("acronymeEquipe1"), reader.GetString("acronymeEquipe2")));
+                    series.Add(new Serie(reader.GetInt32("id"), tour.IdTournoi, tour.No, reader.GetString("acronymeEquipe1"), reader.GetString("acronymeEquipe2")));
                 }
 
             }
@@ -364,9 +381,8 @@ namespace GestionnaireTournois
             return series;
         }
 
-        public static Serie GetSerieById(int idTournoi, int noTour, int idSerie)
+        public static Serie GetSerieById(Tour t, int idSerie)
         {
-            Tour t = GetTourByNo(idTournoi, noTour);
             Serie s = null;
 
 
@@ -381,8 +397,8 @@ namespace GestionnaireTournois
 
                 cmd.CommandText = "SELECT id, acronymeEquipe1, acronymeEquipe2 FROM serie WHERE idTournoi = @idTournoi AND noTour = @noTour and id = @idSerie ORDER BY id ASC; ";
 
-                cmd.Parameters.AddWithValue("@idTournoi", idTournoi);
-                cmd.Parameters.AddWithValue("@noTour", noTour);
+                cmd.Parameters.AddWithValue("@idTournoi", t.IdTournoi);
+                cmd.Parameters.AddWithValue("@noTour", t.No);
                 cmd.Parameters.AddWithValue("@idSerie", idSerie);
 
                 cmd.Prepare();
@@ -392,9 +408,9 @@ namespace GestionnaireTournois
                 while (reader.Read())
                 {
                     if (!reader.IsDBNull(1) || !reader.IsDBNull(2))
-                        s = new Serie(idSerie, idTournoi, noTour, reader.GetString("acronymeEquipe1"), reader.GetString("acronymeEquipe2"));
+                        s = new Serie(idSerie, t.IdTournoi, t.No, reader.GetString("acronymeEquipe1"), reader.GetString("acronymeEquipe2"));
                     else
-                        s = new Serie(idSerie, idTournoi, noTour, null, null);
+                        s = new Serie(idSerie, t.IdTournoi, t.No, null, null);
                 }
 
             }
@@ -411,7 +427,7 @@ namespace GestionnaireTournois
             return s;
         }
 
-        public static Equipe GetWinnerOfSerie(int idTournoi, int noTour, int idSerie)
+        public static Equipe GetWinnerOfSerie(Serie s)
         {
             string winner = "";
 
@@ -430,9 +446,9 @@ namespace GestionnaireTournois
                 cmd.Parameters.Add("@ireturnvalue", MySqlDbType.VarChar);
                 cmd.Parameters["@ireturnvalue"].Direction = ParameterDirection.ReturnValue;
 
-                cmd.Parameters.AddWithValue("pIdSerie", idSerie);
-                cmd.Parameters.AddWithValue("pNoTour", noTour);
-                cmd.Parameters.AddWithValue("pIdTournoi", idTournoi);
+                cmd.Parameters.AddWithValue("pIdSerie", s.Id);
+                cmd.Parameters.AddWithValue("pNoTour", s.NoTour);
+                cmd.Parameters.AddWithValue("pIdTournoi", s.IdTournoi);
 
                 cmd.Prepare();
 
@@ -456,9 +472,58 @@ namespace GestionnaireTournois
 
         #endregion
 
+        #region Matchs
+
+        public static List<Match> GetMatchsFromSerie(Serie serie)
+        {
+            List<Match> matchs = new List<Match>();
+
+            MySqlConnection myConnection = new MySqlConnection(connection);
+
+            myConnection.Open();
+
+            MySqlCommand cmd = myConnection.CreateCommand();
+
+            try
+            {
+                cmd.CommandText = "SELECT id FROM `match` WHERE idSerie = @idSerie AND noTour = @noTour AND idTournoi = @idTournoi ORDER BY id ASC;";
+
+                cmd.Parameters.AddWithValue("@idTournoi", serie.IdTournoi);
+                cmd.Parameters.AddWithValue("@noTour", serie.NoTour);
+                cmd.Parameters.AddWithValue("@idSerie", serie.Id);
+
+                cmd.Prepare();
+
+                MySqlDataReader reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    matchs.Add(new Match(reader.GetInt32("id"), serie.IdTournoi, serie.NoTour, serie.Id));
+                }
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("An exception of type " + e.GetType() + " was encountered.");
+            }
+            finally
+            {
+                myConnection.Close();
+            }
+
+            return matchs;
+        }
+
+        public static int AjouterMatch(Serie serie)
+        {
+            return 0;
+        }
+
+        #endregion
+
         #region Equipes
 
-        public static List<Equipe> GetEquipesFromSerie(int idTournoi, int noTour, int idSerie)
+        public static List<Equipe> GetEquipesFromSerie(Serie s)
         {
 
             List<Equipe> equipes = new List<Equipe>();
@@ -475,9 +540,9 @@ namespace GestionnaireTournois
             {
                 cmd.CommandText = "SELECT acronymeEquipe1, acronymeEquipe2 FROM serie WHERE idTournoi = @idTournoi AND noTour = @noTour AND id = @idSerie;";
 
-                cmd.Parameters.AddWithValue("@idSerie", idSerie);
-                cmd.Parameters.AddWithValue("@noTour", noTour);
-                cmd.Parameters.AddWithValue("@idTournoi", idTournoi);
+                cmd.Parameters.AddWithValue("@idSerie", s.Id);
+                cmd.Parameters.AddWithValue("@noTour", s.NoTour);
+                cmd.Parameters.AddWithValue("@idTournoi", s.IdTournoi);
 
                 cmd.Prepare();
 
@@ -553,6 +618,61 @@ namespace GestionnaireTournois
 
         #endregion
 
+        #region Joueurs
+        /*
+        public static List<Joueur> GetJoueursDeEquipe(Equipe equipe)
+        {
+            List<Joueur> joueurs = new List<Joueur>();
 
+
+            MySqlConnection myConnection = new MySqlConnection(connection);
+
+            myConnection.Open();
+
+            MySqlCommand cmd = myConnection.CreateCommand();
+
+            try
+            {
+                cmd.CommandText = "SELECT acronymeEquipe1, acronymeEquipe2 FROM serie WHERE idTournoi = @idTournoi AND noTour = @noTour AND id = @idSerie;";
+
+                cmd.Parameters.AddWithValue("@idSerie", s.Id);
+                cmd.Parameters.AddWithValue("@noTour", s.NoTour);
+                cmd.Parameters.AddWithValue("@idTournoi", s.IdTournoi);
+
+                cmd.Prepare();
+
+                MySqlDataReader reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+
+                    string acronyme1 = reader.GetString("acronymeEquipe1");
+                    string acronyme2 = reader.GetString("acronymeEquipe2");
+
+
+                    acronymes.Add(acronyme1);
+                    acronymes.Add(acronyme2);
+                }
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("An exception of type " + e.GetType() +
+               " was encountered.");
+            }
+            finally
+            {
+                myConnection.Close();
+            }
+
+            if (acronymes.Count > 0)
+            {
+                equipes.Add(GetEquipeByAcronyme(acronymes[0]));
+                equipes.Add(GetEquipeByAcronyme(acronymes[1]));
+            }
+            return equipes;
+        }
+        */
+        #endregion
     }
 }

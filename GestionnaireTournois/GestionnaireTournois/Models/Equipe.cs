@@ -28,5 +28,15 @@ namespace GestionnaireTournois.Models
             Nom = nom;
             IdResponsable = idResponsable;
         }
+
+        public List<Joueur> GetJoueurs()
+        {
+            return null; // DataBaseConnector.
+        }
+
+        public override string ToString()
+        {
+            return Nom;
+        }
     }
 }

@@ -27,6 +27,7 @@ namespace GestionnaireTournois
 
         private void frmAdmin_Load(object sender, EventArgs e)
         {
+            cbxFilter.Items.AddRange(Tournoi.EtatTournoiNom);
             cbxFilter.SelectedIndex = 0;
 
             wbrTreeStruct.DocumentText = "";
@@ -46,7 +47,11 @@ namespace GestionnaireTournois
             {
                 Console.WriteLine(elem.GetAttribute("name"));
                 string[] split = elem.GetAttribute("name").ToString().Split(';');
-                Serie s = DataBaseConnector.GetSerieById(Convert.ToInt32(split[0]), Convert.ToInt32(split[1]), Convert.ToInt32(split[2]));
+
+                Tournoi tournoi = DataBaseConnector.GetTournoiById(Convert.ToInt32(split[0]));
+                Tour tour = DataBaseConnector.GetTourByNo(tournoi, Convert.ToInt32(split[1]));
+
+                Serie s = DataBaseConnector.GetSerieById(tour, Convert.ToInt32(split[2]));
 
                 frmEditionSerie frm = new frmEditionSerie(s);
                 frm.ShowDialog();
@@ -57,27 +62,7 @@ namespace GestionnaireTournois
         {
             lbxTournament.Items.Clear();
 
-            string condition = "";
-
-            switch(cbxFilter.SelectedItem.ToString())
-            {
-
-                case "En attente":
-                    condition = "WHERE Tournoi.dateHeureDebut > NOW() AND Tournoi.dateHeureFin IS NULL";
-                    break;
-                case "En cours":
-                    condition = "WHERE Tournoi.dateHeureDebut <= NOW() AND Tournoi.dateHeureFin IS NULL";
-                    break;
-                case "Terminé":
-                    condition = "WHERE Tournoi.dateHeureDebut <= NOW() AND Tournoi.dateHeureFin IS NOT NULL AND Tournoi.dateHeureFin <> Tournoi.dateHeureDebut";
-                    break;
-                case "Annulé":
-                    condition = "WHERE Tournoi.dateHeureDebut = Tournoi.dateHeureFin";
-                    break;
-            }
-
-
-            foreach (Tournoi t in DataBaseConnector.GetTournois(condition))
+            foreach (Tournoi t in DataBaseConnector.GetTournoisFiltres((Tournoi.EtatTournoi)cbxFilter.SelectedIndex))
             {
                 lbxTournament.Items.Add(t);
             }

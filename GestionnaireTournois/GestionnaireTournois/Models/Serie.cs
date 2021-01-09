@@ -45,5 +45,15 @@ namespace GestionnaireTournois.Models
         {
             return new Match(id, IdTournoi, NoTour, Id);
         }
+
+        public List<Match> GetMatches()
+        {
+            return DataBaseConnector.GetMatchsFromSerie(this);
+        }
+
+        public void AjouterMatch()
+        {
+            DataBaseConnector.AjouterMatch(this);
+        }
     }
 }

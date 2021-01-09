@@ -86,12 +86,6 @@ namespace GestionnaireTournois
             // cbxFilter
             // 
             this.cbxFilter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbxFilter.Items.AddRange(new object[] {
-            "Tous",
-            "En attente",
-            "En cours",
-            "Terminé",
-            "Annulé"});
             this.cbxFilter.Location = new System.Drawing.Point(12, 40);
             this.cbxFilter.Name = "cbxFilter";
             this.cbxFilter.Size = new System.Drawing.Size(239, 21);

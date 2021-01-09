@@ -8,6 +8,11 @@ namespace GestionnaireTournois.Models
 {
     public class Tournoi
     {
+        
+        public enum EtatTournoi { TOUS, EN_ATTENTE, EN_COURS, TERMINES, ANNULES };
+
+        public static string[] EtatTournoiNom = { "Tous", "En attente", "En cours", "Terminés", "Annulés" };
+
         // Champs..
         private int id;
         
@@ -46,17 +51,18 @@ namespace GestionnaireTournois.Models
 
         public Equipe GetGagnant()
         {
-            return DataBaseConnector.GetWinnerOfSerie(Id, 1, 1);
+
+            return DataBaseConnector.GetWinnerOfSerie(new Serie(Id, 1,1, null, null));
         }
 
         public List<Tour> GetTours()
         {
-            return DataBaseConnector.GetTours(Id);
+            return DataBaseConnector.GetTours(this);
         }
 
         public Tour GetTourByNo(int noTour)
         {
-            return DataBaseConnector.GetTourByNo(Id, noTour);
+            return DataBaseConnector.GetTourByNo(this, noTour);
         }
         
         public override string ToString()
