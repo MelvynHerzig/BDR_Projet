@@ -31,12 +31,12 @@ namespace GestionnaireTournois.Models
 
         public List<Serie> GetSerieOrderByIdASC()
         {
-            return DataBaseConnector.GetSeries(IdTournoi, No);
+            return DataBaseConnector.GetSeries(this);
         }
 
         public Serie GetSerieById(int idSerie)
         {
-            return DataBaseConnector.GetSerieById(IdTournoi, No, idSerie);
+            return DataBaseConnector.GetSerieById(this, idSerie);
         }
     }
 }

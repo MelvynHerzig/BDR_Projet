@@ -30,18 +30,18 @@ namespace GestionnaireTournois.Views.Admin
         private void InitializeComponent()
         {
             this.gbxEquipe1 = new System.Windows.Forms.GroupBox();
-            this.tbxE1J1 = new System.Windows.Forms.TextBox();
-            this.tbxE1J1Buts = new System.Windows.Forms.TextBox();
-            this.tbxE1J1Arrets = new System.Windows.Forms.TextBox();
-            this.lblButs = new System.Windows.Forms.Label();
-            this.lblJoueurs = new System.Windows.Forms.Label();
-            this.lblArrets = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.tbxE1J2Buts = new System.Windows.Forms.TextBox();
-            this.tbxE1J2Arrets = new System.Windows.Forms.TextBox();
-            this.textBox4 = new System.Windows.Forms.TextBox();
-            this.tbxE1J3Buts = new System.Windows.Forms.TextBox();
             this.tbxE1J3Arrets = new System.Windows.Forms.TextBox();
+            this.tbxE1J3Buts = new System.Windows.Forms.TextBox();
+            this.textBox4 = new System.Windows.Forms.TextBox();
+            this.tbxE1J2Arrets = new System.Windows.Forms.TextBox();
+            this.tbxE1J2Buts = new System.Windows.Forms.TextBox();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.lblArrets = new System.Windows.Forms.Label();
+            this.lblJoueurs = new System.Windows.Forms.Label();
+            this.lblButs = new System.Windows.Forms.Label();
+            this.tbxE1J1Arrets = new System.Windows.Forms.TextBox();
+            this.tbxE1J1Buts = new System.Windows.Forms.TextBox();
+            this.tbxE1J1 = new System.Windows.Forms.TextBox();
             this.gbxEquipe2 = new System.Windows.Forms.GroupBox();
             this.tbxE2J3Arrets = new System.Windows.Forms.TextBox();
             this.tbxE2J3Buts = new System.Windows.Forms.TextBox();
@@ -84,78 +84,19 @@ namespace GestionnaireTournois.Views.Admin
             this.gbxEquipe1.TabStop = false;
             this.gbxEquipe1.Text = "Equipe 1";
             // 
-            // tbxE1J1
+            // tbxE1J3Arrets
             // 
-            this.tbxE1J1.Enabled = false;
-            this.tbxE1J1.Location = new System.Drawing.Point(80, 28);
-            this.tbxE1J1.Name = "tbxE1J1";
-            this.tbxE1J1.ReadOnly = true;
-            this.tbxE1J1.Size = new System.Drawing.Size(118, 20);
-            this.tbxE1J1.TabIndex = 0;
+            this.tbxE1J3Arrets.Location = new System.Drawing.Point(385, 100);
+            this.tbxE1J3Arrets.Name = "tbxE1J3Arrets";
+            this.tbxE1J3Arrets.Size = new System.Drawing.Size(118, 20);
+            this.tbxE1J3Arrets.TabIndex = 11;
             // 
-            // tbxE1J1Buts
+            // tbxE1J3Buts
             // 
-            this.tbxE1J1Buts.Location = new System.Drawing.Point(80, 74);
-            this.tbxE1J1Buts.Name = "tbxE1J1Buts";
-            this.tbxE1J1Buts.Size = new System.Drawing.Size(118, 20);
-            this.tbxE1J1Buts.TabIndex = 1;
-            // 
-            // tbxE1J1Arrets
-            // 
-            this.tbxE1J1Arrets.Location = new System.Drawing.Point(80, 100);
-            this.tbxE1J1Arrets.Name = "tbxE1J1Arrets";
-            this.tbxE1J1Arrets.Size = new System.Drawing.Size(118, 20);
-            this.tbxE1J1Arrets.TabIndex = 2;
-            // 
-            // lblButs
-            // 
-            this.lblButs.AutoSize = true;
-            this.lblButs.Location = new System.Drawing.Point(23, 77);
-            this.lblButs.Name = "lblButs";
-            this.lblButs.Size = new System.Drawing.Size(34, 13);
-            this.lblButs.TabIndex = 3;
-            this.lblButs.Text = "Buts :";
-            // 
-            // lblJoueurs
-            // 
-            this.lblJoueurs.AutoSize = true;
-            this.lblJoueurs.Location = new System.Drawing.Point(7, 31);
-            this.lblJoueurs.Name = "lblJoueurs";
-            this.lblJoueurs.Size = new System.Drawing.Size(50, 13);
-            this.lblJoueurs.TabIndex = 4;
-            this.lblJoueurs.Text = "Joueurs :";
-            // 
-            // lblArrets
-            // 
-            this.lblArrets.AutoSize = true;
-            this.lblArrets.Location = new System.Drawing.Point(23, 103);
-            this.lblArrets.Name = "lblArrets";
-            this.lblArrets.Size = new System.Drawing.Size(40, 13);
-            this.lblArrets.TabIndex = 5;
-            this.lblArrets.Text = "Arrêts :";
-            // 
-            // textBox1
-            // 
-            this.textBox1.Enabled = false;
-            this.textBox1.Location = new System.Drawing.Point(234, 28);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.ReadOnly = true;
-            this.textBox1.Size = new System.Drawing.Size(118, 20);
-            this.textBox1.TabIndex = 6;
-            // 
-            // tbxE1J2Buts
-            // 
-            this.tbxE1J2Buts.Location = new System.Drawing.Point(234, 74);
-            this.tbxE1J2Buts.Name = "tbxE1J2Buts";
-            this.tbxE1J2Buts.Size = new System.Drawing.Size(118, 20);
-            this.tbxE1J2Buts.TabIndex = 7;
-            // 
-            // tbxE1J2Arrets
-            // 
-            this.tbxE1J2Arrets.Location = new System.Drawing.Point(234, 100);
-            this.tbxE1J2Arrets.Name = "tbxE1J2Arrets";
-            this.tbxE1J2Arrets.Size = new System.Drawing.Size(118, 20);
-            this.tbxE1J2Arrets.TabIndex = 8;
+            this.tbxE1J3Buts.Location = new System.Drawing.Point(385, 74);
+            this.tbxE1J3Buts.Name = "tbxE1J3Buts";
+            this.tbxE1J3Buts.Size = new System.Drawing.Size(118, 20);
+            this.tbxE1J3Buts.TabIndex = 10;
             // 
             // textBox4
             // 
@@ -166,19 +107,78 @@ namespace GestionnaireTournois.Views.Admin
             this.textBox4.Size = new System.Drawing.Size(118, 20);
             this.textBox4.TabIndex = 9;
             // 
-            // tbxE1J3Buts
+            // tbxE1J2Arrets
             // 
-            this.tbxE1J3Buts.Location = new System.Drawing.Point(385, 74);
-            this.tbxE1J3Buts.Name = "tbxE1J3Buts";
-            this.tbxE1J3Buts.Size = new System.Drawing.Size(118, 20);
-            this.tbxE1J3Buts.TabIndex = 10;
+            this.tbxE1J2Arrets.Location = new System.Drawing.Point(234, 100);
+            this.tbxE1J2Arrets.Name = "tbxE1J2Arrets";
+            this.tbxE1J2Arrets.Size = new System.Drawing.Size(118, 20);
+            this.tbxE1J2Arrets.TabIndex = 8;
             // 
-            // tbxE1J3Arrets
+            // tbxE1J2Buts
             // 
-            this.tbxE1J3Arrets.Location = new System.Drawing.Point(385, 100);
-            this.tbxE1J3Arrets.Name = "tbxE1J3Arrets";
-            this.tbxE1J3Arrets.Size = new System.Drawing.Size(118, 20);
-            this.tbxE1J3Arrets.TabIndex = 11;
+            this.tbxE1J2Buts.Location = new System.Drawing.Point(234, 74);
+            this.tbxE1J2Buts.Name = "tbxE1J2Buts";
+            this.tbxE1J2Buts.Size = new System.Drawing.Size(118, 20);
+            this.tbxE1J2Buts.TabIndex = 7;
+            // 
+            // textBox1
+            // 
+            this.textBox1.Enabled = false;
+            this.textBox1.Location = new System.Drawing.Point(234, 28);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.ReadOnly = true;
+            this.textBox1.Size = new System.Drawing.Size(118, 20);
+            this.textBox1.TabIndex = 6;
+            // 
+            // lblArrets
+            // 
+            this.lblArrets.AutoSize = true;
+            this.lblArrets.Location = new System.Drawing.Point(23, 103);
+            this.lblArrets.Name = "lblArrets";
+            this.lblArrets.Size = new System.Drawing.Size(40, 13);
+            this.lblArrets.TabIndex = 5;
+            this.lblArrets.Text = "Arrêts :";
+            // 
+            // lblJoueurs
+            // 
+            this.lblJoueurs.AutoSize = true;
+            this.lblJoueurs.Location = new System.Drawing.Point(7, 31);
+            this.lblJoueurs.Name = "lblJoueurs";
+            this.lblJoueurs.Size = new System.Drawing.Size(50, 13);
+            this.lblJoueurs.TabIndex = 4;
+            this.lblJoueurs.Text = "Joueurs :";
+            // 
+            // lblButs
+            // 
+            this.lblButs.AutoSize = true;
+            this.lblButs.Location = new System.Drawing.Point(23, 77);
+            this.lblButs.Name = "lblButs";
+            this.lblButs.Size = new System.Drawing.Size(34, 13);
+            this.lblButs.TabIndex = 3;
+            this.lblButs.Text = "Buts :";
+            // 
+            // tbxE1J1Arrets
+            // 
+            this.tbxE1J1Arrets.Location = new System.Drawing.Point(80, 100);
+            this.tbxE1J1Arrets.Name = "tbxE1J1Arrets";
+            this.tbxE1J1Arrets.Size = new System.Drawing.Size(118, 20);
+            this.tbxE1J1Arrets.TabIndex = 2;
+            // 
+            // tbxE1J1Buts
+            // 
+            this.tbxE1J1Buts.Location = new System.Drawing.Point(80, 74);
+            this.tbxE1J1Buts.Name = "tbxE1J1Buts";
+            this.tbxE1J1Buts.Size = new System.Drawing.Size(118, 20);
+            this.tbxE1J1Buts.TabIndex = 1;
+            // 
+            // tbxE1J1
+            // 
+            this.tbxE1J1.Enabled = false;
+            this.tbxE1J1.Location = new System.Drawing.Point(80, 28);
+            this.tbxE1J1.Name = "tbxE1J1";
+            this.tbxE1J1.ReadOnly = true;
+            this.tbxE1J1.Size = new System.Drawing.Size(118, 20);
+            this.tbxE1J1.TabIndex = 0;
             // 
             // gbxEquipe2
             // 
@@ -299,7 +299,7 @@ namespace GestionnaireTournois.Views.Admin
             // 
             // btnModifier
             // 
-            this.btnModifier.Location = new System.Drawing.Point(492, 368);
+            this.btnModifier.Location = new System.Drawing.Point(258, 361);
             this.btnModifier.Name = "btnModifier";
             this.btnModifier.Size = new System.Drawing.Size(118, 29);
             this.btnModifier.TabIndex = 13;
@@ -311,8 +311,9 @@ namespace GestionnaireTournois.Views.Admin
             this.lbxMatchs.FormattingEnabled = true;
             this.lbxMatchs.Location = new System.Drawing.Point(12, 35);
             this.lbxMatchs.Name = "lbxMatchs";
-            this.lbxMatchs.Size = new System.Drawing.Size(224, 316);
+            this.lbxMatchs.Size = new System.Drawing.Size(224, 355);
             this.lbxMatchs.TabIndex = 14;
+            this.lbxMatchs.SelectedIndexChanged += new System.EventHandler(this.lbxMatchs_SelectedIndexChanged);
             // 
             // lblMatchs
             // 
@@ -325,12 +326,13 @@ namespace GestionnaireTournois.Views.Admin
             // 
             // btnAjoutMatch
             // 
-            this.btnAjoutMatch.Location = new System.Drawing.Point(12, 368);
+            this.btnAjoutMatch.Location = new System.Drawing.Point(670, 361);
             this.btnAjoutMatch.Name = "btnAjoutMatch";
-            this.btnAjoutMatch.Size = new System.Drawing.Size(224, 29);
+            this.btnAjoutMatch.Size = new System.Drawing.Size(118, 29);
             this.btnAjoutMatch.TabIndex = 17;
             this.btnAjoutMatch.Text = "Ajouter un match";
             this.btnAjoutMatch.UseVisualStyleBackColor = true;
+            this.btnAjoutMatch.Click += new System.EventHandler(this.btnAjoutMatch_Click);
             // 
             // frmEditionSerie
             // 
@@ -345,6 +347,7 @@ namespace GestionnaireTournois.Views.Admin
             this.Controls.Add(this.gbxEquipe1);
             this.Name = "frmEditionSerie";
             this.Text = "frmEditionSerie";
+            this.Load += new System.EventHandler(this.frmEditionSerie_Load);
             this.gbxEquipe1.ResumeLayout(false);
             this.gbxEquipe1.PerformLayout();
             this.gbxEquipe2.ResumeLayout(false);

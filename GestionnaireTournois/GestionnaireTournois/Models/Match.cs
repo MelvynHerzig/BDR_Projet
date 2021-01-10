@@ -32,5 +32,10 @@ namespace GestionnaireTournois.Models
             NoTour = noTour;
             IdTournoi = idTournoi;
         }
+
+        public override string ToString()
+        {
+            return "Match " + Id;
+        }
     }
 }
