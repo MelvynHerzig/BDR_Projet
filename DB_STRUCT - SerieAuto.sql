@@ -5,8 +5,8 @@
 
 DROP SCHEMA IF EXISTS GestionnaireDeTournoisRocketLeague ;
 
-CREATE SCHEMA IF NOT EXISTS GestionnaireDeTournoisRocketLeague DEFAULT CHARACTER SET utf8mb4 ;
-USE GestionnaireDeTournoisRocketLeague ;
+CREATE SCHEMA IF NOT EXISTS GestionnaireDeTournoisRocketLeague DEFAULT CHARACTER SET utf8mb4;
+USE GestionnaireDeTournoisRocketLeague;
 
 
 CREATE TABLE Prix 
@@ -735,7 +735,7 @@ DELIMITER $$
 CREATE PROCEDURE verifierSerieSuivanteCommencee(pIdSerie INT, pNoTour INT, pIdTournoi INT)
 BEGIN
 	SET @serieSuivante = CEIL(pIdSerie / 2);
-	IF 0 <> (SELECT COUNT(1) FROM Match_Joueur WHERE Match_Joueur.idSerie = @serieSuivante AND Match_Joueur.noTour = pNoTour AND Match_Joueur.idTournoi = pIdTournoi)
+	IF pNoTour <> 1 AND 0 <> (SELECT COUNT(1) FROM Match_Joueur WHERE Match_Joueur.idSerie = @serieSuivante AND Match_Joueur.noTour = pNoTour - 1 AND Match_Joueur.idTournoi = pIdTournoi)
     THEN
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = " Modification/insertion du score du joueur impossible, la serie suivante a déjà commencée.";
 	END IF;
@@ -931,6 +931,8 @@ BEFORE UPDATE
 ON serie
 FOR EACH ROW
 BEGIN
+
+	CALL verifierSerieSuivanteCommencee(NEW.idSerie, NEW.noTour, NEW.idTournoi);
 	CALL verifierIdSerie(NEW.id, NEW.noTour, NEW.idTournoi);
 	CALL verifierInscription(NEW.acronymeEquipe1, new.idTournoi);
     CALL verifierInscription(NEW.acronymeEquipe2, new.idTournoi);
@@ -1106,9 +1108,9 @@ ON Match_Joueur
 FOR EACH ROW
 BEGIN
 	-- Est ce que la finale est terminée
-	IF NEW.noTour = 1 AND NEW.idSerie = 1 
+	IF NEW.noTour = 1
  	THEN 
-		IF 6 = (SELECT COUNT(1) FROM Match_Joueur WHERE Match_Joueur.idSerie = NEW.idSerie AND Match_Joueur.noTour = NEW.noTour AND Match_Joueur.idTournoi = NEW.idTournoi)
+		IF 6 = (SELECT COUNT(1) FROM Match_Joueur WHERE Match_Joueur.idMatch = NEW.idMatch AND Match_Joueur.idSerie = NEW.idSerie AND Match_Joueur.noTour = NEW.noTour AND Match_Joueur.idTournoi = NEW.idTournoi)
 		THEN 
  			IF vainqueurSerie(NEW.idSerie, NEW.noTour, NEW.idTournoi) IS NOT NULL
 			THEN
@@ -1127,7 +1129,8 @@ BEFORE UPDATE
 ON Match_Joueur
 FOR EACH ROW
 BEGIN
-    CALL verifierSerieSuivanteCommencee(NEW.idSerie, NEW.noTour, NEW.idTournoi);
+	
+	CALL verifierSerieSuivanteCommencee(NEW.idSerie, NEW.noTour, NEW.idTournoi);
     CALL verifierJoueurEstDansEquipeSerie(NEW.idJoueur, NEW.idSerie, NEW.noTour, NEW.idTournoi);
 	CALL tenterPromotion(NEW.idMatch, NEW.idSerie, NEW.noTour, NEW.idTournoi);
 END
@@ -1263,7 +1266,7 @@ $$
 
 -- INSERT INTO Tournoi (dateHeureDebut, nom, nbEquipesMax)
 -- VALUES 
--- ( "2021-01-10 15:56:00", "Le Franco-Suisse", 4);
+-- ( "2021-01-10 21:04:00", "Le Franco-Suisse", 4);
 
 -- INSERT INTO Tournoi_Equipe
 -- VALUES 
