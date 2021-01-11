@@ -599,7 +599,7 @@ END $$
 CREATE PROCEDURE verifierTournoiEnAttente(pIdTournoi INT)
 BEGIN
 	 IF NOT estEnAttente(pIdTournoi) THEN 
-		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Le tournoi a déjà commencé inscription impossible';
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Le tournoi a déjà commencé inscription/modification d\'inscription impossible';
 	END IF;
 END $$
 
@@ -739,15 +739,21 @@ BEGIN
 	END IF;
     
     CALL verifierDatePassee(NEW.dateHeureDebut);
-    CALL verifierDatePlusPetite(NEW.dateHeureDebut, NEW.dateHeureFin);
+   
+	IF NEW.dateHeureFin IS NOT NULL
+    THEN
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Le tournoi doit être créé sans date de fin, elle doit être nulle.';
+    END IF;
 END $$
 
 CREATE TRIGGER before_update_tournoi
 BEFORE UPDATE ON Tournoi
 FOR EACH ROW
 BEGIN
+	
 	IF (OLD.nbEquipesMax <> NEW.nbEquipesMax) 
     THEN
+		-- Cette restriction a lieu pour ne pas avoir besoin de modifier le nombre de tour "dynamiquement"
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Impossible de modifier le nombre maximal d\'équipes.';
 	END IF;
     
@@ -762,13 +768,14 @@ CREATE TRIGGER before_delete_tournoi
 BEFORE DELETE ON Tournoi
 FOR EACH ROW
 BEGIN
+	-- Si la date de départ est dépassées il sera supprimé automatiquement
 	IF ((OLD.dateHeureDebut < NOW() AND OLD.dateHeureFin IS NULL) OR OLD.dateHeureDebut <> OLD.dateHeureFin)
     THEN
-		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "Impossible de supprimer un tournoi déjà commencé et non annulé";
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "Impossible de supprimer un tournoi commencé ou non annulé";
 	END IF;
 END $$
 
-CREATE TRIGGER genererArbreTournoi
+CREATE TRIGGER generer_arbre_tournoi
 AFTER INSERT ON Tournoi
 FOR EACH ROW
 BEGIN
@@ -825,6 +832,18 @@ BEGIN
     CALL verifierEquipeComplete(NEW.acronymeEquipe);
 END $$
 
+CREATE TRIGGER before_delete_tournoi_equipe
+BEFORE DELETE ON Tournoi_Equipe
+FOR EACH ROW
+BEGIN
+	-- cas cascade, le tournoi a été supprimé, pas de problème
+    -- cas manuel, le tournoi est encore présent
+	IF estEnAttente(OLD.idTournoi)
+	THEN
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "Impossible de désinscrire une équipe quand le tournoi a débuté.";
+	END IF;
+END $$
+
 -------------------- TOUR ----------------------
 CREATE TRIGGER before_insert_tour
 BEFORE INSERT ON Tour
@@ -846,6 +865,18 @@ BEGIN
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Mise à jour du tour impossible, le tournoi a débuté';
 	END IF;
     CALL verifierLongueurMaxSerie(NEW.longueurMaxSerie);
+END $$
+
+CREATE TRIGGER before_delete_tour
+BEFORE DELETE ON Tour
+FOR EACH ROW
+BEGIN
+	-- cas cascade, le tournoi a été supprimé, pas de problème
+    -- cas manuel, le tournoi est il encore présent 
+	IF EXISTS (SELECT Tournoi.id FROM Tournoi WHERE Tournoi.id = OLD.idTournoi)
+	THEN
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "Suppression du tour impossible";
+	END IF;
 END $$
 
 ----------------------- SERIE --------------------
@@ -873,6 +904,17 @@ BEGIN
     CALL verifierSeedingIncorrect(NEW.acronymeEquipe1, NEW.acronymeEquipe2, NEW.id, NEW.noTour, NEW.idTournoi);
 END $$
 
+CREATE TRIGGER before_delete_serie
+BEFORE DELETE ON Serie
+FOR EACH ROW
+BEGIN
+	-- cas cascade, le tournoi a été supprimé, pas de problème
+    -- cas manuel, le tournoi est il encore présent 
+	IF EXISTS (SELECT Tour.no FROM Tour WHERE Tour.no = OLD.noTour AND Tour.idTournoi = OLD.idTournoi)
+	THEN
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "Suppression de la série impossible";
+	END IF;
+END $$
 ----------------------- EQUIPE --------------------
 CREATE TRIGGER before_insert_equipe
 AFTER INSERT ON Equipe
@@ -944,8 +986,8 @@ BEGIN
     
     CALL verifierDatePlusPetite(NEW.dateHeureArrivee,NEW.dateHeureDepart);
     
-    -- Le joueur rejoint l'équipe
-    IF(OLD.dateHeureArrivee = '0001-01-01 00:00:00' AND NEW.dateHeureArrivee <> OLD.dateHeureArrivee)
+    -- Le joueur rejoint l'équipe, supression des autres demandes
+    IF(OLD.dateHeureArrivee = '0001-01-01 00:00:00' AND NEW.dateHeureArrivee <> OLD.dateHeureArrivee AND NOT estComplete(NEW.acronymeEquipe))
     THEN
 		DELETE FROM Equipe_Joueur WHERE Equipe_Joueur.dateHeureArrivee = '0001-01-01 00:00:00' AND Equipe_Joueur.idJoueur = NEW.idJoueur;
     END IF;
@@ -965,6 +1007,7 @@ BEGIN
         END IF;
 	END IF;
     
+    -- Impossible de destituer le responsable
     IF(OLD.idJoueur = (SELECT idResponsable FROM Equipe WHERE Equipe.acronyme = OLD.acronymeEquipe) AND NEW.dateHeureDepart IS NOT NULL)
     THEN 
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Le responsable ne peut pas quitter son équiper, on a besoin de lui.';
@@ -996,6 +1039,18 @@ BEFORE UPDATE ON `Match`
 FOR EACH ROW
 BEGIN
 	CALL verifierIdMatch(NEW.id, NEW.idSerie, NEW.noTour, NEW.idTournoi);
+END $$
+
+CREATE TRIGGER before_delete_match
+BEFORE DELETE ON `Match`
+FOR EACH ROW
+BEGIN
+	-- Cas cascade aucun problème.
+    -- Cas manuel, blocage si série supprimée, 
+    IF( EXISTS (SELECT Serie.id FROM Serie WHERE Serie.id = OLD.idSerie AND Serie.noTour = OLD.noTour AND Serie.idTournoi = OLD.idTournoi))
+    THEN
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Impossible de supprimer un match';
+    END IF;
 END $$
 
 ----------------------- MATCH_JOUEUR --------------------
@@ -1034,18 +1089,24 @@ BEGIN
 END $$
 
 CREATE TRIGGER after_update_match_joueur
-BEFORE UPDATE ON Match_Joueur
+AFTER UPDATE ON Match_Joueur
 FOR EACH ROW
 BEGIN
 	CALL tenterPromotion(NEW.idMatch, NEW.idSerie, NEW.noTour, NEW.idTournoi);
 END $$
 
+CREATE TRIGGER before_delete_match_joueur
+BEFORE DELETE ON Match_Joueur
+FOR EACH ROW
+BEGIN
+	SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT  = "Impossible de supprimer les résultats d'un match.";
+END $$
 -----------------------------------------------------
 -- EVENTS
 -----------------------------------------------------
 -- Chaque 6 heure, vérifie si la date de début d'un tournoi a été dépassée, si c'est le cas termine le tournoi.alter
 CREATE EVENT annuler_tournoi
-ON SCHEDULE EVERY 6 HOUR DO
+ON SCHEDULE EVERY 1 HOUR DO
 BEGIN 
 	UPDATE Tournoi 
     SET Tournoi.dateHeureFin = Tournoi.dateHeureDebut
@@ -1065,151 +1126,115 @@ END $$
 
 DELIMITER ;
 
-INSERT INTO Objet (nom)
-VALUES 
-( "Clavier Roccat" ),
-( "Souris Roccat" ),
-( "Casque Logitec" ),
-( "Ecran BenQ" ),
-( "PC  Alienware" );
-
-INSERT INTO Prix (montantArgent)
-VALUES 
-( 50.00 ),
-( 100.00 ),
-( 150.00 ),
-( 500.00 ),
-( 1500.00 ),
-( 200.00 ),
-( 300.00 );
-
-INSERT INTO Prix_Objet 
-VALUES 
-( 1, 1 ),
-( 2, 2 ),
-( 3, 3 ),
-( 4, 4 ),
-( 5, 5 );
-
-INSERT INTO Joueur (nom, prenom, email, pseudo, dateNaissance)
-VALUES 
-( "Forestier", "Qunetin", "quentin.forestier@heig-vd.ch", "Dudude", "2001-05-16" ),
-( "Herzig", "Melvyn", "melvyn.herzig@heig-vd.ch", "Wheald", "1997-09-11" ),
-( "Crausaz", "Nicolas", "nicolas.crausaz@heig-vd.ch", "itsaboi", "1999-08-03" ),
-( "Brescard", "Julien", "Jujuju@lse.ch", "Jujuju", "2002-09-16" ),
-( "Baggiolini", "Jonas", "Arcko0o@lse.ch", "Arcko0o", "2000-11-15" ),
-( "Eggenberger", "Kevin", "Keever@lse.ch", "Keever", "1999-01-10" ),
-( "Candolfi", "Kérian", "Kerian@solary.fr", "Kérian", "2003-08-21" ),
-( "Bigeard", "Brice", "ExoTiiK@solary.fr", "ExoTiiK", "2002-10-31" ),
-( "Schäfer", "Damian", "Tox@solary.fr", "Tox", "2003-06-08" ),
-( "Packwood-Clarke", "Jack", "Speed@teamliquid.com", "Speed", "2001-02-26" ),
-( "Moselund", "Emil", "fruity@teamliquid.com", "fruity", "1996-02-22" ),
-( "Hodzic", "Aldin", "Ronaky@teamliquid.com", "Ronaky", "2000-09-21" ),
-( "Jakober", "Lukas", "Zaphare@eldelweiss.ch", "Zaphare", "2000-04-07" ),
-( "Lentz", "Quentin", "Mirror@eldelweiss.ch", "Mirror", "2002-09-05" ),
-( "Sauvey", "Baptiste", "BatOu@eldelweiss.ch", "BatOu", "2001-10-28" ),
-( "Courant", "Alexandre", "Kaydop@vitality.fr", "Kaydop", "1998-05-22" ),
-( "Champenois", "Yanis", "Alpha54@vitality.fr", "Alpha54", "2003-05-27" ),
-( "Loquet", "Victor", "Fairy_Peak@vitality.fr", "Fairy Peak!", "1998-05-26" ),
-( "Van Meurs", "Jos", "ViolentPanda@dignitas.com", "ViolentPanda", "1998-11-02" ),
-( "Robben", "Joris", "Joreuz@dignitas.com", "Joreuz", "2005-03-08" ),
-( "Benton", "Jack", "ApparentlyJack@dignitas.com", "ApparentlyJack", "2003-09-23" ),
-( "Oosting", "Ronald", "Tahz@fcbarcelona.com", "Tahz", "1999-08-03" ),
-( "Lazarus", "Fredi", "Blurry@fcbarcelona.com", "Blurry", "2004-06-30" ),
-( "Gimenez", "Nacho", "Nachitow@fcbarcelona.com", "Nachitow", "2000-06-20" ),
-( "Driessen", "Mitchell", "Mittaen@galaxyracer.com", "Mittaen", "2000-06-20" ),
-( "Pickering", "Dylan", "eekso@galaxyracer.com", "eekso", "2002-06-29" ),
-( "Berdin", "Ario", "arju@galaxyracer.com", "arju", "2002-11-04" ),
-( "Bosch", "Marc", "Stake@giantsgaming.com", "Stake", "2000-07-20" ),
-( "Cortés", "Samuel", "Zamué@giantsgaming.com", "Zamué", "2000-10-19" ),
-( "Benayachi", "Amine", "itachi@giantsgaming.com", "itachi", "2003-08-13" ),
-( "Forestier2", "Qunetin2", "quentin.forestier@heig-vd.ch3", "Dudude", "2001-05-16" );
-
-
-INSERT INTO Equipe
-VALUES 
-( "ROC", "Real Original Cracks", 1 ),
-( "LSE", "Lausanne eSports", 4 ),
-( "SLY", "Solary", 7 ),
-( "TL", "Team Liquid", 10 ),
-( "EE", "Eldelweiss ESports", 13 ),
-( "VIT", "Renault Vitality", 16 ),
-( "DIG", "Dignitas", 19 ),
-( "FCB", "FC Barcelona", 22 ),
-( "GAR", "Galaxy Racer", 25 ),
-( "GIA", "Giants Gaming", 28 ),
-( ".", "Giants Gaming", 31 );
-
-
-INSERT INTO Equipe_Joueur
-VALUES 
-( "ROC", 2,  "2020-01-01 00-00-00", NULL),
-( "ROC", 3,  "2020-01-01 00-00-00", NULL),
-( "LSE", 5,  "2020-01-01 00-00-00", NULL),
-( "LSE", 6,  "2020-01-01 00-00-00", NULL),
-( "SLY", 8,  "2020-01-01 00-00-00", NULL),
-( "SLY", 9,  "2020-01-01 00-00-00", NULL),
-( "TL", 11,  "2020-01-01 00-00-00", NULL),
-( "TL", 12,  "2020-01-01 00-00-00", NULL),
-( "EE", 14,  "2020-01-01 00-00-00", NULL),
-( "EE", 15,  "2020-01-01 00-00-00", NULL),
-( "VIT", 17,  "2020-01-01 00-00-00", NULL),
-( "VIT", 18,  "2020-01-01 00-00-00", NULL),
-( "DIG", 20,  "2020-01-01 00-00-00", NULL),
-( "DIG", 21,  "2020-01-01 00-00-00", NULL),
-( "FCB", 23,  "2020-01-01 00-00-00", NULL),
-( "FCB", 24,  "2020-01-01 00-00-00", NULL),
-( "GAR", 26,  "2020-01-01 00-00-00", NULL),
-( "GAR", 27,  "2020-01-01 00-00-00", NULL),
-( "GIA", 29,  "2020-01-01 00-00-00", NULL),
-( "GIA", 30,  "2020-01-01 00-00-00", NULL);
-
-
-INSERT INTO Tournoi (dateHeureDebut, nom, nbEquipesMax)
-VALUES 
-( "2021-01-11 16:21:30", "Le Franco-Suisse", 4);
-
-INSERT INTO Tournoi_Equipe
-VALUES 
-( 1, "ROC", NULL ),
-( 1, "SLY", NULL ),
-( 1, "EE", NULL ),
-( 1, "VIT", NULL );
-
--- UPDATE Serie SET acronymeEquipe1 = "ROC", acronymeEquipe2 = "SLY" WHERE id = 1 AND noTour = 2 AND idTournoi = 1;
--- INSERT INTO `Match` VALUES ( 1, 1, 2, 1 );
-
--- INSERT INTO Match_Joueur (idJoueur, nbButs, nbArrets, idMatch, idSerie, noTour, idTournoi)
+-- INSERT INTO Objet (nom)
 -- VALUES 
--- ( 1, 3, 1, 1, 1, 2, 1 ),
--- ( 2, 0, 3, 1, 1, 2, 1 ),
--- ( 3, 1, 2, 1, 1, 2, 1 ),
--- ( 7, 0, 2, 1, 1, 2, 1 ),
--- ( 8, 1, 0, 1, 1, 2, 1 ),
--- ( 9, 1, 4, 1, 1, 2, 1 );
+-- ( "Clavier Roccat" ),
+-- ( "Souris Roccat" ),
+-- ( "Casque Logitec" ),
+-- ( "Ecran BenQ" ),
+-- ( "PC  Alienware" );
 
--- UPDATE Serie SET acronymeEquipe1 = "EE", acronymeEquipe2 = "VIT" WHERE id = 2 AND noTour = 2 AND idTournoi = 1;
--- INSERT INTO `Match` VALUES ( 1, 2, 2, 1 );
-
--- INSERT INTO Match_Joueur (idJoueur, nbButs, nbArrets, idMatch, idSerie, noTour, idTournoi)
+-- INSERT INTO Prix (montantArgent)
 -- VALUES 
--- ( 13, 3, 1, 1, 2, 2, 1 ),
--- ( 14, 0, 3, 1, 2, 2, 1 ),
--- ( 15, 4, 2, 1, 2, 2, 1 ),
--- ( 16, 1, 2, 1, 2, 2, 1 ),
--- ( 17, 1, 0, 1, 2, 2, 1 ),
--- ( 18, 1, 4, 1, 2, 2, 1 );
+-- ( 50.00 ),
+-- ( 100.00 ),
+-- ( 150.00 ),
+-- ( 500.00 ),
+-- ( 1500.00 ),
+-- ( 200.00 ),
+-- ( 300.00 );
 
--- UPDATE Serie SET acronymeEquipe1 = "ROC", acronymeEquipe2 = "EE" WHERE id = 1 AND noTour = 1 AND idTournoi = 1;
--- INSERT INTO `Match` VALUES  (1, 1, 1, 1 );
-
--- INSERT INTO Match_Joueur (idJoueur, nbButs, nbArrets, idMatch, idSerie, noTour, idTournoi)
+-- INSERT INTO Prix_Objet 
 -- VALUES 
--- ( 1, 1, 5, 1, 1, 1, 1 ),
--- ( 2, 0, 3, 1, 1, 1, 1 ),
--- ( 3, 1, 2, 1, 1, 1, 1 ),
--- ( 13, 0, 2, 1, 1, 1, 1 ),
--- ( 14, 0, 3, 1, 1, 1, 1 ),
--- ( 15, 0, 4, 1, 1, 1, 1 );
+-- ( 1, 1 ),
+-- ( 2, 2 ),
+-- ( 3, 3 ),
+-- ( 4, 4 ),
+-- ( 5, 5 );
+
+-- INSERT INTO Joueur (nom, prenom, email, pseudo, dateNaissance)
+-- VALUES 
+-- ( "Forestier", "Qunetin", "quentin.forestier@heig-vd.ch", "Dudude", "2001-05-16" ),
+-- ( "Herzig", "Melvyn", "melvyn.herzig@heig-vd.ch", "Wheald", "1997-09-11" ),
+-- ( "Crausaz", "Nicolas", "nicolas.crausaz@heig-vd.ch", "itsaboi", "1999-08-03" ),
+-- ( "Brescard", "Julien", "Jujuju@lse.ch", "Jujuju", "2002-09-16" ),
+-- ( "Baggiolini", "Jonas", "Arcko0o@lse.ch", "Arcko0o", "2000-11-15" ),
+-- ( "Eggenberger", "Kevin", "Keever@lse.ch", "Keever", "1999-01-10" ),
+-- ( "Candolfi", "Kérian", "Kerian@solary.fr", "Kérian", "2003-08-21" ),
+-- ( "Bigeard", "Brice", "ExoTiiK@solary.fr", "ExoTiiK", "2002-10-31" ),
+-- ( "Schäfer", "Damian", "Tox@solary.fr", "Tox", "2003-06-08" ),
+-- ( "Packwood-Clarke", "Jack", "Speed@teamliquid.com", "Speed", "2001-02-26" ),
+-- ( "Moselund", "Emil", "fruity@teamliquid.com", "fruity", "1996-02-22" ),
+-- ( "Hodzic", "Aldin", "Ronaky@teamliquid.com", "Ronaky", "2000-09-21" ),
+-- ( "Jakober", "Lukas", "Zaphare@eldelweiss.ch", "Zaphare", "2000-04-07" ),
+-- ( "Lentz", "Quentin", "Mirror@eldelweiss.ch", "Mirror", "2002-09-05" ),
+-- ( "Sauvey", "Baptiste", "BatOu@eldelweiss.ch", "BatOu", "2001-10-28" ),
+-- ( "Courant", "Alexandre", "Kaydop@vitality.fr", "Kaydop", "1998-05-22" ),
+-- ( "Champenois", "Yanis", "Alpha54@vitality.fr", "Alpha54", "2003-05-27" ),
+-- ( "Loquet", "Victor", "Fairy_Peak@vitality.fr", "Fairy Peak!", "1998-05-26" ),
+-- ( "Van Meurs", "Jos", "ViolentPanda@dignitas.com", "ViolentPanda", "1998-11-02" ),
+-- ( "Robben", "Joris", "Joreuz@dignitas.com", "Joreuz", "2005-03-08" ),
+-- ( "Benton", "Jack", "ApparentlyJack@dignitas.com", "ApparentlyJack", "2003-09-23" ),
+-- ( "Oosting", "Ronald", "Tahz@fcbarcelona.com", "Tahz", "1999-08-03" ),
+-- ( "Lazarus", "Fredi", "Blurry@fcbarcelona.com", "Blurry", "2004-06-30" ),
+-- ( "Gimenez", "Nacho", "Nachitow@fcbarcelona.com", "Nachitow", "2000-06-20" ),
+-- ( "Driessen", "Mitchell", "Mittaen@galaxyracer.com", "Mittaen", "2000-06-20" ),
+-- ( "Pickering", "Dylan", "eekso@galaxyracer.com", "eekso", "2002-06-29" ),
+-- ( "Berdin", "Ario", "arju@galaxyracer.com", "arju", "2002-11-04" ),
+-- ( "Bosch", "Marc", "Stake@giantsgaming.com", "Stake", "2000-07-20" ),
+-- ( "Cortés", "Samuel", "Zamué@giantsgaming.com", "Zamué", "2000-10-19" ),
+-- ( "Benayachi", "Amine", "itachi@giantsgaming.com", "itachi", "2003-08-13" ),
+-- ( "Forestier2", "Qunetin2", "quentin.forestier@heig-vd.ch3", "Dudude", "2001-05-16" );
+
+
+-- INSERT INTO Equipe
+-- VALUES 
+-- ( "ROC", "Real Original Cracks", 1 ),
+-- ( "LSE", "Lausanne eSports", 4 ),
+-- ( "SLY", "Solary", 7 ),
+-- ( "TL", "Team Liquid", 10 ),
+-- ( "EE", "Eldelweiss ESports", 13 ),
+-- ( "VIT", "Renault Vitality", 16 ),
+-- ( "DIG", "Dignitas", 19 ),
+-- ( "FCB", "FC Barcelona", 22 ),
+-- ( "GAR", "Galaxy Racer", 25 ),
+-- ( "GIA", "Giants Gaming", 28 ),
+-- ( ".", "Giants Gaming", 31 );
+
+
+-- INSERT INTO Equipe_Joueur
+-- VALUES 
+-- ( "ROC", 2,  "2020-01-01 00-00-00", NULL),
+-- ( "ROC", 3,  "2020-01-01 00-00-00", NULL),
+-- ( "LSE", 5,  "2020-01-01 00-00-00", NULL),
+-- ( "LSE", 6,  "2020-01-01 00-00-00", NULL),
+-- ( "SLY", 8,  "2020-01-01 00-00-00", NULL),
+-- ( "SLY", 9,  "2020-01-01 00-00-00", NULL),
+-- ( "TL", 11,  "2020-01-01 00-00-00", NULL),
+-- ( "TL", 12,  "2020-01-01 00-00-00", NULL),
+-- ( "EE", 14,  "2020-01-01 00-00-00", NULL),
+-- ( "EE", 15,  "2020-01-01 00-00-00", NULL),
+-- ( "VIT", 17,  "2020-01-01 00-00-00", NULL),
+-- ( "VIT", 18,  "2020-01-01 00-00-00", NULL),
+-- ( "DIG", 20,  "2020-01-01 00-00-00", NULL),
+-- ( "DIG", 21,  "2020-01-01 00-00-00", NULL),
+-- ( "FCB", 23,  "2020-01-01 00-00-00", NULL),
+-- ( "FCB", 24,  "2020-01-01 00-00-00", NULL),
+-- ( "GAR", 26,  "2020-01-01 00-00-00", NULL),
+-- ( "GAR", 27,  "2020-01-01 00-00-00", NULL),
+-- ( "GIA", 29,  "2020-01-01 00-00-00", NULL),
+-- ( "GIA", 30,  "2020-01-01 00-00-00", NULL);
+
+
+-- INSERT INTO Tournoi (dateHeureDebut, nom, nbEquipesMax)
+-- VALUES 
+-- ( "2021-01-11 23:31:10", "Le Franco-Suisse", 4);
+
+-- INSERT INTO Tournoi_Equipe
+-- VALUES 
+-- ( 1, "ROC", NULL ),
+-- ( 1, "SLY", NULL ),
+-- ( 1, "EE", NULL ),
+-- ( 1, "VIT", NULL );
 
 
