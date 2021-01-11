@@ -305,11 +305,10 @@ BEGIN
 	THEN RETURN 1;
     ELSE RETURN 0;
     END IF;
-END
-$$
+END $$
+
 
 -- Calcul le nombre de tour en fonction du nombre d'équipes maximal.
-DELIMITER $$
 CREATE FUNCTION calculerNbTours(pNbEquipeMax INT)
 RETURNS INT
 DETERMINISTIC
@@ -323,11 +322,10 @@ BEGIN
 	 ELSE 
 		RETURN 0;
 	 END IF;
-END
-$$
+END $$
+
 
 -- Compte pour une équipe sont nombre de victoire dans une série.
-DELIMITER $$
 CREATE FUNCTION compterVictoireDansSerie(pAcronymeEquipe VARCHAR(3), pIdSerie INT, pNoTour INT, pIdTournoi INT)
 RETURNS INT
 DETERMINISTIC
@@ -341,11 +339,9 @@ BEGIN
 					    WHERE vainqueurs.Vainqueur = pAcronymeEquipe);
     
     RETURN @nbVictoires;
-END
-$$
+END $$
 
 -- Retourne le nom de l'équipe pour un joueur à une date.
-DELIMITER $$
 CREATE FUNCTION equipeDuJoueurLorsDu(pIdJoueur INT, pDate DATETIME)
 RETURNS VARCHAR(3)
 DETERMINISTIC
@@ -357,36 +353,30 @@ BEGIN
 													   FROM Equipe_Joueur 
                                                        WHERE idJoueur = pIdJoueur AND dateHeureArrivee < pDate AND (dateHeureDepart IS NULL OR dateHeureDepart > pDate));
     RETURN nomEquipe;
-END
-$$
+END $$
 
 -- Retourne vrai si l'équip est complète sinon faux
-DELIMITER $$
 CREATE FUNCTION estComplete(pAcronymeEquipe VARCHAR(3))
 RETURNS BOOLEAN
 DETERMINISTIC
 BEGIN
 	IF ( 3 = (SELECT COUNT(*) 
 			  FROM Equipe_Joueur 
-              WHERE Equipe_Joueur.acronymeEquipe = pAcronymeEquipe AND Equipe_Joueur.dateHeureDepart IS NULL AND Equipe_Joueur.dateHeureArrivee <> '0000-00-00 00:00:00'))
+              WHERE Equipe_Joueur.acronymeEquipe = pAcronymeEquipe AND Equipe_Joueur.dateHeureDepart IS NULL AND Equipe_Joueur.dateHeureArrivee <> '0001-01-01 00:00:00'))
 	THEN RETURN 1;
     ELSE RETURN 0;
     END IF;
-END
-$$
+END $$
 
 -- Vérifie si le tournoi est en "Attente"
-DELIMITER $$
 CREATE FUNCTION estEnAttente(pIdTournoi INT)
 RETURNS BOOLEAN
 DETERMINISTIC
 BEGIN
 	RETURN NOW() < (SELECT Tournoi.dateHeureDebut FROM Tournoi WHERE Tournoi.id = pIdTournoi);
-END
-$$
+END $$
 
--- Vérifie si les deux équipes peuvent jouer la série.
-DELIMITER $$ 
+-- Vérifie si les deux équipes peuvent jouer la série. 
 CREATE FUNCTION seedingCorrect(pAcronymeEquipe1 VARCHAR(3), pAcronymeEquipe2 VARCHAR(3), pIdSerie INT, pNoTour INT, pIdTournoi INT)
 RETURNS BOOLEAN
 DETERMINISTIC
@@ -411,11 +401,9 @@ BEGIN
 	END IF;
     
     RETURN equipe1OK AND equipe2OK;
-END
-$$
+END $$
 
 -- Retourne le vainqueur d'une série donnée si terminée sinon NULL.
-DELIMITER $$
 CREATE FUNCTION vainqueurSerie(pIdSerie INT, pNoTour INT, pIdTournoi INT)
 RETURNS VARCHAR(3)
 DETERMINISTIC
@@ -447,11 +435,9 @@ BEGIN
 	END IF;
     
 	RETURN NULL;
-END
-$$
+END $$
 
 -- Retourne le nom du vainqueur d'un match.
-DELIMITER $$
 CREATE FUNCTION vainqueurMatch(pIdMatch INT, pIdSerie INT, pNoTour INT, pIdTournoi INT)
 RETURNS VARCHAR(3)
 DETERMINISTIC
@@ -481,11 +467,9 @@ BEGIN
     ELSE 
         RETURN ae2;
     END IF;
-END
-$$
+END $$
 
 -- Vérifie si toutes les inscriptions sont faites.
-DELIMITER $$
 CREATE FUNCTION estComplet(pIdTournoi INT)
 RETURNS BOOLEAN
 DETERMINISTIC
@@ -494,11 +478,9 @@ BEGIN
     SET @maxEquipe = (SELECT Tournoi.nbEquipesMax FROM Tournoi WHERE Tournoi.id = pIdTournoi );
     SET @nbEquipe = (SELECT COUNT(1) FROM Tournoi_Equipe WHERE Tournoi_Equipe.idTournoi = pIdTournoi);
 	RETURN @maxEquipe = @nbEquipe;
-END
-$$
+END $$
 
 -- Vérifie si le seeding du premier tour du tournoi (tour avec le plus d'équipe) est fait.
-DELIMITER $$
 CREATE FUNCTION seedingEffectue(pIdTournoi INT)
 RETURNS BOOLEAN
 DETERMINISTIC
@@ -507,76 +489,63 @@ BEGIN
 	SET @premierTour = calculerNbTours(@nbEquipes);
     
     RETURN POW(2, @premierTour)/2 = (SELECT COUNT(1) FROM Serie WHERE Serie.idTournoi = pIdTournoi AND Serie.noTour = @premierTour AND acronymeEquipe1 IS NOT NULL AND acronymeEquipe2 IS NOT NULL);
-END
-$$
+END $$
 
 -- Vérifie que la date en paramètre est plus grande que la date courante.
-DELIMITER $$
 CREATE PROCEDURE verifierDateFuture(pDate DATETIME)
 BEGIN
 	 IF pDate > NOW() THEN 
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'La date de naissance est dans le future.';
 	END IF;
-END
-$$
+END $$
 
 -- Vérifie que la date en paramètre est plus petite que la date courante.
-DELIMITER $$
 CREATE PROCEDURE verifierDatePassee(pDate DATETIME)
 BEGIN
 	 IF pDate <= NOW() THEN 
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Le début du tournoi ne peut être plus petit que le temps présent.';
 	END IF;
-END
-$$
+END $$
 
-DELIMITER $$
+
 CREATE PROCEDURE verifierDatePlusPetite (pDateHeureDebut DATETIME, pDateHeureFin DATETIME)
 BEGIN
 	IF( pDateHeureFin IS NOT NULL AND pDateHeureDebut > pDateHeureFin)
     THEN
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'La date de début ne peut être plus grande que la date de fin';
 	END IF;
-END
-$$
+END $$
 
 -- Vérifie si la joueur en paramètre a déjà une équipe
-DELIMITER $$
 CREATE PROCEDURE verifierDejaDansUneEquipe(pIdJoueur INT)
 BEGIN
 	 IF EXISTS( SELECT * 
 				FROM Equipe_Joueur 
-                WHERE idJoueur = pIdJoueur AND dateHeureDepart IS NULL AND dateHeureArrivee <> '0000-00-00 00:00:00') 
+                WHERE idJoueur = pIdJoueur AND dateHeureDepart IS NULL AND dateHeureArrivee <> '0001-01-01 00:00:00') 
 	THEN 
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Le joueur est déjà dans une équipe';
 	END IF;
-END
-$$
+END $$
 
 -- Vérifie si une équipe est complète
-DELIMITER $$
 CREATE PROCEDURE verifierEquipeComplete(pAcronymeEquipe VARCHAR(3))
 BEGIN
 	IF( NOT estComplete(pAcronymeEquipe))
 	THEN
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'L\'équipe n\'a pas trois joueur et ne peut donc pas s\'inscrire.';
 	END IF;
-END
-$$
+END $$
 
--- Vérifie si l'équipe est inscrite au tournoi en paramètre
-DELIMITER $$
+-- Vérifie si l'équipe est inscrite au tournoi en paramètre 
 CREATE PROCEDURE verifierInscription(pAcronyme VARCHAR(3), pIdTournoi INT)
 BEGIN
 	 IF (pAcronyme IS NOT NULL AND  NOT EXISTS( SELECT * FROM Tournoi_Equipe WHERE idTournoi = pIdTournoi AND pAcronyme = acronymeEquipe))
      THEN 
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'L\'equipe n\'est pas inscrite au tournoi';
 	 END IF;
-END
-$$
+END $$
 
 -- Vérifie si le joueur appartient à l'équipe donnée au moment du tournoi et que l'équipe fasse partie de la série.
-DELIMITER $$
 CREATE PROCEDURE verifierJoueurEstDansEquipeSerie(pIdJoueur INT, pIdSerie INT, pNoTour INT, pIdTournoi INT)
 BEGIN
     DECLARE e1, e2 VARCHAR(3);
@@ -595,54 +564,44 @@ BEGIN
     THEN
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'L\'équipe associée ne joue pas la série.';
 	END IF;
-END
-$$
+END $$
 
 -- Vérifier si la longueur maximale d'une série est bonne.
-DELIMITER $$
 CREATE PROCEDURE verifierLongueurMaxSerie(pLongueurSerie INT)
 BEGIN
 	 IF FIND_IN_SET( pLongueurSerie , "1,3,5,7") = 0 
      THEN 
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Une série ne peut se dérouler qu\'en 3,5 ou 7 matchs';
 	 END IF;
-END
-$$
+END $$
 
 -- Vérifie si deux équipe sont les mêmes
-DELIMITER $$
 CREATE PROCEDURE verifierMemeEquipe(pAcronymeEquipe1 VARCHAR(3), pAcronymeEquipe2 VARCHAR(3))
 BEGIN
 	 IF pAcronymeEquipe1 IS NOT NULL AND pAcronymeEquipe2 IS NOT NULL AND pAcronymeEquipe1 = pAcronymeEquipe2  
      THEN 
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Une equipe ne peut pas s\'affronter elle même';
 	 END IF;
-END
-$$
+END $$
 
 -- Vérifie si le seeding est correct sinon lève une exception.
-DELIMITER $$
 CREATE PROCEDURE verifierSeedingIncorrect(pAcronymeEquipe1 VARCHAR(3), pAcronymeEquipe2 VARCHAR(3), pIdSerie INT, pNoTour INT, pIdTournoi INT)
 BEGIN
 	IF (seedingCorrect(pAcronymeEquipe1, pAcronymeEquipe2, pIdSerie, pNoTour, pIdTournoi ) = FALSE) 
     THEN
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'L\'équipe ne peut pas occuper cette position dans cette série';
 	END IF;
-END
-$$
+END $$
 
 -- Vérifie si le tournoi est en attente.
-DELIMITER $$
 CREATE PROCEDURE verifierTournoiEnAttente(pIdTournoi INT)
 BEGIN
 	 IF NOT estEnAttente(pIdTournoi) THEN 
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Le tournoi a déjà commencé inscription impossible';
 	END IF;
-END
-$$
+END $$
 
 -- Indique que le no de tour ne peut pas être modifié
-DELIMITER $$
 CREATE PROCEDURE verifierNoTour(pNoTour INT, pIdTournoi INT)
 BEGIN
 	 
@@ -651,22 +610,18 @@ BEGIN
      THEN
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Nouvel id de tour invalide';
 	 END IF;
-END
-$$
+END $$
 
 -- Indique que le id de série ne peut pas être modifié
-DELIMITER $$
 CREATE PROCEDURE verifierIdSerie(pIdSerie INT, pNoTour INT, pIdTournoi INT)
 BEGIN
 	 IF pIdSerie <= 0 OR pIdSerie > POWER(2, pNoTour - 1)
      THEN 
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Nouvel id de série invalide';
 	 END IF;
-END
-$$
+END $$
 
 -- Indique que le id de match ne peut pas être modifié
-DELIMITER $$
 CREATE PROCEDURE verifierIdMatch(pIdMatch INT, pIdSerie INT, pNoTour INT, pIdTournoi INT)
 BEGIN
 	 SET @maxMatch = (SELECT Tour.longueurMaxSerie FROM Tour WHERE Tour.idTournoi = pIdTournoi AND Tour.no = pNoTour);
@@ -675,22 +630,18 @@ BEGIN
      THEN
  		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Nouvel id de match invalide';
 	 END IF;
-END
-$$
+END $$
 
 -- Vérifie que le nom de l'équipe ait au moins 1 caractère.
-DELIMITER $$
 CREATE PROCEDURE verifierAcronyme(pAcronymeEquipe VARCHAR(3))
 BEGIN
 	IF LENGTH(pAcronymeEquipe) = 0
     THEN 
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Minimum 1 caractère pour l\'équipe';
 	END IF;
-END
-$$
+END $$
 
 -- Démarre le tournoi
-DELIMITER $$
 CREATE PROCEDURE demarrerTournoi(pIdTournoi INT)
 BEGIN
 	-- Curseurs
@@ -699,7 +650,14 @@ BEGIN
     DECLARE equipe2Inscrite VARCHAR(3);
 	DECLARE curInscription CURSOR FOR SELECT Tournoi_Equipe.acronymeEquipe FROM Tournoi_Equipe WHERE Tournoi_Equipe.idTournoi = pIdTournoi ORDER BY Tournoi_Equipe.dateInscription ASC;
 	DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+    
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK; 
+        RESIGNAL;
+    END;
 
+	START TRANSACTION;
 	IF estEnAttente(pIdTournoi) 
     THEN
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "Il est trop tôt pour démarrer le tournoi";
@@ -727,11 +685,10 @@ BEGIN
         
     END LOOP;
     CLOSE curInscription;
-END
-$$
+    COMMIT;
+END $$
 
 -- Vérifie si un enregistrement de match_joueur idSerie, noTour et idTournoi peut être modifié
-DELIMITER $$
 CREATE PROCEDURE verifierSerieSuivanteCommencee(pIdSerie INT, pNoTour INT, pIdTournoi INT)
 BEGIN
 	SET @serieSuivante = CEIL(pIdSerie / 2);
@@ -739,11 +696,9 @@ BEGIN
     THEN
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = " Modification/insertion du score du joueur impossible, la serie suivante a déjà commencée.";
 	END IF;
-END
-$$
+END $$
 
 -- Après insertion du 6ème joueur, vérifie si la série est finie et fait progresser l'arbre de tournoi
-DELIMITER $$
 CREATE PROCEDURE tenterPromotion(pIdMatch INT, pIdSerie INT, pNoTour INT, pIdTournoi INT)
 BEGIN
 	-- Promotion impossible en finale ou si les 6 joueurs n'ont pas de résultats
@@ -764,18 +719,15 @@ BEGIN
             END IF;
         END IF;
     END IF;
-END
-$$
+END $$
 
 -----------------------------------------------------
 -- TRIGGER
 -----------------------------------------------------
 
 -------------------- TOURNOI ----------------------
-DELIMITER $$
 CREATE TRIGGER tournoiInsertion
-BEFORE INSERT
-ON Tournoi
+BEFORE INSERT ON Tournoi
 FOR EACH ROW
 BEGIN
 	-- Vérification du nombre max d'équipe.
@@ -786,12 +738,10 @@ BEGIN
     
     CALL verifierDatePassee(NEW.dateHeureDebut);
     CALL verifierDatePlusPetite(NEW.dateHeureDebut, NEW.dateHeureFin);
-END
-$$
-DELIMITER $$
+END $$
+
 CREATE TRIGGER tournoiMiseAJour
-BEFORE UPDATE
-ON Tournoi
+BEFORE UPDATE ON Tournoi
 FOR EACH ROW
 BEGIN
 	IF (OLD.nbEquipesMax <> NEW.nbEquipesMax) 
@@ -804,24 +754,20 @@ BEGIN
 		CALL verifierDatePassee(NEW.dateHeureDebut);
 	END IF;
     CALL verifierDatePlusPetite(NEW.dateHeureDebut, NEW.dateHeureFin);
-END
-$$
-DELIMITER $$
+END $$
+
 CREATE TRIGGER tournoiSuppression
-BEFORE DELETE
-ON Tournoi
+BEFORE DELETE ON Tournoi
 FOR EACH ROW
 BEGIN
 	IF ((OLD.dateHeureDebut < NOW() AND OLD.dateHeureFin IS NULL) OR OLD.dateHeureDebut <> OLD.dateHeureFin)
     THEN
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "Impossible de supprimer un tournoi déjà commencé et non annulé";
 	END IF;
-END
-$$
-DELIMITER $$
-CREATE TRIGGER gernerateTournamentTree
-AFTER INSERT
-ON Tournoi
+END $$
+
+CREATE TRIGGER genererArbreTournoi
+AFTER INSERT ON Tournoi
 FOR EACH ROW
 BEGIN
 	DECLARE vNoTour INT DEFAULT 1;
@@ -837,14 +783,11 @@ BEGIN
         SET vNoSerie = 1;
         SET vNoTour = vNoTour + 1;
 	END WHILE;
-END
-$$
+END $$
 
 -------------------- TOURNOI_EQUIPE ----------------------
-DELIMITER $$
 CREATE TRIGGER TournoiEquipeInsertion
-BEFORE INSERT
-ON Tournoi_Equipe
+BEFORE INSERT ON Tournoi_Equipe
 FOR EACH ROW
 BEGIN
 	IF estComplet(NEW.idTournoi)
@@ -865,12 +808,10 @@ BEGIN
 	CALL verifierEquipeComplete(NEW.acronymeEquipe); 
 	
 	SET NEW.dateInscription = NOW();
-END
-$$
-DELIMITER $$
+END $$
+
 CREATE TRIGGER TournoiEquipeMiseAJour
-BEFORE UPDATE
-ON Tournoi_Equipe
+BEFORE UPDATE ON Tournoi_Equipe
 FOR EACH ROW
 BEGIN
     -- Le tournoi est-il encore en attente ?
@@ -880,24 +821,19 @@ BEGIN
     END IF;
     
     CALL verifierEquipeComplete(NEW.acronymeEquipe);
-END
-$$
+END $$
 
 -------------------- TOUR ----------------------
-DELIMITER $$
 CREATE TRIGGER tourInsertion
-BEFORE INSERT
-ON Tour
+BEFORE INSERT ON Tour
 FOR EACH ROW
 BEGIN
 	CALL verifierNoTour(NEW.no, NEW.idTournoi);
     CALL verifierLongueurMaxSerie(NEW.longueurMaxSerie);
-END
-$$
-DELIMITER $$
+END $$
+
 CREATE TRIGGER tourMiseAJour
-BEFORE UPDATE
-ON Tour
+BEFORE UPDATE ON Tour
 FOR EACH ROW
 BEGIN
 	CALL verifierNoTour(NEW.no, NEW.idTournoi);
@@ -908,14 +844,11 @@ BEGIN
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Mise à jour du tour impossible, le tournoi a débuté';
 	END IF;
     CALL verifierLongueurMaxSerie(NEW.longueurMaxSerie);
-END
-$$
+END $$
 
 ----------------------- SERIE --------------------
-DELIMITER $$
 CREATE TRIGGER serieInsertion
-BEFORE INSERT
-ON serie
+BEFORE INSERT ON serie
 FOR EACH ROW
 BEGIN
 	CALL verifierIdSerie(NEW.id, NEW.noTour, NEW.idTournoi);
@@ -923,48 +856,39 @@ BEGIN
     CALL verifierInscription(NEW.acronymeEquipe2, new.idTournoi);
 	CALL verifierMemeEquipe(NEW.acronymeEquipe1, NEW.acronymeEquipe2);
     CALL verifierSeedingIncorrect(NEW.acronymeEquipe1, NEW.acronymeEquipe2, NEW.id, NEW.noTour, NEW.idTournoi);
-END
-$$
-DELIMITER $$
+END $$
+
 CREATE TRIGGER serieMiseAJour
-BEFORE UPDATE
-ON serie
+BEFORE UPDATE ON serie
 FOR EACH ROW
 BEGIN
 
-	CALL verifierSerieSuivanteCommencee(NEW.idSerie, NEW.noTour, NEW.idTournoi);
+	CALL verifierSerieSuivanteCommencee(NEW.id, NEW.noTour, NEW.idTournoi);
 	CALL verifierIdSerie(NEW.id, NEW.noTour, NEW.idTournoi);
 	CALL verifierInscription(NEW.acronymeEquipe1, new.idTournoi);
     CALL verifierInscription(NEW.acronymeEquipe2, new.idTournoi);
 	CALL verifierMemeEquipe(NEW.acronymeEquipe1, NEW.acronymeEquipe2);
     CALL verifierSeedingIncorrect(NEW.acronymeEquipe1, NEW.acronymeEquipe2, NEW.id, NEW.noTour, NEW.idTournoi);
-END
-$$
+END $$
 
 ----------------------- EQUIPE --------------------
-DELIMITER $$
 CREATE TRIGGER equipeInsertion
-AFTER INSERT
-ON Equipe
+AFTER INSERT ON Equipe
 FOR EACH ROW
 BEGIN
 	CALL verifierAcronyme(NEW.acronyme);
-END
-$$
-DELIMITER $$
+END $$
+
 CREATE TRIGGER equipeInsertionApres
-AFTER INSERT
-ON Equipe
+AFTER INSERT ON Equipe
 FOR EACH ROW
 BEGIN
 	INSERT INTO Equipe_Joueur (acronymeEquipe, idJoueur, dateHeureArrivee, dateHeureDepart)
     VALUE(NEW.acronyme, NEW.idResponsable, NOW(), NULL);
-END
-$$
-DELIMITER $$
+END $$
+
 CREATE TRIGGER equipeMiseAJour
-BEFORE UPDATE
-ON Equipe
+BEFORE UPDATE ON Equipe
 FOR EACH ROW
 BEGIN
     CALL verifierAcronyme(NEW.acronyme);
@@ -972,35 +896,26 @@ BEGIN
     THEN
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Le responsable de l\'équipe ne peut être changé';
 	END IF;
-END
-$$
+END $$
 
 ----------------------- JOUEUR --------------------
-DELIMITER $$
 CREATE TRIGGER joueurInsertion
-BEFORE INSERT
-ON Joueur
+BEFORE INSERT ON Joueur
 FOR EACH ROW
 BEGIN
     CALL  verifierDateFuture(NEW.dateNaissance);
-END
-$$
+END $$
 
-DELIMITER $$
 CREATE TRIGGER joueurMiseAJour
-BEFORE UPDATE
-ON Joueur
+BEFORE UPDATE ON Joueur
 FOR EACH ROW
 BEGIN
     CALL verifierDateFuture(NEW.dateNaissance);
-END
-$$
+END $$
 
 ----------------------- EQUIPE_JOUEUR --------------------
-DELIMITER $$
 CREATE TRIGGER equipeJoueurInsertion
-BEFORE INSERT
-ON Equipe_Joueur
+BEFORE INSERT ON Equipe_Joueur
 FOR EACH ROW
 BEGIN
     CALL  verifierDatePlusPetite(NEW.dateHeureArrivee,NEW.dateHeureDepart);
@@ -1009,13 +924,10 @@ BEGIN
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Impossible de rejoindre l\'equipe, elle est complète';
     END IF;
     CALL verifierDejaDansUneEquipe(NEW.idJoueur);
-END
-$$
+END $$
 
-DELIMITER $$
 CREATE TRIGGER equipeJoueurMiseAJour
-BEFORE UPDATE
-ON Equipe_Joueur
+BEFORE UPDATE ON Equipe_Joueur
 FOR EACH ROW
 BEGIN
 	IF(OLD.idJoueur <> NEW.idJoueur)
@@ -1031,9 +943,9 @@ BEGIN
     CALL verifierDatePlusPetite(NEW.dateHeureArrivee,NEW.dateHeureDepart);
     
     -- Le joueur rejoint l'équipe
-    IF(OLD.dateHeureArrivee = '0000-00-00 00:00:00' AND NEW.dateHeureArrivee <> OLD.dateHeureArrivee)
+    IF(OLD.dateHeureArrivee = '0001-01-01 00:00:00' AND NEW.dateHeureArrivee <> OLD.dateHeureArrivee)
     THEN
-		DELETE FROM Equipe_Joueur WHERE Equipe_Joueur.dateHeureArrivee = '0000-00-00 00:00:00' AND Equipe_Joueur.idJoueur = NEW.idJoueur;
+		DELETE FROM Equipe_Joueur WHERE Equipe_Joueur.dateHeureArrivee = '0001-01-01 00:00:00' AND Equipe_Joueur.idJoueur = NEW.idJoueur;
     END IF;
     
     -- Si on tente de lui le re-refaire rejoindre l'équipe avec le même enregistrement
@@ -1055,14 +967,11 @@ BEGIN
     THEN 
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Le responsable ne peut pas quitter son équiper, on a besoin de lui.';
 	END IF;
-END
-$$
+END $$
 
 ------------------------- MATCH --------------------
-DELIMITER $$
 CREATE TRIGGER matchInsertion
-BEFORE INSERT
-ON `Match`
+BEFORE INSERT ON `Match`
 FOR EACH ROW
 BEGIN
 	DECLARE e1 VARCHAR(3);
@@ -1078,33 +987,25 @@ BEGIN
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Serie terminée, ajout de match impossible';
     END IF;
 	CALL verifierIdMatch(NEW.id, NEW.idSerie, NEW.noTour, NEW.idTournoi);
-END
-$$
-DELIMITER $$
+END $$
+
 CREATE TRIGGER matchMiseAJour
-BEFORE UPDATE
-ON `Match`
+BEFORE UPDATE ON `Match`
 FOR EACH ROW
 BEGIN
 	CALL verifierIdMatch(NEW.id, NEW.idSerie, NEW.noTour, NEW.idTournoi);
-END
-$$
+END $$
 
 ----------------------- MATCH_JOUEUR --------------------
-DELIMITER $$
 CREATE TRIGGER matchJoueurInsertion
-BEFORE INSERT
-ON Match_Joueur
+BEFORE INSERT ON Match_Joueur
 FOR EACH ROW
 BEGIN
     CALL verifierJoueurEstDansEquipeSerie(NEW.idJoueur, NEW.idSerie, NEW.noTour, NEW.idTournoi);
-END
-$$
+END $$
 
-DELIMITER $$
 CREATE TRIGGER matchJoueurInsertionApres
-AFTER INSERT
-ON Match_Joueur
+AFTER INSERT ON Match_Joueur
 FOR EACH ROW
 BEGIN
 	-- Est ce que la finale est terminée
@@ -1120,49 +1021,42 @@ BEGIN
 	 ELSE
 		CALL tenterPromotion(NEW.idMatch, NEW.idSerie, NEW.noTour, NEW.idTournoi);
      END IF;
-END
-$$
+END $$
 
-DELIMITER $$
 CREATE TRIGGER matchJoueurMiseAJour
-BEFORE UPDATE
-ON Match_Joueur
+BEFORE UPDATE ON Match_Joueur
 FOR EACH ROW
 BEGIN
 	
 	CALL verifierSerieSuivanteCommencee(NEW.idSerie, NEW.noTour, NEW.idTournoi);
     CALL verifierJoueurEstDansEquipeSerie(NEW.idJoueur, NEW.idSerie, NEW.noTour, NEW.idTournoi);
 	CALL tenterPromotion(NEW.idMatch, NEW.idSerie, NEW.noTour, NEW.idTournoi);
-END
-$$
+END $$
 
 -----------------------------------------------------
 -- EVENTS
 -----------------------------------------------------
 -- Chaque 6 heure, vérifie si la date de début d'un tournoi a été dépassée, si c'est le cas termine le tournoi.alter
-DELIMITER $$
 CREATE EVENT annuler_tournoi
-ON SCHEDULE EVERY 6 HOUR 
-DO
+ON SCHEDULE EVERY 6 HOUR DO
 BEGIN 
 	UPDATE Tournoi 
     SET Tournoi.dateHeureFin = Tournoi.dateHeureDebut
     WHERE Tournoi.dateHeureFin IS NULL AND Tournoi.dateHeureDebut < NOW() 
 		  AND Tournoi.nbEquipesMax > (SELECT COUNT(1) FROM Tournoi_Equipe
 									  WHERE Tournoi_Equipe = Tournoi.id);
-END
-$$
+END $$
 
 -- Chaque 7 jour vérifie si le un tournoi de plus de 7 jour peut être supprimé.
-DELIMITER $$
 CREATE EVENT supprimer_tournoi_annule
-ON SCHEDULE EVERY 7 DAY 
-DO
+ON SCHEDULE EVERY 7 DAY STARTS NOW() + INTERVAL 15 MINUTE DO
+
 BEGIN 
 	DELETE FROM Tournoi 
     WHERE Tournoi.dateHeureFin = Tournoi.dateHeureDebut AND DATEDIFF(NOW(), Tournoi.dateHeureDebut) >= 7;
-END
-$$
+END $$
+
+DELIMITER ;
 
 -- INSERT INTO Objet (nom)
 -- VALUES 
@@ -1266,7 +1160,7 @@ $$
 
 -- INSERT INTO Tournoi (dateHeureDebut, nom, nbEquipesMax)
 -- VALUES 
--- ( "2021-01-10 21:04:00", "Le Franco-Suisse", 4);
+-- ( "2021-01-11 15:41:30", "Le Franco-Suisse", 4);
 
 -- INSERT INTO Tournoi_Equipe
 -- VALUES 
