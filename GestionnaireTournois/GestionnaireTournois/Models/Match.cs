@@ -33,6 +33,11 @@ namespace GestionnaireTournois.Models
             IdTournoi = idTournoi;
         }
 
+        public int[] GetDataJoueur(Joueur j)
+        {
+            return DataBaseConnector.GetDataJoueur(this, j);
+        }
+
         public override string ToString()
         {
             return "Match " + Id;

@@ -52,7 +52,7 @@ namespace GestionnaireTournois.Models
         public Equipe GetGagnant()
         {
 
-            return DataBaseConnector.GetWinnerOfSerie(new Serie(Id, 1,1, null, null));
+            return DataBaseConnector.GetWinnerOfSerie(new Serie(1, Id,1, null, null));
         }
 
         public List<Tour> GetTours()
@@ -64,10 +64,21 @@ namespace GestionnaireTournois.Models
         {
             return DataBaseConnector.GetTourByNo(this, noTour);
         }
-        
+
+        public bool SeedingEffectue()
+        {
+            return DataBaseConnector.SeedingEffectue(this);
+        }
+
+        public void StartTournoi()
+        {
+            DataBaseConnector.StartTournoi(this);
+        }
+
         public override string ToString()
         {
             return nom;
         }
+
     }
 }

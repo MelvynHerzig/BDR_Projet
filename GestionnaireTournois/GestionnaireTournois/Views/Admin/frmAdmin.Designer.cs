@@ -130,7 +130,9 @@ namespace GestionnaireTournois
             this.Controls.Add(this.cbxFilter);
             this.Controls.Add(this.lbxTournament);
             this.Controls.Add(this.mstrpAdmin);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.MainMenuStrip = this.mstrpAdmin;
+            this.MaximizeBox = false;
             this.Name = "frmAdmin";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "frmAdmin";

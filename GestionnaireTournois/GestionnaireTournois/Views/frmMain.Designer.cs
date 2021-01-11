@@ -32,7 +32,6 @@ namespace GestionnaireTournois
             this.gbxAdmin = new System.Windows.Forms.GroupBox();
             this.btnAdmin = new System.Windows.Forms.Button();
             this.gbxUser = new System.Windows.Forms.GroupBox();
-            this.lblSignUp = new System.Windows.Forms.Label();
             this.btnSignUp = new System.Windows.Forms.Button();
             this.btnSignIn = new System.Windows.Forms.Button();
             this.lblEmail = new System.Windows.Forms.Label();
@@ -65,7 +64,6 @@ namespace GestionnaireTournois
             // 
             // gbxUser
             // 
-            this.gbxUser.Controls.Add(this.lblSignUp);
             this.gbxUser.Controls.Add(this.btnSignUp);
             this.gbxUser.Controls.Add(this.btnSignIn);
             this.gbxUser.Controls.Add(this.lblEmail);
@@ -77,18 +75,6 @@ namespace GestionnaireTournois
             this.gbxUser.TabIndex = 1;
             this.gbxUser.TabStop = false;
             this.gbxUser.Text = "Mode utilisateur";
-            // 
-            // lblSignUp
-            // 
-            this.lblSignUp.AutoSize = true;
-            this.lblSignUp.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblSignUp.ForeColor = System.Drawing.SystemColors.Highlight;
-            this.lblSignUp.Location = new System.Drawing.Point(25, 109);
-            this.lblSignUp.Name = "lblSignUp";
-            this.lblSignUp.Size = new System.Drawing.Size(116, 15);
-            this.lblSignUp.TabIndex = 5;
-            this.lblSignUp.Text = "Inscription effectuée";
-            this.lblSignUp.Visible = false;
             // 
             // btnSignUp
             // 
@@ -147,6 +133,8 @@ namespace GestionnaireTournois
             this.Controls.Add(this.lblModeChoice);
             this.Controls.Add(this.gbxUser);
             this.Controls.Add(this.gbxAdmin);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
+            this.MaximizeBox = false;
             this.Name = "frmMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Gestionnaire de tournois";
@@ -168,7 +156,6 @@ namespace GestionnaireTournois
         private System.Windows.Forms.Label lblEmail;
         private System.Windows.Forms.TextBox tbxEmail;
         private System.Windows.Forms.Button btnAdmin;
-        private System.Windows.Forms.Label lblSignUp;
     }
 }
 

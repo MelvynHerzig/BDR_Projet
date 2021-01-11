@@ -21,7 +21,7 @@ namespace GestionnaireTournois
         private void btnAjouterTournoi_Click(object sender, EventArgs e)
         {
 
-            Tournoi t = new Tournoi(0, dtpDateDebut.Value, DateTime.Now, "Test", 16);
+            Tournoi t = new Tournoi(0, dtpDateDebut.Value.Date + dtpHeureDebut.Value.TimeOfDay, DateTime.Now, tbxNomTournoi.Text, (int)nudEquipes.Value);
 
             DataBaseConnector.InsertionTournoi(t);
 

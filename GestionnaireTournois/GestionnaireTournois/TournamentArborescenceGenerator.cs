@@ -82,6 +82,8 @@ namespace GestionnaireTournois
 
                             effective_serie_id = col_match_num;
 
+                            Tour tour = t.GetTourByNo(noTour);
+                            Serie serie = tour.GetSerieById(effective_serie_id);
 
                             if ((position_in_match_span == 1) && (effective_row % match_span == position_in_match_span))
                             {
@@ -89,29 +91,26 @@ namespace GestionnaireTournois
                             }
                             else if ((position_in_match_span == ((match_span >> 1) + 1)) && (effective_row % match_span == position_in_match_span))
                             {
-                                HTMLTable.AppendLine("        <td class=\"vs\" rowspan=\"" + match_white_span + "\"> VS <br><button name=\"" + t.Id + ";" + noTour + ";" + effective_serie_id + "\">" + infoMatch + "</button></td>");
+                                string disabled = "";
+                                if(serie.GetEquipes() == null || serie.GetEquipes().Contains(null))
+                                {
+                                    disabled = "disabled";
+                                }
+                                HTMLTable.AppendLine("        <td class=\"vs\" rowspan=\"" + match_white_span + "\"> VS <br><button " + disabled + " name=\"" + t.Id + ";" + noTour + ";" + effective_serie_id + "\">" + infoMatch + "</button></td>");
                             }
                             else
                             {
-                                Tour tour = t.GetTourByNo(noTour);
-
-                                if (effective_serie_id <= (2 << tour.No))
+                                if (serie != null)
                                 {
+                                    List<Equipe> equipes = serie.GetEquipes();
 
-                                    Serie serie = tour.GetSerieById(effective_serie_id);
-
-                                    if (serie != null)
+                                    if ((position_in_match_span == (match_span >> 1)) && (effective_row % match_span == position_in_match_span))
                                     {
-                                        List<Equipe> equipes = serie.GetEquipes();
-
-                                        if ((position_in_match_span == (match_span >> 1)) && (effective_row % match_span == position_in_match_span))
-                                        {
-                                            HTMLTable.AppendLine("        <td class=\"team\">" + (equipes[0] == null ? "N.A" : equipes[0].Acronyme) + "</td>"); 
-                                        }
-                                        else if ((position_in_match_span == match_span) && (effective_row % match_span == 0))
-                                        {
-                                            HTMLTable.AppendLine("        <td class=\"team\">" + (equipes[1] == null ? "N.A" : equipes[1].Acronyme) + "</td>"); 
-                                        }
+                                        HTMLTable.AppendLine("        <td class=\"team\">" + (equipes[0] == null ? "N.A" : equipes[0].Acronyme) + "</td>");
+                                    }
+                                    else if ((position_in_match_span == match_span) && (effective_row % match_span == 0))
+                                    {
+                                        HTMLTable.AppendLine("        <td class=\"team\">" + (equipes[1] == null ? "N.A" : equipes[1].Acronyme) + "</td>");
                                     }
                                 }
                             }
