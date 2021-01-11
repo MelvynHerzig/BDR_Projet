@@ -19,6 +19,17 @@ namespace GestionnaireTournois
             InitializeComponent();
         }
 
+        private void ChargeTournois()
+        {
+            lbxTournament.Items.Clear();
+
+            foreach (Tournoi t in DataBaseConnector.GetTournoisFiltres((Tournoi.EtatTournoi)cbxFilter.SelectedIndex))
+            {
+
+                lbxTournament.Items.Add(t);
+            }
+        }
+
         private void tsmiModeChoice_Click(object sender, EventArgs e)
         {
             this.DialogResult = DialogResult.OK;
@@ -43,7 +54,7 @@ namespace GestionnaireTournois
 
             HtmlElement elem = doc.ActiveElement;
 
-            if(elem.InnerHtml == "Editer")
+            if (elem.InnerHtml == "Editer")
             {
                 Console.WriteLine(elem.GetAttribute("name"));
                 string[] split = elem.GetAttribute("name").ToString().Split(';');
@@ -60,29 +71,45 @@ namespace GestionnaireTournois
 
         private void cbxFilter_SelectedIndexChanged(object sender, EventArgs e)
         {
-            lbxTournament.Items.Clear();
-
-            foreach (Tournoi t in DataBaseConnector.GetTournoisFiltres((Tournoi.EtatTournoi)cbxFilter.SelectedIndex))
-            {
-                lbxTournament.Items.Add(t);
-            }
+            ChargeTournois();
         }
 
         private void lbxTournament_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if(lbxTournament.SelectedItem != null)
-                wbrTreeStruct.DocumentText = TournamentArborescenceGenerator.Generate((Tournoi)lbxTournament.SelectedItem, "Editer");
+            try
+            {
+                if (lbxTournament.SelectedItem != null)
+                {
+                    Tournoi t = (Tournoi)lbxTournament.SelectedItem;
+
+                    if (!t.SeedingEffectue())
+                    {
+                        t.StartTournoi();
+                    }
+
+                    wbrTreeStruct.DocumentText = TournamentArborescenceGenerator.Generate(t, "Editer");
+
+                }
+            }catch(Exception error)
+            {
+                MessageBox.Show(error.Message);
+            }
         }
 
         private void btnProperties_Click(object sender, EventArgs e)
         {
             Tournoi t = (Tournoi)lbxTournament.SelectedItem;
 
-            frmTournamentProperties properties = new frmTournamentProperties(t.Id);
+            if (t != null)
+            {
+                frmTournamentProperties properties = new frmTournamentProperties(t);
 
-            properties.ShowDialog();
+                properties.ShowDialog();
 
-            lbxTournament.SelectedIndex = lbxTournament.SelectedIndex;
+                ChargeTournois();
+
+                lbxTournament.SelectedIndex = lbxTournament.SelectedIndex;
+            }
         }
 
         private void tsmiAjoutTournoi_Click(object sender, EventArgs e)
@@ -91,6 +118,7 @@ namespace GestionnaireTournois
 
             frm.ShowDialog();
 
+            ChargeTournois();
 
         }
     }

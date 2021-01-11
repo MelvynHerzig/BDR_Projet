@@ -15,6 +15,58 @@ namespace GestionnaireTournois
     {
         private const string connection = "server=localhost;database=gestionnairedetournoisrocketleague;uid=root;pwd=root;";
 
+        private void templateTransaction()
+        {
+            MySqlConnection myConnection = new MySqlConnection(connection);
+
+            myConnection.Open();
+
+            MySqlCommand myCommand = myConnection.CreateCommand();
+            MySqlTransaction myTrans;
+
+            // Start a local transaction
+            myTrans = myConnection.BeginTransaction();
+            // Must assign both transaction object and connection
+            // to Command object for a pending local transaction
+            myCommand.Connection = myConnection;
+            myCommand.Transaction = myTrans;
+
+            try
+            {
+                myCommand.CommandText = "insert into Test (id, desc) VALUES (100, 'Description')";
+                myCommand.ExecuteNonQuery();
+
+                myCommand.CommandText = "insert into Test (id, desc) VALUES (101, 'Description')";
+                myCommand.ExecuteNonQuery();
+
+                myTrans.Commit();
+
+            }
+            catch (Exception e)
+            {
+                try
+                {
+                    myTrans.Rollback();
+                }
+                catch (SqlException ex)
+                {
+                    if (myTrans.Connection != null)
+                    {
+                        Console.WriteLine("An exception of type " + ex.GetType() +
+                        " was encountered while attempting to roll back the transaction.");
+                    }
+                }
+
+                Console.WriteLine("An exception of type " + e.Message +
+                " was encountered while inserting the data.");
+                Console.WriteLine("Neither record was written to database.");
+
+            }
+            finally
+            {
+                myConnection.Close();
+            }
+        }
 
         #region Tournois
 
@@ -33,7 +85,7 @@ namespace GestionnaireTournois
                     condition = "WHERE Tournoi.dateHeureDebut > NOW() AND Tournoi.dateHeureFin IS NULL";
                     break;
                 case EtatTournoi.EN_COURS:
-                    condition = "WHERE Tournoi.dateHeureDebut <= NOW() AND Tournoi.dateHeureFin IS NULL";
+                    condition = "WHERE Tournoi.dateHeureDebut <= NOW() AND Tournoi.dateHeureFin IS NULL AND Tournoi.nbEquipesMax = (SELECT COUNT(1) FROM Tournoi_Equipe WHERE Tournoi.id = Tournoi_Equipe.idTournoi)";
                     break;
                 case EtatTournoi.TERMINES:
                     condition = "WHERE Tournoi.dateHeureDebut <= NOW() AND Tournoi.dateHeureFin IS NOT NULL AND Tournoi.dateHeureFin <> Tournoi.dateHeureDebut";
@@ -58,12 +110,18 @@ namespace GestionnaireTournois
 
                 while (rdr.Read())
                 {
-                    tournois.Add(new Tournoi(rdr.GetInt32("id"), DateTime.Now, DateTime.Now, rdr.GetString("nom"), rdr.GetInt32("nbEquipesMax")));
+
+                    DateTime fin = DateTime.MinValue;
+
+                    if (!rdr.IsDBNull(2))
+                        fin = rdr.GetDateTime("dateHeureFin");
+
+                    tournois.Add(new Tournoi(rdr.GetInt32("id"), rdr.GetDateTime("dateHeureDebut"), fin, rdr.GetString("nom"), rdr.GetInt32("nbEquipesMax")));
                 }
             }
             catch (Exception e)
             {
-                Console.WriteLine("An exception of type " + e.GetType() +
+                Console.WriteLine("An exception of type " + e.Message +
                 " was encountered.");
             }
             finally
@@ -96,12 +154,17 @@ namespace GestionnaireTournois
 
                 while (rdr.Read())
                 {
-                    result = new Tournoi(idTournoi, DateTime.Now, DateTime.Now, rdr.GetString("nom"), rdr.GetInt32("nbEquipesMax"));
+                    DateTime fin = DateTime.MinValue;
+
+                    if (!rdr.IsDBNull(2))
+                        fin = rdr.GetDateTime("dateHeureFin");
+
+                    result = new Tournoi(idTournoi, rdr.GetDateTime("dateHeureDebut"), fin, rdr.GetString("nom"), rdr.GetInt32("nbEquipesMax"));
                 }
             }
             catch (Exception e)
             {
-                Console.WriteLine("An exception of type " + e.GetType() +
+                Console.WriteLine("An exception of type " + e.Message +
                 " was encountered.");
             }
             finally
@@ -132,7 +195,7 @@ namespace GestionnaireTournois
             }
             catch (Exception e)
             {
-                Console.WriteLine("An exception of type " + e.GetType() +
+                Console.WriteLine("An exception of type " + e.Message +
                 " was encountered.");
             }
             finally
@@ -181,7 +244,7 @@ namespace GestionnaireTournois
             }
             catch (Exception e)
             {
-                Console.WriteLine("An exception of type " + e.GetType() +
+                Console.WriteLine("An exception of type " + e.Message +
                " was encountered.");
             }
             finally
@@ -192,61 +255,81 @@ namespace GestionnaireTournois
             return idTournoi;
         }
 
+        public static bool SeedingEffectue(Tournoi t)
+        {
+            bool flag = false;
+
+            MySqlConnection myConnection = new MySqlConnection(connection);
+
+            myConnection.Open();
+
+            MySqlCommand cmd = myConnection.CreateCommand();
+
+            try
+            {
+                cmd.CommandText = "seedingEffectue";
+                cmd.CommandType = CommandType.StoredProcedure;
 
 
-        #endregion
+                cmd.Parameters.Add("@ireturnvalue", MySqlDbType.Int32);
+                cmd.Parameters["@ireturnvalue"].Direction = ParameterDirection.ReturnValue;
 
-        private void templateTransaction()
+                cmd.Parameters.AddWithValue("pIdTournoi", t.Id);
+
+                cmd.Prepare();
+
+                cmd.ExecuteScalar();
+
+                flag = Convert.ToBoolean(cmd.Parameters["@ireturnvalue"].Value);
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("An exception of type " + e.Message +
+               " was encountered.");
+            }
+            finally
+            {
+                myConnection.Close();
+            }
+
+            return flag;
+        }
+
+        public static void StartTournoi(Tournoi t)
         {
             MySqlConnection myConnection = new MySqlConnection(connection);
 
             myConnection.Open();
 
-            MySqlCommand myCommand = myConnection.CreateCommand();
-            MySqlTransaction myTrans;
-
-            // Start a local transaction
-            myTrans = myConnection.BeginTransaction();
-            // Must assign both transaction object and connection
-            // to Command object for a pending local transaction
-            myCommand.Connection = myConnection;
-            myCommand.Transaction = myTrans;
+            MySqlCommand cmd = myConnection.CreateCommand();
 
             try
             {
-                myCommand.CommandText = "insert into Test (id, desc) VALUES (100, 'Description')";
-                myCommand.ExecuteNonQuery();
+                cmd.CommandText = "demarrerTournoi";
+                cmd.CommandType = CommandType.StoredProcedure;
 
-                myCommand.CommandText = "insert into Test (id, desc) VALUES (101, 'Description')";
-                myCommand.ExecuteNonQuery();
 
-                myTrans.Commit();
+
+                cmd.Parameters.AddWithValue("pIdTournoi", t.Id);
+
+                cmd.Prepare();
+
+                cmd.ExecuteNonQuery();
 
             }
             catch (Exception e)
             {
-                try
-                {
-                    myTrans.Rollback();
-                }
-                catch (SqlException ex)
-                {
-                    if (myTrans.Connection != null)
-                    {
-                        Console.WriteLine("An exception of type " + ex.GetType() +
-                        " was encountered while attempting to roll back the transaction.");
-                    }
-                }
-
-                Console.WriteLine("An exception of type " + e.GetType() +
-                " was encountered while inserting the data.");
-                Console.WriteLine("Neither record was written to database.");
+                Console.WriteLine("An exception of type " + e.Message +
+               " was encountered.");
             }
             finally
             {
                 myConnection.Close();
             }
         }
+
+        #endregion
 
         #region Tours
 
@@ -284,7 +367,7 @@ namespace GestionnaireTournois
             }
             catch (Exception e)
             {
-                Console.WriteLine("An exception of type " + e.GetType() + " was encountered.");
+                Console.WriteLine("An exception of type " + e.Message + " was encountered.");
             }
             finally
             {
@@ -328,7 +411,7 @@ namespace GestionnaireTournois
             }
             catch (Exception e)
             {
-                Console.WriteLine("An exception of type " + e.GetType() + " was encountered.");
+                Console.WriteLine("An exception of type " + e.Message + " was encountered.");
             }
             finally
             {
@@ -371,7 +454,7 @@ namespace GestionnaireTournois
             }
             catch (Exception e)
             {
-                Console.WriteLine("An exception of type " + e.GetType() + " was encountered.");
+                Console.WriteLine("An exception of type " + e.Message + " was encountered.");
             }
             finally
             {
@@ -416,7 +499,7 @@ namespace GestionnaireTournois
             }
             catch (Exception e)
             {
-                Console.WriteLine("An exception of type " + e.GetType() +
+                Console.WriteLine("An exception of type " + e.Message +
                " was encountered.");
             }
             finally
@@ -459,7 +542,7 @@ namespace GestionnaireTournois
             }
             catch (Exception e)
             {
-                Console.WriteLine("An exception of type " + e.GetType() +
+                Console.WriteLine("An exception of type " + e.Message +
                " was encountered.");
             }
             finally
@@ -504,7 +587,7 @@ namespace GestionnaireTournois
             }
             catch (Exception e)
             {
-                Console.WriteLine("An exception of type " + e.GetType() + " was encountered.");
+                Console.WriteLine("An exception of type " + e.Message + " was encountered.");
             }
             finally
             {
@@ -514,9 +597,197 @@ namespace GestionnaireTournois
             return matchs;
         }
 
-        public static int AjouterMatch(Serie serie)
+        public static void AjouterMatch(List<JoueurMatchData> datas)
         {
-            return 0;
+            MySqlConnection myConnection = new MySqlConnection(connection);
+
+            myConnection.Open();
+
+            MySqlCommand myCommand = myConnection.CreateCommand();
+            MySqlTransaction myTrans;
+
+            // Start a local transaction
+            myTrans = myConnection.BeginTransaction();
+            // Must assign both transaction object and connection
+            // to Command object for a pending local transaction
+            myCommand.Connection = myConnection;
+            myCommand.Transaction = myTrans;
+
+            try
+            {
+                myCommand.CommandText = "INSERT INTO `match`(id, idSerie, noTour, idTournoi) VALUES (@idMatch, @idSerie, @noTour, @idTournoi)";
+
+                myCommand.Parameters.AddWithValue("idMatch", datas[0].IdMatch);
+                myCommand.Parameters.AddWithValue("idSerie", datas[0].IdSerie);
+                myCommand.Parameters.AddWithValue("noTour", datas[0].NoTour);
+                myCommand.Parameters.AddWithValue("idTournoi", datas[0].IdTournoi);
+
+                myCommand.ExecuteNonQuery();
+
+                string insertMatchJoueur = "";
+                foreach (JoueurMatchData data in datas)
+                {
+                    insertMatchJoueur += string.Format("({0},{1},{2},{3},{4},{5},{6}),", data.IdJoueur, data.NbButs, data.NbArrets, data.IdMatch, data.IdSerie, data.NoTour, data.IdTournoi);   
+                }
+
+                insertMatchJoueur = insertMatchJoueur.Substring(0, insertMatchJoueur.Length - 1) + ";";
+
+
+                myCommand.CommandText = "INSERT INTO Match_Joueur (idJoueur, nbButs, nbArrets, idMatch, idSerie, noTour, idTournoi) VALUES " + insertMatchJoueur;
+
+                myCommand.ExecuteNonQuery();
+
+                myTrans.Commit();
+
+            }
+            catch (Exception e)
+            {
+                try
+                {
+                    myTrans.Rollback();
+                }
+                catch (SqlException ex)
+                {
+                    if (myTrans.Connection != null)
+                    {
+                        Console.WriteLine("An exception of type " + ex.GetType() +
+                        " was encountered while attempting to roll back the transaction.");
+                    }
+                }
+
+                Console.WriteLine("An exception of type " + e.Message +
+                " was encountered while inserting the data.");
+                Console.WriteLine("Neither record was written to database.");
+            }
+            finally
+            {
+                myConnection.Close();
+            }
+        }
+
+        public static void ModifierMatch(List<JoueurMatchData> datas)
+        {
+            MySqlConnection myConnection = new MySqlConnection(connection);
+
+            myConnection.Open();
+
+            MySqlCommand cmd = myConnection.CreateCommand();
+
+            try
+            {
+
+                string insertMatchJoueur = "";
+                foreach (JoueurMatchData data in datas)
+                {
+                    insertMatchJoueur += string.Format("({0},{1},{2},{3},{4},{5},{6}), ", data.IdJoueur, data.NbButs, data.NbArrets, data.IdMatch, data.IdSerie, data.NoTour, data.IdTournoi);
+                }
+
+                insertMatchJoueur = insertMatchJoueur.Substring(0, insertMatchJoueur.Length - 2);
+
+                cmd.CommandText = "INSERT INTO Match_Joueur (idJoueur, nbButs, nbArrets, idMatch, idSerie, noTour, idTournoi) VALUES " + insertMatchJoueur + " ON DUPLICATE KEY UPDATE nbButs = VALUES(nbButs), nbArrets = VALUES(nbArrets);";
+
+                cmd.Prepare();
+
+                cmd.ExecuteNonQuery();
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("An exception of type " + e.Message + " was encountered.");
+            }
+            finally
+            {
+                myConnection.Close();
+            }
+        }
+
+        public static int[] GetDataJoueur(Match m, Joueur j)
+        {
+            int[] data = new int[2];
+
+            MySqlConnection myConnection = new MySqlConnection(connection);
+
+            myConnection.Open();
+
+            MySqlCommand cmd = myConnection.CreateCommand();
+
+            try
+            {
+                cmd.CommandText = "SELECT nbButs, nbArrets FROM match_joueur WHERE idJoueur = @idJoueur AND idMatch = @idMatch AND idSerie = @idSerie AND noTour = @noTour AND idTournoi = @idTournoi;";
+
+                cmd.Parameters.AddWithValue("@idTournoi", m.IdTournoi);
+                cmd.Parameters.AddWithValue("@noTour", m.NoTour);
+                cmd.Parameters.AddWithValue("@idSerie", m.IdSerie);
+                cmd.Parameters.AddWithValue("@idMatch", m.Id);
+
+                cmd.Parameters.AddWithValue("@idJoueur", j.Id);
+
+                cmd.Prepare();
+
+                MySqlDataReader reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    data[0] = reader.GetInt32("nbButs");
+                    data[1] = reader.GetInt32("nbArrets");
+                }
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("An exception of type " + e.Message + " was encountered.");
+            }
+            finally
+            {
+                myConnection.Close();
+            }
+
+
+            return data;
+        }
+
+        public static List<Joueur> GetJoueursEquipe(Equipe equipe, int idTournoi)
+        {
+            List<Joueur> joueurs = new List<Joueur>();
+
+            MySqlConnection myConnection = new MySqlConnection(connection);
+
+            myConnection.Open();
+
+            MySqlCommand cmd = myConnection.CreateCommand();
+
+            try
+            {
+                cmd.CommandText = "SELECT DISTINCT id,  nom, prenom, email, pseudo, dateNaissance " +
+                                  "FROM joueur " +
+                                  "JOIN equipe_joueur ON equipe_joueur.idJoueur = joueur.id " +
+                                  "JOIN tournoi_equipe ON tournoi_equipe.acronymeEquipe = equipe_joueur.acronymeEquipe " +
+                                  "WHERE tournoi_equipe.idTournoi = @idTournoi  AND equipeDuJoueurLorsDu(joueur.id, tournoi_equipe.dateInscription) = @acronyme;";
+
+                cmd.Parameters.AddWithValue("@idTournoi", idTournoi);
+
+                cmd.Parameters.AddWithValue("@acronyme", equipe.Acronyme);
+
+                cmd.Prepare();
+
+                MySqlDataReader reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    joueurs.Add(new Joueur(reader.GetInt32("id"), reader.GetString("nom"), reader.GetString("prenom"), reader.GetString("email"), reader.GetString("pseudo"), reader.GetDateTime("dateNaissance")));
+                }
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("An exception of type " + e.Message + " was encountered.");
+            }
+            finally
+            {
+                myConnection.Close();
+            }
+
+            return joueurs;
         }
 
         #endregion
@@ -562,7 +833,7 @@ namespace GestionnaireTournois
             }
             catch (Exception e)
             {
-                Console.WriteLine("An exception of type " + e.GetType() +
+                Console.WriteLine("An exception of type " + e.Message +
                " was encountered.");
             }
             finally
@@ -605,7 +876,7 @@ namespace GestionnaireTournois
             }
             catch (Exception e)
             {
-                Console.WriteLine("An exception of type " + e.GetType() +
+                Console.WriteLine("An exception of type " + e.Message +
                 " was encountered.");
             }
             finally
@@ -657,7 +928,7 @@ namespace GestionnaireTournois
             }
             catch (Exception e)
             {
-                Console.WriteLine("An exception of type " + e.GetType() +
+                Console.WriteLine("An exception of type " + e.Message +
                " was encountered.");
             }
             finally

@@ -48,12 +48,8 @@ namespace GestionnaireTournois
                 signUp.GetCountryKey();
 
 
-
-                // Si erreur, changer texte du label 
-                lblSignUp.Visible = true;
             }
 
-            lblSignUp.Enabled = true;
         }
 
         private void btnSignIn_Click(object sender, EventArgs e)

@@ -48,6 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataBaseConnector.cs" />
+    <Compile Include="Models\JoueurMatchData.cs" />
     <Compile Include="Views\Admin\frmAdmin.cs">
       <SubType>Form</SubType>
     </Compile>

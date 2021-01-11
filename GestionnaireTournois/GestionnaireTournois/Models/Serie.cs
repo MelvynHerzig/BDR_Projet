@@ -32,7 +32,7 @@ namespace GestionnaireTournois.Models
             Equipe2 = e2;
         }
 
-   
+
 
         public List<Equipe> GetEquipes()
         {
@@ -51,9 +51,15 @@ namespace GestionnaireTournois.Models
             return DataBaseConnector.GetMatchsFromSerie(this);
         }
 
-        public void AjouterMatch()
+        public void AjouterMatch(List<JoueurMatchData> datas)
         {
-            DataBaseConnector.AjouterMatch(this);
+            DataBaseConnector.AjouterMatch(datas);
+        }
+
+        public void ModifierMatch(List<JoueurMatchData> datas)
+        {
+
+            DataBaseConnector.ModifierMatch(datas);
         }
     }
 }
