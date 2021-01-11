@@ -351,7 +351,9 @@ BEGIN
 	FROM Equipe_Joueur
 	WHERE idJoueur = pIdJoueur AND dateHeureArrivee = (SELECT MAX(dateHeureArrivee) 
 													   FROM Equipe_Joueur 
-                                                       WHERE idJoueur = pIdJoueur AND dateHeureArrivee < pDate AND (dateHeureDepart IS NULL OR dateHeureDepart > pDate));
+                                                       WHERE idJoueur = pIdJoueur AND dateHeureArrivee <> "0001-01-01 00:00:00" 
+																				  AND dateHeureArrivee < pDate 
+																				  AND (dateHeureDepart IS NULL OR dateHeureDepart > pDate));
     RETURN nomEquipe;
 END $$
 
