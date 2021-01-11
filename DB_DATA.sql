@@ -21,10 +21,14 @@ VALUES
 ( 50.00 ),
 ( 100.00 ),
 ( 150.00 ),
-( 500.00 ),
-( 1500.00 ),
 ( 200.00 ),
-( 300.00 );
+( 250.00 ),
+( 300.00 ),
+( 350.00 ),
+( 500.00 ),
+( 1000.00 ),
+( 1500.00 ),
+( 2000.00 );
 
 INSERT INTO Prix_Objet 
 VALUES 
@@ -142,17 +146,17 @@ VALUES
 ( 'UC2', 36,  '2020-01-30 00:00:00', '2021-01-01 20:00:00' );
 
 
-INSERT INTO Tournoi (dateHeureDebut, nom, nbEquipesMax, dateHeureFin)
+INSERT INTO Tournoi (dateHeureDebut, nom, nbEquipesMax, dateHeureFin, idPrixPremier, idPrixSecond)
 VALUES 
-( '2020-02-01 20:00:00', 'Le Franco-Suisse', 4, '2020-02-01 23:00:00' ),
-( '2020-03-01 20:00:00', 'IEM', 8, '2020-04-01 23:00:00' ),
-( '2020-12-02', 'Tournoi de préparation en cours', 2, NULL ),
-( '2020-12-01', 'Tournoi de préparation annulé', 2, '2020-12-01' ),
-( '2020-12-03', 'Tournoi 4 équipe en cours séries en cours', 4, NULL ),
-( '2020-12-04', 'Tournoi 4 équipe en cours tour 1 terminé', 4, NULL ),
-( '2022-02-01', 'Tournoi 4 équipe en attente 3/4', 4, NULL ),
-( '2022-03-01', 'Tournoi 4 équipe en attente 4/4', 4, NULL ),
-( Now(), 'Tournoi 4 équipe en attente prêt 4/4', 4, NULL );
+( '2020-02-01 20:00:00', 'Le Franco-Suisse', 4, '2020-02-01 23:00:00', 2, 1),
+( '2020-03-01 20:00:00', 'IEM', 8, '2020-04-01 23:00:00', 3, 2),
+( '2020-12-02', 'Tournoi de préparation en cours', 2, NULL, 4, 3),
+( '2020-12-01', 'Tournoi de préparation annulé', 2, '2020-12-01', 5, 4),
+( '2020-12-03', 'Tournoi 4 équipe en cours séries en cours', 4, NULL, 6, 5),
+( '2020-12-04', 'Tournoi 4 équipe en cours tour 1 terminé', 4, NULL, 7, 6 ),
+( '2022-02-01', 'Tournoi 4 équipe en attente 3/4', 4, NULL, 8, 7 ),
+( '2022-03-01', 'Tournoi 4 équipe en attente 4/4', 4, NULL, 9, 8 ),
+( Now(), 'Tournoi 4 équipe en attente prêt 4/4', 4, NULL, 10, 9 );
 
 
 INSERT INTO Tour
@@ -452,7 +456,7 @@ VALUES
 ( 4, 1, 5, 1, 1, 2, 5 ),
 ( 5, 3, 1, 1, 1, 2, 5 ),
 ( 6, 2, 2, 1, 1, 2, 5 ),
-( 25, 3, 1, 1, 1, 2, 5 ),
+( 25, 0, 1, 1, 1, 2, 5 ),
 ( 26, 1, 3, 1, 1, 2, 5 ),
 ( 27, 2, 0, 1, 1, 2, 5 );
 
