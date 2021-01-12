@@ -3,7 +3,7 @@
 -- Model: New Model    Version: 1.0
 -- Berney Alec, Forestier Quentin, Herzig Melvyn
 
-DROP SCHEMA IF EXISTS GestionnaireDeTournoisRocketLeague ;
+DROP SCHEMA IF EXISTS GestionnaireDeTournoisRocketLeague;
 
 CREATE SCHEMA IF NOT EXISTS GestionnaireDeTournoisRocketLeague DEFAULT CHARACTER SET utf8mb4;
 USE GestionnaireDeTournoisRocketLeague;
@@ -1674,7 +1674,7 @@ END $$
 -- --------------------------------
 DROP USER IF EXISTS 'GDTRL_Manager';
 CREATE USER 'GDTRL_Manager' IDENTIFIED BY 'P@$$w0rd1sHArDt0F1nd';
-GRANT DELETE, INSERT, SELECT, UPDATE ON tablut.* TO 'Tablut_User';
+GRANT DELETE, INSERT, SELECT, UPDATE ON GestionnaireDeTournoisRocketLeague.* TO 'Tablut_User';
 
 DELIMITER ;
 
