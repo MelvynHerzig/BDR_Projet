@@ -66,7 +66,10 @@ namespace GestionnaireTournois
 
                 frmEditionSerie frm = new frmEditionSerie(s);
                 frm.ShowDialog();
+                ShowArborescence();
             }
+
+
         }
 
         private void cbxFilter_SelectedIndexChanged(object sender, EventArgs e)
@@ -76,26 +79,28 @@ namespace GestionnaireTournois
 
         private void lbxTournament_SelectedIndexChanged(object sender, EventArgs e)
         {
+            ShowArborescence();
+        }
+
+        private void ShowArborescence()
+        {
             try
             {
                 if (lbxTournament.SelectedItem != null)
                 {
                     Tournoi t = (Tournoi)lbxTournament.SelectedItem;
 
-                    if (!t.SeedingEffectue())
-                    {
-                        t.StartTournoi();
-                    }
+                    t.StartTournoi();
 
                     wbrTreeStruct.DocumentText = TournamentArborescenceGenerator.Generate(t, "Editer");
 
                 }
-            }catch(Exception error)
+            }
+            catch (Exception error)
             {
                 MessageBox.Show(error.Message);
             }
         }
-
         private void btnProperties_Click(object sender, EventArgs e)
         {
             Tournoi t = (Tournoi)lbxTournament.SelectedItem;

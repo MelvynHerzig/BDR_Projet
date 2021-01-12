@@ -107,9 +107,24 @@ namespace GestionnaireTournois
             // nudEquipes
             // 
             this.nudEquipes.Location = new System.Drawing.Point(148, 72);
+            this.nudEquipes.Maximum = new decimal(new int[] {
+            256,
+            0,
+            0,
+            0});
+            this.nudEquipes.Minimum = new decimal(new int[] {
+            2,
+            0,
+            0,
+            0});
             this.nudEquipes.Name = "nudEquipes";
             this.nudEquipes.Size = new System.Drawing.Size(102, 20);
             this.nudEquipes.TabIndex = 7;
+            this.nudEquipes.Value = new decimal(new int[] {
+            2,
+            0,
+            0,
+            0});
             // 
             // label1
             // 

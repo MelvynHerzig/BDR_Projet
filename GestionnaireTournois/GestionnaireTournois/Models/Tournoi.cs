@@ -65,20 +65,21 @@ namespace GestionnaireTournois.Models
             return DataBaseConnector.GetTourByNo(this, noTour);
         }
 
-        public bool SeedingEffectue()
-        {
-            return DataBaseConnector.SeedingEffectue(this);
-        }
 
         public void StartTournoi()
         {
             DataBaseConnector.StartTournoi(this);
         }
 
+        public void ModifierTours(List<Tour> tours)
+        {
+            DataBaseConnector.ModifierToursTournoi(this, tours);
+        }
         public override string ToString()
         {
             return nom;
         }
+
 
     }
 }

@@ -29,3 +29,4 @@ C:\Users\Dudude\Google Drive\HEIG-VD\BDR\Projet\BDR_Projet\GestionnaireTournois\
 C:\Users\Dudude\Google Drive\HEIG-VD\BDR\Projet\BDR_Projet\GestionnaireTournois\GestionnaireTournois\obj\Debug\GestionnaireTournois.frmTournamentProperties.resources
 C:\Users\Dudude\Google Drive\HEIG-VD\BDR\Projet\BDR_Projet\GestionnaireTournois\GestionnaireTournois\obj\Debug\GestionnaireTournois.frmAjoutTournoi.resources
 C:\Users\Dudude\Google Drive\HEIG-VD\BDR\Projet\BDR_Projet\GestionnaireTournois\GestionnaireTournois\obj\Debug\GestionnaireTournois.Views.Admin.frmEditionSerie.resources
+C:\Users\Dudude\Google Drive\HEIG-VD\BDR\Projet\BDR_Projet\GestionnaireTournois\GestionnaireTournois\obj\Debug\GestionnaireTournois.Views.Admin.frmEditionPrix.resources

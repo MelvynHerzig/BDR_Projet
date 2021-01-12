@@ -30,12 +30,14 @@ namespace GestionnaireTournois.Views.Admin
         {
             List<JoueurMatchData> datas = CreationInfosMatch(lbxMatchs.Items.Count + 1);
             Serie.AjouterMatch(datas);
+            ChargeMatchs();
 
         }
         private void btnModifier_Click(object sender, EventArgs e)
         {
             List<JoueurMatchData> datas = CreationInfosMatch(((Match)lbxMatchs.SelectedItem).Id);
             Serie.ModifierMatch(datas);
+            ChargeMatchs();
         }
         private void frmEditionSerie_Load(object sender, EventArgs e)
         {

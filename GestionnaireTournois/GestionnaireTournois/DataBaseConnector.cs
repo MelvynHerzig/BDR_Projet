@@ -8,6 +8,7 @@ using GestionnaireTournois.Models;
 using System.Data.SqlClient;
 using System.Data;
 using static GestionnaireTournois.Models.Tournoi;
+using System.Windows.Forms;
 
 namespace GestionnaireTournois
 {
@@ -255,46 +256,6 @@ namespace GestionnaireTournois
             return idTournoi;
         }
 
-        public static bool SeedingEffectue(Tournoi t)
-        {
-            bool flag = false;
-
-            MySqlConnection myConnection = new MySqlConnection(connection);
-
-            myConnection.Open();
-
-            MySqlCommand cmd = myConnection.CreateCommand();
-
-            try
-            {
-                cmd.CommandText = "seedingEffectue";
-                cmd.CommandType = CommandType.StoredProcedure;
-
-
-                cmd.Parameters.Add("@ireturnvalue", MySqlDbType.Int32);
-                cmd.Parameters["@ireturnvalue"].Direction = ParameterDirection.ReturnValue;
-
-                cmd.Parameters.AddWithValue("pIdTournoi", t.Id);
-
-                cmd.Prepare();
-
-                cmd.ExecuteScalar();
-
-                flag = Convert.ToBoolean(cmd.Parameters["@ireturnvalue"].Value);
-
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("An exception of type " + e.Message +
-               " was encountered.");
-            }
-            finally
-            {
-                myConnection.Close();
-            }
-
-            return flag;
-        }
 
         public static void StartTournoi(Tournoi t)
         {
@@ -421,6 +382,71 @@ namespace GestionnaireTournois
             return tour;
         }
 
+        public static void ModifierToursTournoi(Tournoi tournoi, List<Tour> tours)
+        {
+            MySqlConnection myConnection = new MySqlConnection(connection);
+
+            myConnection.Open();
+
+            MySqlCommand myCommand = myConnection.CreateCommand();
+            MySqlTransaction myTrans;
+
+            // Start a local transaction
+            myTrans = myConnection.BeginTransaction();
+            // Must assign both transaction object and connection
+            // to Command object for a pending local transaction
+            myCommand.Connection = myConnection;
+            myCommand.Transaction = myTrans;
+
+            try
+            {
+                 
+                myCommand.Parameters.AddWithValue("idTournoi", tours[0].IdTournoi);
+
+                foreach (Tour t in tours)
+                {
+                    myCommand.CommandText = String.Format("UPDATE tour SET longueurMaxSerie = @longueurSerie{0} WHERE no = @noTour{1} AND idTournoi = @idTournoi;", t.No, t.No);
+                    
+                    myCommand.Parameters.AddWithValue(String.Format("longueurSerie{0}", t.No), t.LongueurMaxSerie);
+                    myCommand.Parameters.AddWithValue(String.Format("noTour{0}", t.No), t.No);
+
+                    myCommand.Prepare();
+
+                    myCommand.ExecuteNonQuery();
+
+                }
+
+                myTrans.Commit();
+
+
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+                try
+                {
+                    myTrans.Rollback();
+                }
+                catch (SqlException ex)
+                {
+                    if (myTrans.Connection != null)
+                    {
+                        Console.WriteLine("An exception of type " + ex.GetType() +
+                        " was encountered while attempting to roll back the transaction.");
+                    }
+                }
+
+                Console.WriteLine("An exception of type " + e.Message +
+                " was encountered while inserting the data.");
+                Console.WriteLine("Neither record was written to database.");
+
+            }
+            finally
+            {
+                myConnection.Close();
+            }
+        }
+
         #endregion
 
         #region Series
@@ -490,10 +516,12 @@ namespace GestionnaireTournois
 
                 while (reader.Read())
                 {
-                    if (!reader.IsDBNull(1) || !reader.IsDBNull(2))
-                        s = new Serie(idSerie, t.IdTournoi, t.No, reader.GetString("acronymeEquipe1"), reader.GetString("acronymeEquipe2"));
-                    else
-                        s = new Serie(idSerie, t.IdTournoi, t.No, null, null);
+                    string e1 = reader.IsDBNull(1) ? null : reader.GetString(1);
+                    string e2 = reader.IsDBNull(2) ? null : reader.GetString(2); ;
+
+
+
+                    s = new Serie(idSerie, t.IdTournoi, t.No, e1, e2);
                 }
 
             }
@@ -627,7 +655,7 @@ namespace GestionnaireTournois
                 string insertMatchJoueur = "";
                 foreach (JoueurMatchData data in datas)
                 {
-                    insertMatchJoueur += string.Format("({0},{1},{2},{3},{4},{5},{6}),", data.IdJoueur, data.NbButs, data.NbArrets, data.IdMatch, data.IdSerie, data.NoTour, data.IdTournoi);   
+                    insertMatchJoueur += string.Format("({0},{1},{2},{3},{4},{5},{6}),", data.IdJoueur, data.NbButs, data.NbArrets, data.IdMatch, data.IdSerie, data.NoTour, data.IdTournoi);
                 }
 
                 insertMatchJoueur = insertMatchJoueur.Substring(0, insertMatchJoueur.Length - 1) + ";";
@@ -945,5 +973,19 @@ namespace GestionnaireTournois
         }
         */
         #endregion
+
+        #region Prix
+
+        public static List<Objet> GetObjetsPrix(Prix prix)
+        {
+            List<Objet> objets = new List<Objet>();
+
+
+
+            return objets;
+        }
+
+        #endregion
+
     }
 }
