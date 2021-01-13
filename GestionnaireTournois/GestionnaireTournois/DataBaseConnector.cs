@@ -9,12 +9,17 @@ using System.Data.SqlClient;
 using System.Data;
 using static GestionnaireTournois.Models.Tournoi;
 using System.Windows.Forms;
+using System.Configuration;
 
 namespace GestionnaireTournois
 {
     class DataBaseConnector
-    {
-        private const string connection = "server=localhost;database=gestionnairedetournoisrocketleague;uid=root;pwd=root;";
+    {//"server=localhost;database=gestionnairedetournoisrocketleague;uid=root;pwd=root;";
+        private static string connection = String.Format("server={0};database={1};uid={2};pwd={3};",
+                                                        ConfigurationManager.AppSettings["server"],
+                                                        ConfigurationManager.AppSettings["database"],
+                                                        ConfigurationManager.AppSettings["user"],
+                                                        ConfigurationManager.AppSettings["password"]);
 
         private void templateTransaction()
         {
@@ -103,7 +108,7 @@ namespace GestionnaireTournois
 
             try
             {
-                cmd.CommandText = "SELECT id, dateHeureDebut, dateHeureFin, nom, nbEquipesMax FROM tournoi " + condition + ";";
+                cmd.CommandText = "SELECT id, dateHeureDebut, dateHeureFin, nom, nbEquipesMax, idPrixPremier, idPrixSecond FROM tournoi " + condition + ";";
 
                 cmd.Prepare();
 
@@ -113,11 +118,17 @@ namespace GestionnaireTournois
                 {
 
                     DateTime fin = DateTime.MinValue;
+                    int idPrixPremier = 0;
+                    int idPrixDeuxieme = 0;
 
                     if (!rdr.IsDBNull(2))
                         fin = rdr.GetDateTime("dateHeureFin");
+                    if (!rdr.IsDBNull(5))
+                        idPrixPremier = rdr.GetInt32("idPrixPremier");
+                    if (!rdr.IsDBNull(6))
+                        idPrixPremier = rdr.GetInt32("idPrixSecond");
 
-                    tournois.Add(new Tournoi(rdr.GetInt32("id"), rdr.GetDateTime("dateHeureDebut"), fin, rdr.GetString("nom"), rdr.GetInt32("nbEquipesMax")));
+                    tournois.Add(new Tournoi(rdr.GetInt32("id"), rdr.GetDateTime("dateHeureDebut"), fin, rdr.GetString("nom"), rdr.GetInt32("nbEquipesMax"), idPrixPremier, idPrixDeuxieme));
                 }
             }
             catch (Exception e)
@@ -145,7 +156,7 @@ namespace GestionnaireTournois
 
             try
             {
-                cmd.CommandText = "SELECT id, dateHeureDebut, dateHeureFin, nom, nbEquipesMax FROM tournoi WHERE id = @idTournoi;";
+                cmd.CommandText = "SELECT id, dateHeureDebut, dateHeureFin, nom, nbEquipesMax, idPrixPremier, idPrixSecond FROM tournoi WHERE id = @idTournoi;";
                 cmd.Parameters.AddWithValue("@idTournoi", idTournoi);
 
                 cmd.Prepare();
@@ -160,7 +171,7 @@ namespace GestionnaireTournois
                     if (!rdr.IsDBNull(2))
                         fin = rdr.GetDateTime("dateHeureFin");
 
-                    result = new Tournoi(idTournoi, rdr.GetDateTime("dateHeureDebut"), fin, rdr.GetString("nom"), rdr.GetInt32("nbEquipesMax"));
+                    result = new Tournoi(idTournoi, rdr.GetDateTime("dateHeureDebut"), fin, rdr.GetString("nom"), rdr.GetInt32("nbEquipesMax"), rdr.GetInt32("idPrixPremier"), rdr.GetInt32("idPrixSecond"));
                 }
             }
             catch (Exception e)
@@ -245,6 +256,7 @@ namespace GestionnaireTournois
             }
             catch (Exception e)
             {
+                MessageBox.Show(e.Message);
                 Console.WriteLine("An exception of type " + e.Message +
                " was encountered.");
             }
@@ -256,6 +268,80 @@ namespace GestionnaireTournois
             return idTournoi;
         }
 
+        public static void ModifierProprietesTournoi(Tournoi t, string nouveauNom, DateTime nouveauDebut)
+        {
+            MySqlConnection myConnection = new MySqlConnection(connection);
+
+            myConnection.Open();
+
+            MySqlCommand cmd = myConnection.CreateCommand();
+
+            try
+            {
+
+                cmd.CommandText = "UPDATE tournoi SET nom = @nom, dateHeureDebut = @dateDebut WHERE id = @idTournoi;";
+
+                MySqlParameter nom = new MySqlParameter("@nom", MySqlDbType.VarChar, 50);
+                MySqlParameter dateDebut = new MySqlParameter("@dateDebut", MySqlDbType.DateTime);
+                MySqlParameter idTournoi = new MySqlParameter("idTournoi", MySqlDbType.Int32);
+
+                nom.Value = nouveauNom;
+                dateDebut.Value = nouveauDebut.ToString("yyyy-MM-dd HH:mm:ss");
+                idTournoi.Value = t.Id;
+
+                cmd.Parameters.Add(nom);
+                cmd.Parameters.Add(dateDebut);
+                cmd.Parameters.Add(idTournoi);
+
+                cmd.Prepare();
+
+                cmd.ExecuteNonQuery();
+
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+                Console.WriteLine("An exception of type " + e.Message +
+               " was encountered.");
+            }
+            finally
+            {
+                myConnection.Close();
+            }
+        }
+
+        public static void SuppressionTournoi(Tournoi t)
+        {
+
+            MySqlConnection myConnection = new MySqlConnection(connection);
+
+            myConnection.Open();
+
+            MySqlCommand cmd = myConnection.CreateCommand();
+
+            try
+            {
+
+                cmd.CommandText = "DELETE FROM tournoi WHERE id = @idTournoi";
+
+                cmd.Parameters.AddWithValue("idTournoi", t.Id);
+
+                cmd.Prepare();
+
+                cmd.ExecuteNonQuery();
+
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+                Console.WriteLine("An exception of type " + e.Message +
+               " was encountered.");
+            }
+            finally
+            {
+                myConnection.Close();
+            }
+        }
 
         public static void StartTournoi(Tournoi t)
         {
@@ -400,13 +486,13 @@ namespace GestionnaireTournois
 
             try
             {
-                 
+
                 myCommand.Parameters.AddWithValue("idTournoi", tours[0].IdTournoi);
 
                 foreach (Tour t in tours)
                 {
                     myCommand.CommandText = String.Format("UPDATE tour SET longueurMaxSerie = @longueurSerie{0} WHERE no = @noTour{1} AND idTournoi = @idTournoi;", t.No, t.No);
-                    
+
                     myCommand.Parameters.AddWithValue(String.Format("longueurSerie{0}", t.No), t.LongueurMaxSerie);
                     myCommand.Parameters.AddWithValue(String.Format("noTour{0}", t.No), t.No);
 
@@ -670,6 +756,7 @@ namespace GestionnaireTournois
             }
             catch (Exception e)
             {
+                MessageBox.Show(e.Message);
                 try
                 {
                     myTrans.Rollback();
@@ -721,6 +808,7 @@ namespace GestionnaireTournois
             }
             catch (Exception e)
             {
+                MessageBox.Show(e.Message);
                 Console.WriteLine("An exception of type " + e.Message + " was encountered.");
             }
             finally
@@ -976,15 +1064,501 @@ namespace GestionnaireTournois
 
         #region Prix
 
+        public static Prix GetPrixById(int idPrix)
+        {
+            Prix prix = null;
+
+            MySqlConnection myConnection = new MySqlConnection(connection);
+
+            myConnection.Open();
+
+            MySqlCommand cmd = myConnection.CreateCommand();
+
+            try
+            {
+
+                cmd.CommandText = "SELECT id, montantArgent FROM prix WHERE id = @idPrix ; ";
+
+                cmd.Parameters.AddWithValue("@idPrix", idPrix);
+
+                cmd.Prepare();
+
+                MySqlDataReader reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+
+                    prix = new Prix(reader.GetInt32("id"), reader.GetInt32("montantArgent"));
+
+                }
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("An exception of type " + e.Message + " was encountered.");
+            }
+            finally
+            {
+                myConnection.Close();
+            }
+
+            return prix;
+        }
+
         public static List<Objet> GetObjetsPrix(Prix prix)
         {
             List<Objet> objets = new List<Objet>();
 
+            MySqlConnection myConnection = new MySqlConnection(connection);
 
+            myConnection.Open();
+
+            MySqlCommand cmd = myConnection.CreateCommand();
+
+            try
+            {
+
+                cmd.CommandText = "SELECT id, nom FROM objet JOIN prix_objet ON prix_objet.idObjet = objet.id WHERE prix_objet.idPrix = @idPrix;";
+
+                cmd.Parameters.AddWithValue("@idPrix", prix.Id);
+
+                cmd.Prepare();
+
+                MySqlDataReader reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+
+                    objets.Add(new Objet(reader.GetInt32("id"), reader.GetString("nom")));
+
+                }
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("An exception of type " + e.Message + " was encountered.");
+            }
+            finally
+            {
+                myConnection.Close();
+            }
 
             return objets;
         }
 
+        public static List<Objet> GetObjets()
+        {
+            List<Objet> objets = new List<Objet>();
+
+            MySqlConnection myConnection = new MySqlConnection(connection);
+
+            myConnection.Open();
+
+            MySqlCommand cmd = myConnection.CreateCommand();
+
+            try
+            {
+
+                cmd.CommandText = "SELECT id, nom FROM objet";
+
+
+                cmd.Prepare();
+
+                MySqlDataReader reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+
+                    objets.Add(new Objet(reader.GetInt32("id"), reader.GetString("nom")));
+
+                }
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("An exception of type " + e.Message + " was encountered.");
+            }
+            finally
+            {
+                myConnection.Close();
+            }
+
+            return objets;
+        }
+
+        public static int CreerPrix(Prix prix)
+        {
+            int id = 0;
+
+            MySqlConnection myConnection = new MySqlConnection(connection);
+
+            myConnection.Open();
+
+            MySqlCommand cmd = myConnection.CreateCommand();
+
+            try
+            {
+
+                cmd.CommandText = "INSERT INTO prix(montantArgent) VALUES (@montantArgent);";
+
+                MySqlParameter montantArgent = new MySqlParameter("@montantArgent", MySqlDbType.Decimal);
+
+                montantArgent.Value = prix.MontantArgent;
+
+                cmd.Parameters.Add(montantArgent);
+
+                cmd.Prepare();
+
+                cmd.ExecuteNonQuery();
+
+                id = (int)cmd.LastInsertedId;
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+                Console.WriteLine("An exception of type " + e.Message +
+               " was encountered.");
+            }
+            finally
+            {
+                myConnection.Close();
+            }
+
+            return id;
+
+        }
+
+        public static void AjouterObjetsPrix(Prix prix, List<Objet> objets)
+        {
+            MySqlConnection myConnection = new MySqlConnection(connection);
+
+            myConnection.Open();
+
+            MySqlCommand myCommand = myConnection.CreateCommand();
+            MySqlTransaction myTrans;
+
+            // Start a local transaction
+            myTrans = myConnection.BeginTransaction();
+            // Must assign both transaction object and connection
+            // to Command object for a pending local transaction
+            myCommand.Connection = myConnection;
+            myCommand.Transaction = myTrans;
+
+            try
+            {
+                foreach (Objet o in objets)
+                {
+                    myCommand.CommandText = String.Format("INSERT INTO prix_objet(idPrix, idObjet) VALUES (@idPrix{0}, @idObjet{1})", o.Id, o.Id);
+
+                    myCommand.Parameters.AddWithValue(string.Format("idPrix{0}", o.Id), prix.Id);
+                    myCommand.Parameters.AddWithValue(string.Format("idObjet{0}", o.Id), o.Id);
+
+                    myCommand.ExecuteNonQuery();
+
+                }
+
+
+                myTrans.Commit();
+
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+                try
+                {
+                    myTrans.Rollback();
+                }
+                catch (SqlException ex)
+                {
+                    if (myTrans.Connection != null)
+                    {
+                        Console.WriteLine("An exception of type " + ex.GetType() +
+                        " was encountered while attempting to roll back the transaction.");
+                    }
+                }
+
+                Console.WriteLine("An exception of type " + e.Message +
+                " was encountered while inserting the data.");
+                Console.WriteLine("Neither record was written to database.");
+
+            }
+            finally
+            {
+                myConnection.Close();
+            }
+        }
+
+        public static void RetirerObjetsPrix(Prix prix, List<Objet> objets)
+        {
+            MySqlConnection myConnection = new MySqlConnection(connection);
+
+            myConnection.Open();
+
+            MySqlCommand myCommand = myConnection.CreateCommand();
+            MySqlTransaction myTrans;
+
+            // Start a local transaction
+            myTrans = myConnection.BeginTransaction();
+            // Must assign both transaction object and connection
+            // to Command object for a pending local transaction
+            myCommand.Connection = myConnection;
+            myCommand.Transaction = myTrans;
+
+            try
+            {
+                foreach (Objet o in objets)
+                {
+                    myCommand.CommandText = String.Format("DELETE FROM prix_objet WHERE idPrix = @idPrix{0} AND idObjet = @idObjet{1};", o.Id, o.Id);
+
+                    myCommand.Parameters.AddWithValue(string.Format("idPrix{0}", o.Id), prix.Id);
+                    myCommand.Parameters.AddWithValue(string.Format("idObjet{0}", o.Id), o.Id);
+
+                    myCommand.ExecuteNonQuery();
+
+                }
+
+
+                myTrans.Commit();
+
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+                try
+                {
+                    myTrans.Rollback();
+                }
+                catch (SqlException ex)
+                {
+                    if (myTrans.Connection != null)
+                    {
+                        Console.WriteLine("An exception of type " + ex.GetType() +
+                        " was encountered while attempting to roll back the transaction.");
+                    }
+                }
+
+                Console.WriteLine("An exception of type " + e.Message +
+                " was encountered while inserting the data.");
+                Console.WriteLine("Neither record was written to database.");
+
+            }
+            finally
+            {
+                myConnection.Close();
+            }
+        }
+
+        public static void AjouterObjet(Objet objet)
+        {
+            MySqlConnection myConnection = new MySqlConnection(connection);
+
+            myConnection.Open();
+
+            MySqlCommand cmd = myConnection.CreateCommand();
+
+            try
+            {
+
+                cmd.CommandText = "INSERT INTO objet(nom) VALUES (@nom);";
+
+                MySqlParameter nom = new MySqlParameter("@nom", MySqlDbType.VarChar, 100);
+
+                nom.Value = objet.Nom;
+
+                cmd.Parameters.Add(nom);
+
+                cmd.Prepare();
+
+                cmd.ExecuteNonQuery();
+
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+                Console.WriteLine("An exception of type " + e.Message +
+               " was encountered.");
+            }
+            finally
+            {
+                myConnection.Close();
+            }
+        }
+
+        public static void ModifierMontantArgentPrix(Prix prix, double montant)
+        {
+            MySqlConnection myConnection = new MySqlConnection(connection);
+
+            myConnection.Open();
+
+            MySqlCommand cmd = myConnection.CreateCommand();
+
+            try
+            {
+
+                cmd.CommandText = "UPDATE prix SET montantArgent = @montantArgent WHERE id = @idPrix";
+
+                cmd.Parameters.AddWithValue("montantArgent", montant);
+                cmd.Parameters.AddWithValue("idPrix", prix.Id);
+
+                cmd.Prepare();
+
+                cmd.ExecuteNonQuery();
+
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+                Console.WriteLine("An exception of type " + e.Message +
+               " was encountered.");
+            }
+            finally
+            {
+                myConnection.Close();
+            }
+        }
+
+        public static void AjouterPremierPrix(Tournoi tournoi, Prix prix)
+        {
+            MySqlConnection myConnection = new MySqlConnection(connection);
+
+            myConnection.Open();
+
+            MySqlCommand cmd = myConnection.CreateCommand();
+
+            try
+            {
+
+                cmd.CommandText = "UPDATE tournoi SET idPrixPremier = @idPrix WHERE id = @idTournoi";
+
+                cmd.Parameters.AddWithValue("idPrix", prix.Id);
+                cmd.Parameters.AddWithValue("idTournoi", tournoi.Id);
+
+                cmd.Prepare();
+
+                cmd.ExecuteNonQuery();
+
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+                Console.WriteLine("An exception of type " + e.Message +
+               " was encountered.");
+            }
+            finally
+            {
+                myConnection.Close();
+            }
+        }
+
+        public static void AjouterDeuxiemePrix(Tournoi tournoi, Prix prix)
+        {
+            MySqlConnection myConnection = new MySqlConnection(connection);
+
+            myConnection.Open();
+
+            MySqlCommand cmd = myConnection.CreateCommand();
+
+            try
+            {
+
+                cmd.CommandText = "UPDATE tournoi SET idPrixSecond = @idPrix WHERE id = @idTournoi";
+
+                cmd.Parameters.AddWithValue("idPrix", prix.Id);
+                cmd.Parameters.AddWithValue("idTournoi", tournoi.Id);
+
+                cmd.Prepare();
+
+                cmd.ExecuteNonQuery();
+
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+                Console.WriteLine("An exception of type " + e.Message +
+               " was encountered.");
+            }
+            finally
+            {
+                myConnection.Close();
+            }
+        }
+
+        #endregion
+
+        #region Statistiques
+        public static List<int> GetNbEquipesParTournoi()
+        {
+            List<int> nbEquipes = new List<int>();
+
+            MySqlConnection myConnection = new MySqlConnection(connection);
+
+            myConnection.Open();
+
+            MySqlCommand cmd = myConnection.CreateCommand();
+
+            try
+            {
+
+                cmd.CommandText = "SELECT DISTINCT nbEquipesMax FROM tournoi ORDER BY nbEquipesMax; ";
+
+
+                cmd.Prepare();
+
+                MySqlDataReader reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+
+                    nbEquipes.Add(reader.GetInt32("nbEquipesMax"));
+
+                }
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("An exception of type " + e.Message + " was encountered.");
+            }
+            finally
+            {
+                myConnection.Close();
+            }
+
+            return nbEquipes;
+        }
+        
+        public static double GetMoyenneNbEquipesDesJoueurs()
+        {
+            double moyenne = 0;
+
+            MySqlConnection myConnection = new MySqlConnection(connection);
+
+            myConnection.Open();
+
+            MySqlCommand cmd = myConnection.CreateCommand();
+
+            try
+            {
+
+                cmd.CommandText = "SELECT AVG(Equipe_Par_Joueur.somme) FROM (SELECT COUNT(DISTINCT Equipe_joueur.acronymeEquipe) AS somme, Equipe_Joueur.idJoueur FROM Equipe_Joueur GROUP BY Equipe_Joueur.idJoueur)  AS Equipe_Par_Joueur";
+
+
+                cmd.Prepare();
+
+                moyenne = Convert.ToDouble(cmd.ExecuteScalar());
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("An exception of type " + e.Message + " was encountered.");
+            }
+            finally
+            {
+                myConnection.Close();
+            }
+
+            return moyenne;
+        }
+        
         #endregion
 
     }

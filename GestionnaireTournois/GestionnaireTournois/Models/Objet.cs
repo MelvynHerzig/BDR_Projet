@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GestionnaireTournois.Models
 {
-    class Objet
+    public class Objet
     {
         private int id;
         private string nom;
@@ -18,6 +18,21 @@ namespace GestionnaireTournois.Models
         {
             Id = id;
             Nom = nom;
+        }
+
+        public override string ToString()
+        {
+            return Nom;
+        }
+
+        public static List<Objet> GetObjets()
+        {
+            return DataBaseConnector.GetObjets();
+        }
+
+        public void AjouterInDB()
+        {
+            DataBaseConnector.AjouterObjet(this);
         }
     }
 }

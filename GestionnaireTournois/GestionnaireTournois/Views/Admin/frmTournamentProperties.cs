@@ -1,4 +1,5 @@
 ﻿using GestionnaireTournois.Models;
+using GestionnaireTournois.Views.Admin;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -33,13 +34,21 @@ namespace GestionnaireTournois
             tbxId.Text = Tournoi.Id.ToString();
             tbxName.Text = Tournoi.Nom;
 
-            tbxDateDebut.Text = Tournoi.DateHeureDebut.ToString();
 
-            tbxDateFin.Text = Tournoi.DateHeureFin.ToString();
+            dtpDateDebut.Value = Tournoi.DateHeureDebut;
+            dtpHeureDebut.Value = Tournoi.DateHeureDebut;
 
-            tbxDateFin.Visible = Tournoi.DateHeureFin != DateTime.MinValue;
+            if (Tournoi.DateHeureFin != DateTime.MinValue)
+            {
+                dtpDateFin.Value = Tournoi.DateHeureFin;
+                dtpHeureFin.Value = Tournoi.DateHeureFin;
+            }
+            
+            dtpHeureFin.Visible = Tournoi.DateHeureFin != DateTime.MinValue;
+            dtpDateFin.Visible = Tournoi.DateHeureFin != DateTime.MinValue;
             lblDateFin.Visible = Tournoi.DateHeureFin != DateTime.MinValue;
-
+            lblHeureFin.Visible = Tournoi.DateHeureFin != DateTime.MinValue;
+            
             tbxMaxJoueurs.Text = Tournoi.NbEquipesMax.ToString();
         }
 
@@ -66,12 +75,31 @@ namespace GestionnaireTournois
 
         private void btn1erPrix_Click(object sender, EventArgs e)
         {
+            frmEditionPrix frm = new frmEditionPrix(Tournoi.GetPremierPrix());
+            frm.ShowDialog();
+            Tournoi.AjouterPremierPrix(frm.Prix);
+
 
         }
 
         private void btn2emePrix_Click(object sender, EventArgs e)
         {
+            frmEditionPrix frm = new frmEditionPrix(Tournoi.GetDeuxiemePrix());
+            frm.ShowDialog();
+            Tournoi.AjouterDeuxiemePrix(frm.Prix);
 
+
+        }
+
+        private void btnSupprimerTournoi_Click(object sender, EventArgs e)
+        {
+            Tournoi.Supprimer(Tournoi);
+            this.Close();
+        }
+
+        private void btnSaveInfo_Click(object sender, EventArgs e)
+        {
+            Tournoi.ModifierProprietes(tbxName.Text, dtpDateDebut.Value.Date + dtpHeureDebut.Value.TimeOfDay);
         }
     }
 }

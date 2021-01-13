@@ -21,13 +21,29 @@ namespace GestionnaireTournois
 
         private void ChargeTournois()
         {
+            int index = lbxTournament.SelectedIndex == -1 ? 0 : lbxTournament.SelectedIndex;
+
             lbxTournament.Items.Clear();
 
-            foreach (Tournoi t in DataBaseConnector.GetTournoisFiltres((Tournoi.EtatTournoi)cbxFilter.SelectedIndex))
+            foreach (Tournoi t in Tournoi.GetTournoiParEtat((Tournoi.EtatTournoi)cbxFilter.SelectedIndex))
             {
 
                 lbxTournament.Items.Add(t);
             }
+
+            lbxTournament.SelectedIndex = index >= lbxTournament.Items.Count ? 0 : index;
+            ChargeStatistiques();
+        }
+
+        private void ChargeStatistiques()
+        {
+            cbxStatVitesseInscription.Items.Clear();
+            foreach(int i in DataBaseConnector.GetNbEquipesParTournoi())
+            {
+                cbxStatVitesseInscription.Items.Add(i);
+            }
+
+            tbxEquipesJoueur.Text = DataBaseConnector.GetMoyenneNbEquipesDesJoueurs().ToString();
         }
 
         private void tsmiModeChoice_Click(object sender, EventArgs e)
@@ -44,6 +60,8 @@ namespace GestionnaireTournois
             wbrTreeStruct.DocumentText = "";
             wbrTreeStruct.Document.Click += Document_Click;
 
+            ChargeStatistiques();
+
         }
 
 
@@ -59,10 +77,11 @@ namespace GestionnaireTournois
                 Console.WriteLine(elem.GetAttribute("name"));
                 string[] split = elem.GetAttribute("name").ToString().Split(';');
 
-                Tournoi tournoi = DataBaseConnector.GetTournoiById(Convert.ToInt32(split[0]));
-                Tour tour = DataBaseConnector.GetTourByNo(tournoi, Convert.ToInt32(split[1]));
-
-                Serie s = DataBaseConnector.GetSerieById(tour, Convert.ToInt32(split[2]));
+                Tournoi tournoi = Tournoi.GetTournoiById(Convert.ToInt32(split[0]));
+                
+                Tour tour = tournoi.GetTourByNo(Convert.ToInt32(split[1]));
+                
+                Serie s = tour.GetSerieById(Convert.ToInt32(split[2]));
 
                 frmEditionSerie frm = new frmEditionSerie(s);
                 frm.ShowDialog();
