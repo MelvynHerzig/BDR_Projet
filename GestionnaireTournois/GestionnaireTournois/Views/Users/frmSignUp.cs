@@ -25,12 +25,10 @@ namespace GestionnaireTournois
 
         private void btnSignUp_Click(object sender, EventArgs e)
         {
-            // requête enregistrement
-            //INSERT INTO joueur (nom, prenom, peuso, email) VALUES (tbxName.Text, tbxFirstName.Text, tbxPseudo.Text, tbxEmail.Text);
 
-            Joueur j = new Joueur(0, tbxName.Text, tbxFirstName.Text, tbxPseudo.Text, tbxEmail.Text, dtpBirthday.Value);
+            Joueur j = new Joueur(0, tbxName.Text, tbxFirstName.Text, tbxEmail.Text, tbxPseudo.Text, dtpBirthday.Value);
 
-            //Joueur.Aj
+            Joueur.Ajouter(j);
         }
 
         private void btnCancel_Click(object sender, EventArgs e)

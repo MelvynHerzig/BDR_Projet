@@ -1113,6 +1113,47 @@ namespace GestionnaireTournois
             return joueur;
         }
 
+        public static Joueur GetJoueurByEmail(string email)
+        {
+            Joueur joueur = null;
+
+            MySqlConnection myConnection = new MySqlConnection(connection);
+
+            myConnection.Open();
+
+            MySqlCommand cmd = myConnection.CreateCommand();
+
+            try
+            {
+
+                cmd.CommandText = "SELECT id, nom, prenom, email, pseudo, dateNaissance FROM joueur WHERE email = @email";
+
+                cmd.Parameters.AddWithValue("email", email);
+
+                cmd.Prepare();
+
+                MySqlDataReader reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+
+                    joueur = new Joueur(reader.GetInt32("id"), reader.GetString("nom"), reader.GetString("prenom"), reader.GetString("email"), reader.GetString("pseudo"), reader.GetDateTime("dateNaissance"));
+
+                }
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("An exception of type " + e.Message + " was encountered.");
+            }
+            finally
+            {
+                myConnection.Close();
+            }
+
+            return joueur;
+        }
+
         public static List<Joueur> GetJoueursEquipeTournoi(Equipe equipe, int idTournoi)
         {
             List<Joueur> joueurs = new List<Joueur>();
@@ -1198,9 +1239,45 @@ namespace GestionnaireTournois
             return joueurs;
         }
 
-        public static void AjouterJoueur(Joueur joueur)
+        public static int AjouterJoueur(Joueur joueur)
         {
+            int id = 0;
 
+            MySqlConnection myConnection = new MySqlConnection(connection);
+
+            myConnection.Open();
+
+            MySqlCommand cmd = myConnection.CreateCommand();
+
+            try
+            {
+
+                cmd.CommandText = "INSERT INTO joueur(nom, prenom, email, pseudo, dateNaissance) VALUES (@nom, @prenom, @email, @pseudo, @dateNaissance);";
+
+                cmd.Parameters.AddWithValue("nom", joueur.Nom);
+                cmd.Parameters.AddWithValue("prenom", joueur.Prenom);
+                cmd.Parameters.AddWithValue("email", joueur.Email);
+                cmd.Parameters.AddWithValue("pseudo", joueur.Pseudo);
+                cmd.Parameters.AddWithValue("dateNaissance", joueur.DateNaissance);
+
+                cmd.Prepare();
+
+                cmd.ExecuteNonQuery();
+
+                id = (int)cmd.LastInsertedId;
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+                Console.WriteLine("An exception of type " + e.Message +
+               " was encountered.");
+            }
+            finally
+            {
+                myConnection.Close();
+            }
+
+            return id;
         }
 
         /*

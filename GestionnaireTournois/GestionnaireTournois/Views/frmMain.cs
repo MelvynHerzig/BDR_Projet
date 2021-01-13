@@ -43,9 +43,10 @@ namespace GestionnaireTournois
 
         private void btnSignIn_Click(object sender, EventArgs e)
         {
-            Joueur j = Joueur.GetJoueurById(1);
+            Joueur j = Joueur.GetJoueurByEmail(tbxEmail.Text);
             // Check dans la base de donnée l'email
             // Si dans la base :
+            if(j != null)
             {
                 frmUser user = new frmUser(j);
                 this.Hide();
