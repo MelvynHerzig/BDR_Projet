@@ -154,7 +154,7 @@ namespace GestionnaireTournois
             this.Name = "frmAjoutTournoi";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "AJouter un tournoi ";
+            this.Text = "Ajouter un tournoi ";
             ((System.ComponentModel.ISupportInitialize)(this.nudEquipes)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

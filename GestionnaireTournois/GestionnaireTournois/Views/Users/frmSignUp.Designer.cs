@@ -32,13 +32,11 @@ namespace GestionnaireTournois
             this.lblSignUp = new System.Windows.Forms.Label();
             this.tbxName = new System.Windows.Forms.TextBox();
             this.gbxInfo = new System.Windows.Forms.GroupBox();
-            this.lblCountry = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.lblEmail = new System.Windows.Forms.Label();
             this.lblPseudo = new System.Windows.Forms.Label();
             this.lblFirstname = new System.Windows.Forms.Label();
             this.lblName = new System.Windows.Forms.Label();
-            this.cbxCountry = new System.Windows.Forms.ComboBox();
             this.dtpBirthday = new System.Windows.Forms.DateTimePicker();
             this.tbxEmail = new System.Windows.Forms.TextBox();
             this.tbxPseudo = new System.Windows.Forms.TextBox();
@@ -67,13 +65,11 @@ namespace GestionnaireTournois
             // 
             // gbxInfo
             // 
-            this.gbxInfo.Controls.Add(this.lblCountry);
             this.gbxInfo.Controls.Add(this.label3);
             this.gbxInfo.Controls.Add(this.lblEmail);
             this.gbxInfo.Controls.Add(this.lblPseudo);
             this.gbxInfo.Controls.Add(this.lblFirstname);
             this.gbxInfo.Controls.Add(this.lblName);
-            this.gbxInfo.Controls.Add(this.cbxCountry);
             this.gbxInfo.Controls.Add(this.dtpBirthday);
             this.gbxInfo.Controls.Add(this.tbxEmail);
             this.gbxInfo.Controls.Add(this.tbxPseudo);
@@ -82,19 +78,10 @@ namespace GestionnaireTournois
             this.gbxInfo.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.gbxInfo.Location = new System.Drawing.Point(12, 83);
             this.gbxInfo.Name = "gbxInfo";
-            this.gbxInfo.Size = new System.Drawing.Size(312, 237);
+            this.gbxInfo.Size = new System.Drawing.Size(312, 205);
             this.gbxInfo.TabIndex = 5;
             this.gbxInfo.TabStop = false;
             this.gbxInfo.Text = "Informations";
-            // 
-            // lblCountry
-            // 
-            this.lblCountry.AutoSize = true;
-            this.lblCountry.Location = new System.Drawing.Point(88, 197);
-            this.lblCountry.Name = "lblCountry";
-            this.lblCountry.Size = new System.Drawing.Size(45, 16);
-            this.lblCountry.TabIndex = 15;
-            this.lblCountry.Text = "Pays :";
             // 
             // label3
             // 
@@ -141,14 +128,6 @@ namespace GestionnaireTournois
             this.lblName.TabIndex = 10;
             this.lblName.Text = "Nom :";
             // 
-            // cbxCountry
-            // 
-            this.cbxCountry.FormattingEnabled = true;
-            this.cbxCountry.Location = new System.Drawing.Point(144, 194);
-            this.cbxCountry.Name = "cbxCountry";
-            this.cbxCountry.Size = new System.Drawing.Size(143, 24);
-            this.cbxCountry.TabIndex = 9;
-            // 
             // dtpBirthday
             // 
             this.dtpBirthday.CustomFormat = "dd.MM.yyyy";
@@ -186,29 +165,31 @@ namespace GestionnaireTournois
             // 
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.btnCancel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnCancel.Location = new System.Drawing.Point(41, 337);
+            this.btnCancel.Location = new System.Drawing.Point(45, 312);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 6;
             this.btnCancel.Text = "Annuler";
             this.btnCancel.UseVisualStyleBackColor = true;
+            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
             // btnSignUp
             // 
             this.btnSignUp.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.btnSignUp.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnSignUp.Location = new System.Drawing.Point(224, 337);
+            this.btnSignUp.Location = new System.Drawing.Point(224, 312);
             this.btnSignUp.Name = "btnSignUp";
             this.btnSignUp.Size = new System.Drawing.Size(75, 23);
             this.btnSignUp.TabIndex = 7;
             this.btnSignUp.Text = "S\'inscrire";
             this.btnSignUp.UseVisualStyleBackColor = true;
+            this.btnSignUp.Click += new System.EventHandler(this.btnSignUp_Click);
             // 
             // frmSignUp
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(336, 378);
+            this.ClientSize = new System.Drawing.Size(336, 361);
             this.Controls.Add(this.btnSignUp);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.gbxInfo);
@@ -233,10 +214,8 @@ namespace GestionnaireTournois
         private System.Windows.Forms.TextBox tbxEmail;
         private System.Windows.Forms.TextBox tbxPseudo;
         private System.Windows.Forms.TextBox tbxFirstName;
-        private System.Windows.Forms.ComboBox cbxCountry;
         private System.Windows.Forms.Label lblName;
         private System.Windows.Forms.Label lblFirstname;
-        private System.Windows.Forms.Label lblCountry;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label lblEmail;
         private System.Windows.Forms.Label lblPseudo;

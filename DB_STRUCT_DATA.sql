@@ -324,7 +324,7 @@ VALUES
 
 INSERT INTO Joueur (nom, prenom, email, pseudo, dateNaissance)
 VALUES 
-( 'Forestier', 'Qunetin', 'quentin.forestier@heig-vd.ch', 'Dudude', '2001-05-16' ),
+( 'Forestier', 'Quentin', 'quentin.forestier@heig-vd.ch', 'Dudude', '2001-05-16' ),
 ( 'Herzig', 'Melvyn', 'melvyn.herzig@heig-vd.ch', 'Wheald', '1997-09-11' ),
 ( 'Crausaz', 'Nicolas', 'nicolas.crausaz@heig-vd.ch', 'itsaboi', '1999-08-03' ),
 ( 'Brescard', 'Julien', 'Jujuju@lse.ch', 'Jujuju', '2002-09-16' ),

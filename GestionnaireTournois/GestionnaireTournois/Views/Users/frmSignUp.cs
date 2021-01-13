@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GestionnaireTournois.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -19,40 +20,20 @@ namespace GestionnaireTournois
 
         private void frmSignUp_Load(object sender, EventArgs e)
         {
-            // On load les pays qui sont dans la base de données dans le combobox
-
             dtpBirthday.MaxDate = DateTime.Now;
         }
 
-        public String GetName()
+        private void btnSignUp_Click(object sender, EventArgs e)
         {
-            return tbxName.Text;
+
+            Joueur j = new Joueur(0, tbxName.Text, tbxFirstName.Text, tbxEmail.Text, tbxPseudo.Text, dtpBirthday.Value);
+
+            Joueur.Ajouter(j);
         }
 
-        public String GetFirstName()
+        private void btnCancel_Click(object sender, EventArgs e)
         {
-            return tbxFirstName.Text;
-        }
-
-        public String GetEmail()
-        {
-            return tbxEmail.Text;
-        }
-
-        public String GetPseudo()
-        {
-            return tbxPseudo.Text;
-        }
-
-        public DateTime GetBirthday()
-        {
-            return dtpBirthday.Value;
-        }
-
-        public int GetCountryKey()
-        {
-            // A revoir
-            return cbxCountry.SelectedIndex;
+            this.Close();
         }
     }
 }

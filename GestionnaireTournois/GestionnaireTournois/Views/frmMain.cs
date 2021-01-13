@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GestionnaireTournois.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -36,30 +37,18 @@ namespace GestionnaireTournois
 
             frmSignUp signUp = new frmSignUp();
 
-
-            if (signUp.ShowDialog() == DialogResult.OK)
-            {
-                // Recupère info + envoie bdd
-                signUp.GetName();
-                signUp.GetFirstName();
-                signUp.GetEmail();
-                signUp.GetPseudo();
-                signUp.GetBirthday();
-                signUp.GetCountryKey();
-
-
-            }
+            signUp.ShowDialog();
 
         }
 
         private void btnSignIn_Click(object sender, EventArgs e)
         {
-
-            int userId = 0;
+            Joueur j = Joueur.GetJoueurByEmail("melvyn.herzig@heig-vd.ch");
             // Check dans la base de donnée l'email
             // Si dans la base :
+            if(j != null)
             {
-                frmUser user = new frmUser(userId);
+                frmUser user = new frmUser(j);
                 this.Hide();
                 if (user.ShowDialog() != DialogResult.OK)
                 {

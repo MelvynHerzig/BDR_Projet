@@ -8,14 +8,14 @@ namespace GestionnaireTournois.Models
 {
     public class Tournoi
     {
-        
+
         public enum EtatTournoi { TOUS, EN_ATTENTE, EN_COURS, TERMINES, ANNULES };
 
         public static string[] EtatTournoiNom = { "Tous", "En attente", "En cours", "Terminés", "Annulés" };
 
         // Champs..
         private int id;
-        
+
         private DateTime dateHeureDebut;
 
         private DateTime dateHeureFin;
@@ -24,6 +24,9 @@ namespace GestionnaireTournois.Models
 
         private int nbEquipesMax;
 
+        private int idPremierPrix;
+
+        private int idDeuxiemePrix;
 
         // Propriétés..
         public int Id { get => id; set => id = value; }
@@ -31,16 +34,19 @@ namespace GestionnaireTournois.Models
         public DateTime DateHeureFin { get => dateHeureFin; set => dateHeureFin = value; }
         public string Nom { get => nom; set => nom = value; }
         public int NbEquipesMax { get => nbEquipesMax; set => nbEquipesMax = value; }
+        public int IdPremierPrix { get => idPremierPrix; set => idPremierPrix = value; }
+        public int IdDeuxiemePrix { get => idDeuxiemePrix; set => idDeuxiemePrix = value; }
 
         // Constructeurs..
-        public Tournoi(int id, DateTime debut, DateTime fin, string nom, int nbEquipesMax)
+        public Tournoi(int id, DateTime debut, DateTime fin, string nom, int nbEquipesMax, int idPremierPrix, int idDeuxiemePrix)
         {
             Id = id;
             DateHeureDebut = debut;
             DateHeureFin = fin;
             Nom = nom;
             NbEquipesMax = nbEquipesMax;
-
+            IdPremierPrix = idPremierPrix;
+            IdDeuxiemePrix = idDeuxiemePrix;
         }
 
         // Méthodes..
@@ -52,7 +58,7 @@ namespace GestionnaireTournois.Models
         public Equipe GetGagnant()
         {
 
-            return DataBaseConnector.GetWinnerOfSerie(new Serie(1, Id,1, null, null));
+            return DataBaseConnector.GetWinnerOfSerie(new Serie(1, Id, 1, null, null));
         }
 
         public List<Tour> GetTours()
@@ -75,11 +81,58 @@ namespace GestionnaireTournois.Models
         {
             DataBaseConnector.ModifierToursTournoi(this, tours);
         }
+
+        public void ModifierProprietes(string nom, DateTime dateDebut)
+        {
+            DataBaseConnector.ModifierProprietesTournoi(this, nom, dateDebut);
+        }
         public override string ToString()
         {
             return nom;
         }
 
+        public Prix GetPremierPrix()
+        {
+            return DataBaseConnector.GetPrixById(IdPremierPrix);
+        }
+        public Prix GetDeuxiemePrix()
+        {
+            return DataBaseConnector.GetPrixById(IdDeuxiemePrix);
+        }
+
+        public void AjouterPremierPrix(Prix prix)
+        {
+            if (IdPremierPrix != 0) return;
+            DataBaseConnector.AjouterPremierPrix(this, prix);
+            IdPremierPrix = prix.Id;
+        }
+
+        public void AjouterDeuxiemePrix(Prix prix)
+        {
+            if (IdDeuxiemePrix != 0) return;
+            DataBaseConnector.AjouterDeuxiemePrix(this,prix);
+            IdDeuxiemePrix = prix.Id;
+        }
+
+
+        public static Tournoi GetTournoiById(int idTournoi)
+        {
+            return DataBaseConnector.GetTournoiById(idTournoi);
+        }
+
+        public static List<Tournoi> GetTournoiParEtat(Tournoi.EtatTournoi etat)
+        {
+            return DataBaseConnector.GetTournoisFiltres(etat);
+        }
+
+        public static void Ajouter(Tournoi t)
+        {
+            DataBaseConnector.InsertionTournoi(t);
+        }
+        public static void Supprimer(Tournoi t)
+        {
+            DataBaseConnector.SuppressionTournoi(t);
+        }
 
     }
 }
