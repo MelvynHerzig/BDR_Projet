@@ -46,6 +46,9 @@ namespace GestionnaireTournois
             ConstruireDataGridView();
             ChargeTournois();
 
+            // id responsable == id joueur
+            // get equipe
+
             /*if(estResposable)
             {
                 btnEquipe.Text = "Gérer équipe";

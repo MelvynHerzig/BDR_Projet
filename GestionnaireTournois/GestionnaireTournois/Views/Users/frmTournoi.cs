@@ -21,5 +21,16 @@ namespace GestionnaireTournois.Views.Users
             tournoi = t;
             InitializeComponent();
         }
+
+        private void frmTournoi_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void cbxEtatsTournoi_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
     }
 }

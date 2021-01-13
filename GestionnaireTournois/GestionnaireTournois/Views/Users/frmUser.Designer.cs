@@ -34,11 +34,8 @@ namespace GestionnaireTournois
             this.cbxTournois = new System.Windows.Forms.ComboBox();
             this.dgvTournois = new System.Windows.Forms.DataGridView();
             this.NomTournoi = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
-            this.tsmiFichier = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmiChoixMode = new System.Windows.Forms.ToolStripMenuItem();
+            this.lblFilter = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dgvTournois)).BeginInit();
-            this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnStats
@@ -65,7 +62,7 @@ namespace GestionnaireTournois
             // 
             this.cbxTournois.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbxTournois.FormattingEnabled = true;
-            this.cbxTournois.Location = new System.Drawing.Point(182, 38);
+            this.cbxTournois.Location = new System.Drawing.Point(182, 67);
             this.cbxTournois.Name = "cbxTournois";
             this.cbxTournois.Size = new System.Drawing.Size(121, 21);
             this.cbxTournois.TabIndex = 3;
@@ -93,50 +90,31 @@ namespace GestionnaireTournois
             this.NomTournoi.Name = "NomTournoi";
             this.NomTournoi.ReadOnly = true;
             // 
-            // menuStrip1
+            // lblFilter
             // 
-            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsmiFichier});
-            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
-            this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(800, 24);
-            this.menuStrip1.TabIndex = 5;
-            this.menuStrip1.Text = "menuStrip1";
-            // 
-            // tsmiFichier
-            // 
-            this.tsmiFichier.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsmiChoixMode});
-            this.tsmiFichier.Name = "tsmiFichier";
-            this.tsmiFichier.Size = new System.Drawing.Size(54, 20);
-            this.tsmiFichier.Text = "Fichier";
-            // 
-            // tsmiChoixMode
-            // 
-            this.tsmiChoixMode.Name = "tsmiChoixMode";
-            this.tsmiChoixMode.Size = new System.Drawing.Size(180, 22);
-            this.tsmiChoixMode.Text = "Choix du mode";
-            this.tsmiChoixMode.Click += new System.EventHandler(this.tsmiChoixMode_Click);
+            this.lblFilter.AutoSize = true;
+            this.lblFilter.Location = new System.Drawing.Point(179, 38);
+            this.lblFilter.Name = "lblFilter";
+            this.lblFilter.Size = new System.Drawing.Size(129, 13);
+            this.lblFilter.TabIndex = 8;
+            this.lblFilter.Text = "Filtre par état du tournois :";
             // 
             // frmUser
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.lblFilter);
             this.Controls.Add(this.dgvTournois);
             this.Controls.Add(this.cbxTournois);
             this.Controls.Add(this.btnEquipe);
             this.Controls.Add(this.btnStats);
-            this.Controls.Add(this.menuStrip1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
-            this.MainMenuStrip = this.menuStrip1;
             this.MaximizeBox = false;
             this.Name = "frmUser";
             this.Text = "frmUser";
             this.Load += new System.EventHandler(this.frmUser_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dgvTournois)).EndInit();
-            this.menuStrip1.ResumeLayout(false);
-            this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -148,8 +126,6 @@ namespace GestionnaireTournois
         private System.Windows.Forms.ComboBox cbxTournois;
         private System.Windows.Forms.DataGridView dgvTournois;
         private System.Windows.Forms.DataGridViewTextBoxColumn NomTournoi;
-        private System.Windows.Forms.MenuStrip menuStrip1;
-        private System.Windows.Forms.ToolStripMenuItem tsmiFichier;
-        private System.Windows.Forms.ToolStripMenuItem tsmiChoixMode;
+        private System.Windows.Forms.Label lblFilter;
     }
 }

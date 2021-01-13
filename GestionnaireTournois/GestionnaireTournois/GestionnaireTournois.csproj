@@ -187,6 +187,9 @@
     <EmbeddedResource Include="Views\Users\frmStats.resx">
       <DependentUpon>frmStats.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Views\Users\frmTournoi.resx">
+      <DependentUpon>frmTournoi.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Views\Users\frmUser.resx">
       <DependentUpon>frmUser.cs</DependentUpon>
     </EmbeddedResource>
