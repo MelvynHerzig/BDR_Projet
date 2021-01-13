@@ -23,6 +23,13 @@ namespace GestionnaireTournois
 
         private void frmTournamentProperties_Load(object sender, EventArgs e)
         {
+
+            LoadInfoTournoi();
+            LoadInfoTours();
+        }
+
+        private void LoadInfoTournoi()
+        {
             tbxId.Text = Tournoi.Id.ToString();
             tbxName.Text = Tournoi.Nom;
 
@@ -34,6 +41,36 @@ namespace GestionnaireTournois
             lblDateFin.Visible = Tournoi.DateHeureFin != DateTime.MinValue;
 
             tbxMaxJoueurs.Text = Tournoi.NbEquipesMax.ToString();
+        }
+
+        private void LoadInfoTours()
+        {
+            cbxTours.Items.AddRange(Tournoi.GetTours().ToArray());
+            cbxTours.SelectedIndex = 0;
+        }
+
+        private void cbxTours_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            nudLongueurSerie.Value = ((Tour)cbxTours.SelectedItem).LongueurMaxSerie;
+        }
+
+        private void nudLongueurSerie_ValueChanged(object sender, EventArgs e)
+        {
+            ((Tour)cbxTours.SelectedItem).LongueurMaxSerie = (int)nudLongueurSerie.Value;
+        }
+
+        private void btnSaveTours_Click(object sender, EventArgs e)
+        {
+            Tournoi.ModifierTours(cbxTours.Items.Cast<Tour>().ToList());
+        }
+
+        private void btn1erPrix_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btn2emePrix_Click(object sender, EventArgs e)
+        {
 
         }
     }

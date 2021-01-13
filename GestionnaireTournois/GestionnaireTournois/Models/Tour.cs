@@ -38,5 +38,10 @@ namespace GestionnaireTournois.Models
         {
             return DataBaseConnector.GetSerieById(this, idSerie);
         }
+
+        public override string ToString()
+        {
+            return "Tour no " + No;
+        }
     }
 }
