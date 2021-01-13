@@ -114,5 +114,11 @@ namespace GestionnaireTournois
 
             }   
         }
+
+        private void tsmiChoixMode_Click(object sender, EventArgs e)
+        {
+            this.DialogResult = DialogResult.OK;
+            this.Close();
+        }
     }
 }

@@ -97,6 +97,24 @@
     <Compile Include="Views\frmMain.Designer.cs">
       <DependentUpon>frmMain.cs</DependentUpon>
     </Compile>
+    <Compile Include="Views\Users\frmEquipe.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\Users\frmEquipe.Designer.cs">
+      <DependentUpon>frmEquipe.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Users\frmGestionEquipe.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\Users\frmGestionEquipe.Designer.cs">
+      <DependentUpon>frmGestionEquipe.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Users\frmRechercheEquipe.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\Users\frmRechercheEquipe.Designer.cs">
+      <DependentUpon>frmRechercheEquipe.cs</DependentUpon>
+    </Compile>
     <Compile Include="Views\Users\frmSignUp.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -108,6 +126,18 @@
     </Compile>
     <Compile Include="Views\Admin\frmTournamentProperties.Designer.cs">
       <DependentUpon>frmTournamentProperties.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Users\frmStats.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\Users\frmStats.Designer.cs">
+      <DependentUpon>frmStats.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Users\frmTournoi.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\Users\frmTournoi.Designer.cs">
+      <DependentUpon>frmTournoi.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\Users\frmUser.cs">
       <SubType>Form</SubType>
@@ -139,11 +169,23 @@
     <EmbeddedResource Include="Views\frmMain.resx">
       <DependentUpon>frmMain.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Views\Users\frmEquipe.resx">
+      <DependentUpon>frmEquipe.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Users\frmGestionEquipe.resx">
+      <DependentUpon>frmGestionEquipe.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Users\frmRechercheEquipe.resx">
+      <DependentUpon>frmRechercheEquipe.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Views\Users\frmSignUp.resx">
       <DependentUpon>frmSignUp.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Admin\frmTournamentProperties.resx">
       <DependentUpon>frmTournamentProperties.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Users\frmStats.resx">
+      <DependentUpon>frmStats.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Users\frmUser.resx">
       <DependentUpon>frmUser.cs</DependentUpon>
