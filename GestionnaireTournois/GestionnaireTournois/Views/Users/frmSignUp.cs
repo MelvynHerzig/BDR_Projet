@@ -19,8 +19,6 @@ namespace GestionnaireTournois
 
         private void frmSignUp_Load(object sender, EventArgs e)
         {
-            // On load les pays qui sont dans la base de données dans le combobox
-
             dtpBirthday.MaxDate = DateTime.Now;
         }
 
@@ -49,10 +47,20 @@ namespace GestionnaireTournois
             return dtpBirthday.Value;
         }
 
-        public int GetCountryKey()
+        private void btnSignUp_Click(object sender, EventArgs e)
         {
-            // A revoir
-            return cbxCountry.SelectedIndex;
+            // requête enregistrement
+             //INSERT INTO joueur (nom, prenom, peuso, email) VALUES (tbxName.Text, tbxFirstName.Text, tbxPseudo.Text, tbxEmail.Text);
+        }
+
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+            tbxFirstName.Text = "";
+            tbxName.Text = "";
+            tbxPseudo.Text = "";
+            tbxEmail.Text = "";
+            tbxFirstName.Text = "";
+            dtpBirthday.Value = new DateTime(0001-01-01);
         }
     }
 }
