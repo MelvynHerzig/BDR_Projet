@@ -37,16 +37,7 @@ namespace GestionnaireTournois
 
             frmSignUp signUp = new frmSignUp();
 
-
-            if (signUp.ShowDialog() == DialogResult.OK)
-            {
-                // Recupère info + envoie bdd
-                signUp.GetName();
-                signUp.GetFirstName();
-                signUp.GetEmail();
-                signUp.GetPseudo();
-                signUp.GetBirthday();
-            }
+            signUp.ShowDialog();
 
         }
 

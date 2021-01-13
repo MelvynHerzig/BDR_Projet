@@ -51,5 +51,10 @@ namespace GestionnaireTournois.Models
         {
             return DataBaseConnector.GetJoueurById(idJoueur);
         }
+
+        public static void Ajouter(Joueur joueur)
+        {
+            DataBaseConnector.AjouterJoueur(joueur);
+        }
     }
 }

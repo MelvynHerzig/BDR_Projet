@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GestionnaireTournois.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -22,45 +23,19 @@ namespace GestionnaireTournois
             dtpBirthday.MaxDate = DateTime.Now;
         }
 
-        public String GetName()
-        {
-            return tbxName.Text;
-        }
-
-        public String GetFirstName()
-        {
-            return tbxFirstName.Text;
-        }
-
-        public String GetEmail()
-        {
-            return tbxEmail.Text;
-        }
-
-        public String GetPseudo()
-        {
-            return tbxPseudo.Text;
-        }
-
-        public DateTime GetBirthday()
-        {
-            return dtpBirthday.Value;
-        }
-
         private void btnSignUp_Click(object sender, EventArgs e)
         {
             // requête enregistrement
-             //INSERT INTO joueur (nom, prenom, peuso, email) VALUES (tbxName.Text, tbxFirstName.Text, tbxPseudo.Text, tbxEmail.Text);
+            //INSERT INTO joueur (nom, prenom, peuso, email) VALUES (tbxName.Text, tbxFirstName.Text, tbxPseudo.Text, tbxEmail.Text);
+
+            Joueur j = new Joueur(0, tbxName.Text, tbxFirstName.Text, tbxPseudo.Text, tbxEmail.Text, dtpBirthday.Value);
+
+            //Joueur.Aj
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
-            tbxFirstName.Text = "";
-            tbxName.Text = "";
-            tbxPseudo.Text = "";
-            tbxEmail.Text = "";
-            tbxFirstName.Text = "";
-            dtpBirthday.Value = new DateTime(0001-01-01);
+            this.Close();
         }
     }
 }

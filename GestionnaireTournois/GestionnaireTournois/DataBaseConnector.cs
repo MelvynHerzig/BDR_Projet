@@ -1198,6 +1198,11 @@ namespace GestionnaireTournois
             return joueurs;
         }
 
+        public static void AjouterJoueur(Joueur joueur)
+        {
+
+        }
+
         /*
         public static List<Joueur> GetJoueursDeEquipe(Equipe equipe)
         {
