@@ -40,13 +40,8 @@ namespace GestionnaireTournois.Views.Users
         {
             lbxEquipes.Items.Clear();
 
-            // requête 
-            // SELECT * FROM equipe INNER JOIN equipe_joueur WHERE (acronymeEquipe, idJoueur, dateHeureArrivee) VALUES (equipe.Acronyme, joueur.Id, "0001-01-01");
-            Equipe[] equipesLibres = new Equipe[] { new Equipe("TEA", "test1", 101),
-                                                    new Equipe("TEB", "test2", 102),
-                                                    new Equipe("TEC", "test3", 103)};
 
-            foreach (Equipe e in equipesLibres)
+            foreach (Equipe e in Equipe.GetEquipes())
             {
                 lbxEquipes.Items.Add(e);
             }

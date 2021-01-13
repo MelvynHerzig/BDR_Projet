@@ -14,12 +14,14 @@ namespace GestionnaireTournois.Views.Users
     public partial class frmEquipe : Form
     {
         private Equipe equipe;
-        private Joueur[] membresEquipe;
+        private Joueur joueur;
         public Equipe Equipe { get => equipe; set => equipe = value; }
+        public Joueur Joueur { get => joueur; set => joueur = value; }
 
-        public frmEquipe(Equipe e)
+        public frmEquipe(Joueur joueur)
         {
-            equipe = e;
+            equipe = joueur.GetEquipe();
+            Joueur = joueur;
             InitializeComponent();
         }
 
@@ -27,17 +29,16 @@ namespace GestionnaireTournois.Views.Users
         {
             lblEquipe.Text = equipe.Nom;
 
-            construireDataGridView();
+            ConstruireDataGridView();
             ChargeJoueurs();
         }
 
         private void btnQuitter_Click(object sender, EventArgs e)
         {
-            //requête quitter équipe
-            //DELETE FROM equipe_joueur WHERE idJoueur = joueur.id;
+            Equipe.SupprimerJoueur(Joueur);
         }
 
-        private void construireDataGridView()
+        private void ConstruireDataGridView()
         {
             dgvMembresEquipe.ColumnCount = 4;
             dgvMembresEquipe.Columns[0].Name = "Pseudo";
@@ -52,12 +53,8 @@ namespace GestionnaireTournois.Views.Users
         {
             dgvMembresEquipe.Rows.Clear();
 
-            membresEquipe = new Joueur[] { new Joueur(100, "Berney", "Alec", "alec.berney@heig-vd.ch", "Marlek", new DateTime(1998, 09, 09)),
-                                           new Joueur(100, "Herzig", "Melvyn", "melvyn.herzig@heig-vd.ch", "Wheald", new DateTime(1997, 09, 09)),
-                                           new Joueur(100, "Forestier", "Quentin", "quentin.forestier@heig-vd.ch", "Dudude", new DateTime(2001, 09, 09)) };
-            //membresEquipe = DataBaseConnector.GetTournoisFiltres((Tournoi.EtatTournoi)dgvMembresEquipe.SelectedIndex).ToArray();
 
-            foreach (Joueur j in membresEquipe)
+            foreach (Joueur j in Equipe.GetJoueursActuels())
             {
                 dgvMembresEquipe.Rows.Add(j.Pseudo, j.Nom, j.Prenom, j.Email);
             }

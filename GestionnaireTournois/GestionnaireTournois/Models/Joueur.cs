@@ -41,5 +41,15 @@ namespace GestionnaireTournois.Models
             Pseudo = pseudo;
             DateNaissance = dateNaissance;
         }
+
+        public Equipe GetEquipe()
+        {
+            return DataBaseConnector.GetEquipeJoueur(this);
+        }
+
+        public static Joueur GetJoueurById(int idJoueur)
+        {
+            return DataBaseConnector.GetJoueurById(idJoueur);
+        }
     }
 }

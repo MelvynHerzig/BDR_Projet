@@ -31,12 +31,27 @@ namespace GestionnaireTournois.Models
 
         public List<Joueur> GetJoueursFromTournoi(int idTournoi)
         {
-            return DataBaseConnector.GetJoueursEquipe(this, idTournoi);
+            return DataBaseConnector.GetJoueursEquipeTournoi(this, idTournoi);
+        }
+
+        public List<Joueur> GetJoueursActuels()
+        {
+            return DataBaseConnector.GetJoueursEquipeActuels(this);
+        }
+
+        public void SupprimerJoueur(Joueur joueur)
+        {
+            DataBaseConnector.SupprimerJoueurEquipe(this, joueur);
         }
 
         public override string ToString()
         {
             return Nom;
+        }
+
+        public static List<Equipe> GetEquipes()
+        {
+            return DataBaseConnector.GetAllEquipes();
         }
     }
 }

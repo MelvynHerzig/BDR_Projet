@@ -52,7 +52,7 @@ namespace GestionnaireTournois
 
         private void btnSignIn_Click(object sender, EventArgs e)
         {
-            Joueur j = new Joueur(100, "Berney", "Alec", "alec.berney@heig-vd.ch", "Marlek", new DateTime(1998, 09, 09));
+            Joueur j = Joueur.GetJoueurById(1);
             // Check dans la base de donnée l'email
             // Si dans la base :
             {

@@ -15,11 +15,14 @@ namespace GestionnaireTournois
     public partial class frmUser : Form
     {
         private Joueur joueur;
-        private Tournoi[] tournois;
+        private List<Tournoi> tournois;
+
+        public Joueur Joueur { get => joueur; set => joueur = value; }
+        public List<Tournoi> Tournois { get => tournois; set => tournois = value; }
 
         public frmUser(Joueur j)
         {
-            joueur = j;
+            Joueur = j;
             InitializeComponent();
         }
 
@@ -27,9 +30,9 @@ namespace GestionnaireTournois
         {
             dgvTournois.Rows.Clear();
 
-            tournois = DataBaseConnector.GetTournoisFiltres((Tournoi.EtatTournoi)cbxTournois.SelectedIndex).ToArray();
+            Tournois = Tournoi.GetTournoiParEtat((Tournoi.EtatTournoi)cbxTournois.SelectedIndex);
 
-            foreach (Tournoi t in tournois)
+            foreach (Tournoi t in Tournois)
             {
                 dgvTournois.Rows.Add(t.Nom, t.DateHeureDebut, t.DateHeureFin, t.NbEquipesMax);
             }
@@ -40,7 +43,7 @@ namespace GestionnaireTournois
             cbxTournois.Items.AddRange(Tournoi.EtatTournoiNom);
             cbxTournois.SelectedIndex = 0;
 
-            construireDataGridView();
+            ConstruireDataGridView();
             ChargeTournois();
 
             /*if(estResposable)
@@ -51,15 +54,14 @@ namespace GestionnaireTournois
 
         private void btnStats_Click(object sender, EventArgs e)
         {
-            frmStats stats = new frmStats(joueur);
+            frmStats stats = new frmStats(Joueur);
             stats.ShowDialog();
         }
 
         private void btnEquipe_Click(object sender, EventArgs e)
         {
-            Equipe test = new Equipe("ROC", "Real Original Crac", 100);
 
-            frmEquipe equipe = new frmEquipe(test);
+            frmEquipe equipe = new frmEquipe(Joueur);
             equipe.ShowDialog();
 
             /*if(estResponsable)
@@ -84,7 +86,7 @@ namespace GestionnaireTournois
             ChargeTournois();
         }
 
-        private void construireDataGridView()
+        private void ConstruireDataGridView()
         {
             dgvTournois.ColumnCount = 4;
             dgvTournois.Columns[0].Name = "Nom tournoi";
@@ -106,9 +108,9 @@ namespace GestionnaireTournois
         private void dgvTournois_CellClick(object sender, DataGridViewCellEventArgs e)
         {
 
-            if (e.ColumnIndex == 4 & e.RowIndex < tournois.Length)
+            if (e.ColumnIndex == 4 & e.RowIndex < Tournois.Count)
             {
-                Tournoi tournoiSelectionne = tournois[e.RowIndex];
+                Tournoi tournoiSelectionne = Tournois[e.RowIndex];
 
                 MessageBox.Show("tournoi sélectionné : " + tournoiSelectionne.Nom);
 

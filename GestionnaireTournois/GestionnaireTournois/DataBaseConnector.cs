@@ -862,49 +862,7 @@ namespace GestionnaireTournois
             return data;
         }
 
-        public static List<Joueur> GetJoueursEquipe(Equipe equipe, int idTournoi)
-        {
-            List<Joueur> joueurs = new List<Joueur>();
-
-            MySqlConnection myConnection = new MySqlConnection(connection);
-
-            myConnection.Open();
-
-            MySqlCommand cmd = myConnection.CreateCommand();
-
-            try
-            {
-                cmd.CommandText = "SELECT DISTINCT id,  nom, prenom, email, pseudo, dateNaissance " +
-                                  "FROM joueur " +
-                                  "JOIN equipe_joueur ON equipe_joueur.idJoueur = joueur.id " +
-                                  "JOIN tournoi_equipe ON tournoi_equipe.acronymeEquipe = equipe_joueur.acronymeEquipe " +
-                                  "WHERE tournoi_equipe.idTournoi = @idTournoi  AND equipeDuJoueurLorsDu(joueur.id, tournoi_equipe.dateInscription) = @acronyme;";
-
-                cmd.Parameters.AddWithValue("@idTournoi", idTournoi);
-
-                cmd.Parameters.AddWithValue("@acronyme", equipe.Acronyme);
-
-                cmd.Prepare();
-
-                MySqlDataReader reader = cmd.ExecuteReader();
-
-                while (reader.Read())
-                {
-                    joueurs.Add(new Joueur(reader.GetInt32("id"), reader.GetString("nom"), reader.GetString("prenom"), reader.GetString("email"), reader.GetString("pseudo"), reader.GetDateTime("dateNaissance")));
-                }
-
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("An exception of type " + e.Message + " was encountered.");
-            }
-            finally
-            {
-                myConnection.Close();
-            }
-
-            return joueurs;
-        }
+        
 
         #endregion
 
@@ -1003,9 +961,243 @@ namespace GestionnaireTournois
             return result;
         }
 
+        public static Equipe GetEquipeJoueur(Joueur joueur)
+        {
+            Equipe result = null;
+
+            MySqlConnection myConnection = new MySqlConnection(connection);
+
+            myConnection.Open();
+
+            MySqlCommand cmd = myConnection.CreateCommand();
+
+            try
+            {
+                cmd.CommandText = "SELECT acronyme, nom, idResponsable FROM equipe WHERE acronyme = equipeDuJoueurLorsDu(@idJoueur, NOW())";
+                cmd.Parameters.AddWithValue("@idJoueur", joueur.Id);
+
+                cmd.Prepare();
+
+                MySqlDataReader rdr = cmd.ExecuteReader();
+
+                while (rdr.Read())
+                {
+                    result = new Equipe(rdr.GetString("acronyme"), rdr.GetString("nom"), rdr.GetInt32("idResponsable"));
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("An exception of type " + e.Message +
+                " was encountered.");
+            }
+            finally
+            {
+                myConnection.Close();
+            }
+
+            return result;
+        }
+
+        public static void SupprimerJoueurEquipe(Equipe equipe, Joueur joueur)
+        {
+            MySqlConnection myConnection = new MySqlConnection(connection);
+
+            myConnection.Open();
+
+            MySqlCommand cmd = myConnection.CreateCommand();
+
+            try
+            {
+
+                cmd.CommandText = "UPDATE equipe_joueur SET dateHeureDepart = NOW() WHERE acronymeEquipe = @acronyme AND idJoueur = @idJoueur AND dateHeureDepart IS NULL;";
+
+                cmd.Parameters.AddWithValue("acronyme", equipe.Acronyme);
+                cmd.Parameters.AddWithValue("idJoueur", joueur.Id);
+
+                cmd.Prepare();
+
+                cmd.ExecuteNonQuery();
+
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+                Console.WriteLine("An exception of type " + e.Message + " was encountered.");
+            }
+            finally
+            {
+                myConnection.Close();
+            }
+        }
+
+        public static List<Equipe> GetAllEquipes()
+        {
+            List<Equipe> equipes = new List<Equipe>();
+
+
+            MySqlConnection myConnection = new MySqlConnection(connection);
+
+            myConnection.Open();
+
+            MySqlCommand cmd = myConnection.CreateCommand();
+
+            try
+            {
+                cmd.CommandText = "SELECT acronyme, nom, idResponsable FROM equipe";
+
+                cmd.Prepare();
+
+                MySqlDataReader reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    equipes.Add(new Equipe(reader.GetString("acronyme"), reader.GetString("nom"), reader.GetInt32("idResponsable")));
+                }
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("An exception of type " + e.Message +
+               " was encountered.");
+            }
+            finally
+            {
+                myConnection.Close();
+            }
+
+            return equipes;
+        }
+
         #endregion
 
         #region Joueurs
+
+        public static Joueur GetJoueurById(int idJoueur)
+        {
+            Joueur joueur = null;
+
+            MySqlConnection myConnection = new MySqlConnection(connection);
+
+            myConnection.Open();
+
+            MySqlCommand cmd = myConnection.CreateCommand();
+
+            try
+            {
+
+                cmd.CommandText = "SELECT id, nom, prenom, email, pseudo, dateNaissance FROM joueur WHERE id = @idJoueur";
+
+                cmd.Parameters.AddWithValue("idJoueur", idJoueur);
+
+                cmd.Prepare();
+
+                MySqlDataReader reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+
+                    joueur = new Joueur(idJoueur, reader.GetString("nom"), reader.GetString("prenom"), reader.GetString("email"), reader.GetString("pseudo"), reader.GetDateTime("dateNaissance"));
+
+                }
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("An exception of type " + e.Message + " was encountered.");
+            }
+            finally
+            {
+                myConnection.Close();
+            }
+
+            return joueur;
+        }
+
+        public static List<Joueur> GetJoueursEquipeTournoi(Equipe equipe, int idTournoi)
+        {
+            List<Joueur> joueurs = new List<Joueur>();
+
+            MySqlConnection myConnection = new MySqlConnection(connection);
+
+            myConnection.Open();
+
+            MySqlCommand cmd = myConnection.CreateCommand();
+
+            try
+            {
+                cmd.CommandText = "SELECT DISTINCT id,  nom, prenom, email, pseudo, dateNaissance " +
+                                  "FROM joueur " +
+                                  "JOIN equipe_joueur ON equipe_joueur.idJoueur = joueur.id " +
+                                  "JOIN tournoi_equipe ON tournoi_equipe.acronymeEquipe = equipe_joueur.acronymeEquipe " +
+                                  "WHERE tournoi_equipe.idTournoi = @idTournoi  AND equipeDuJoueurLorsDu(joueur.id, tournoi_equipe.dateInscription) = @acronyme;";
+
+                cmd.Parameters.AddWithValue("@idTournoi", idTournoi);
+
+                cmd.Parameters.AddWithValue("@acronyme", equipe.Acronyme);
+
+                cmd.Prepare();
+
+                MySqlDataReader reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    joueurs.Add(new Joueur(reader.GetInt32("id"), reader.GetString("nom"), reader.GetString("prenom"), reader.GetString("email"), reader.GetString("pseudo"), reader.GetDateTime("dateNaissance")));
+                }
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("An exception of type " + e.Message + " was encountered.");
+            }
+            finally
+            {
+                myConnection.Close();
+            }
+
+            return joueurs;
+        }
+
+        public static List<Joueur> GetJoueursEquipeActuels(Equipe equipe)
+        {
+            List<Joueur> joueurs = new List<Joueur>();
+
+            MySqlConnection myConnection = new MySqlConnection(connection);
+
+            myConnection.Open();
+
+            MySqlCommand cmd = myConnection.CreateCommand();
+
+            try
+            {
+
+                cmd.CommandText = "SELECT id, nom, prenom, email, pseudo, dateNaissance FROM joueur JOIN equipe_joueur ON equipe_joueur.idJoueur = joueur.id WHERE equipe_joueur.acronymeEquipe = @acronyme AND equipeDuJoueurLorsDu(joueur.id, NOW()) = @acronyme";
+
+                cmd.Parameters.AddWithValue("acronyme", equipe.Acronyme);
+
+                cmd.Prepare();
+
+                MySqlDataReader reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+
+                    joueurs.Add(new Joueur(reader.GetInt32("id"), reader.GetString("nom"), reader.GetString("prenom"), reader.GetString("email"), reader.GetString("pseudo"), reader.GetDateTime("dateNaissance")));
+
+                }
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("An exception of type " + e.Message + " was encountered.");
+            }
+            finally
+            {
+                myConnection.Close();
+            }
+
+            return joueurs;
+        }
+
         /*
         public static List<Joueur> GetJoueursDeEquipe(Equipe equipe)
         {
