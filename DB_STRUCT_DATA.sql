@@ -324,7 +324,7 @@ VALUES
 
 INSERT INTO Joueur (nom, prenom, email, pseudo, dateNaissance)
 VALUES 
-( 'Forestier', 'Quentin', 'quentin.forestier@heig-vd.ch', 'Dudude', '2001-05-16' ),
+( 'Forestier', 'Qunetin', 'quentin.forestier@heig-vd.ch', 'Dudude', '2001-05-16' ),
 ( 'Herzig', 'Melvyn', 'melvyn.herzig@heig-vd.ch', 'Wheald', '1997-09-11' ),
 ( 'Crausaz', 'Nicolas', 'nicolas.crausaz@heig-vd.ch', 'itsaboi', '1999-08-03' ),
 ( 'Brescard', 'Julien', 'Jujuju@lse.ch', 'Jujuju', '2002-09-16' ),
@@ -904,9 +904,9 @@ CREATE FUNCTION estComplete(pAcronymeEquipe VARCHAR(3))
 RETURNS BOOLEAN
 DETERMINISTIC
 BEGIN
-	IF ( 3 = (SELECT COUNT(*) 
-			  FROM Equipe_Joueur 
-              WHERE Equipe_Joueur.acronymeEquipe = pAcronymeEquipe AND Equipe_Joueur.dateHeureDepart IS NULL AND Equipe_Joueur.dateHeureArrivee <> '0001-01-01 00:00:00'))
+	IF  3 = (SELECT COUNT(1) 
+			 FROM Equipe_Joueur 
+			 WHERE Equipe_Joueur.acronymeEquipe = pAcronymeEquipe AND Equipe_Joueur.dateHeureDepart IS NULL AND Equipe_Joueur.dateHeureArrivee <> '0001-01-01 00:00:00')
 	THEN RETURN 1;
     ELSE RETURN 0;
     END IF;
@@ -1524,7 +1524,7 @@ BEFORE INSERT ON Equipe_Joueur
 FOR EACH ROW
 BEGIN
     CALL  verifierDatePlusPetite(NEW.dateHeureArrivee,NEW.dateHeureDepart);
-    IF ( estComplete(NEW.acronymeEquipe) )
+    IF ( NEW.dateHeureArrivee <> '0001-01-01 00:00:00' AND estComplete(NEW.acronymeEquipe) )
     THEN 
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Impossible de rejoindre l\'equipe, elle est complète';
     END IF;
@@ -1548,9 +1548,14 @@ BEGIN
     CALL verifierDatePlusPetite(NEW.dateHeureArrivee,NEW.dateHeureDepart);
     
     -- Le joueur rejoint l'équipe, supression des autres demandes
-    IF(OLD.dateHeureArrivee = '0001-01-01 00:00:00' AND NEW.dateHeureArrivee <> OLD.dateHeureArrivee AND NOT estComplete(NEW.acronymeEquipe))
+    IF(OLD.dateHeureArrivee = '0001-01-01 00:00:00' AND NEW.dateHeureArrivee <> OLD.dateHeureArrivee)
     THEN
-		DELETE FROM Equipe_Joueur WHERE Equipe_Joueur.dateHeureArrivee = '0001-01-01 00:00:00' AND Equipe_Joueur.idJoueur = NEW.idJoueur;
+		IF estComplete(NEW.acronymeEquipe)
+        THEN
+			SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = ' Le joueur ne peut pas être accepté, équipe pleine.';
+		ELSE
+			DELETE FROM Equipe_Joueur WHERE Equipe_Joueur.dateHeureArrivee = '0001-01-01 00:00:00' AND Equipe_Joueur.idJoueur = NEW.idJoueur;
+		END IF;
     END IF;
     
     -- Si on tente de lui le re-refaire rejoindre l'équipe avec le même enregistrement
@@ -1657,7 +1662,7 @@ BEFORE UPDATE ON Match_Joueur
 FOR EACH ROW
 BEGIN
 	-- Blocage de la modification de la clé.
-    IF OLD.idJoueur <> NEW.idJoueur OR OLD.id <> NEW.id OR OLD.idSerie <> NEW.idSerie OR NEW.noTour <> OLD.noTour OR OLD.idTournoi <> NEW.idTournoi
+    IF OLD.idJoueur <> NEW.idJoueur OR OLD.idMatch <> NEW.idMatch OR OLD.idSerie <> NEW.idSerie OR NEW.noTour <> OLD.noTour OR OLD.idTournoi <> NEW.idTournoi
     THEN
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = ' Modification de la clé du match impossible.';
 	END IF;
