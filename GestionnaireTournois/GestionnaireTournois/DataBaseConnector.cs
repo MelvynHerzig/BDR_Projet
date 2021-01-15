@@ -1417,7 +1417,7 @@ namespace GestionnaireTournois
             try
             {
 
-                cmd.CommandText = "SELECT id, nom, prenom, email, pseudo, dateNaissance FROM joueur JOIN equipe_joueur ON equipe_joueur.idJoueur = joueur.id WHERE equipe_joueur.acronymeEquipe = @acronyme AND equipeDuJoueurLorsDu(joueur.id, NOW()) = @acronyme";
+                cmd.CommandText = "SELECT DISTINCT id, nom, prenom, email, pseudo, dateNaissance FROM joueur JOIN equipe_joueur ON equipe_joueur.idJoueur = joueur.id WHERE equipe_joueur.acronymeEquipe = @acronyme AND equipeDuJoueurLorsDu(joueur.id, NOW()) = @acronyme";
 
                 cmd.Parameters.AddWithValue("acronyme", equipe.Acronyme);
 
@@ -1538,7 +1538,7 @@ namespace GestionnaireTournois
             try
             {
 
-                cmd.CommandText = "UPDATE equipe_joueur SET dateHeureArrivee = NOW() WHERE acronymeEquipe = @acronyme AND idJoueur = @idJoueur";
+                cmd.CommandText = "UPDATE equipe_joueur SET dateHeureArrivee = NOW() WHERE acronymeEquipe = @acronyme AND idJoueur = @idJoueur AND dateHeureDepart IS NULL";
 
                 cmd.Parameters.AddWithValue("idJoueur", joueur.Id);
                 cmd.Parameters.AddWithValue("acronyme", equipe.Acronyme);

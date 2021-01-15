@@ -129,9 +129,11 @@ namespace GestionnaireTournois.Views.Users
                     {
                         case "Joueurs actuels":
                             Equipe.SupprimerJoueur(joueurSelectionne);
+                            ChargeJoueursActuels();
                             break;
                         case "Joueurs en attente":
                             Equipe.AccepterJoueur(joueurSelectionne);
+                            ChargeJoueursEnAttente();
                             break;
                     }
                 }

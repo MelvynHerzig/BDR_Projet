@@ -50,11 +50,13 @@ namespace GestionnaireTournois
                     case "Tournois participés":
                         frmTournoi frm = new frmTournoi(Joueur, tournoiSelectionne);
                         frm.ShowDialog();
+                        ChargeTournoisParticipes();
                         break;
                     case "Tournois rejoignables":
                         Equipe equipe = Joueur.GetEquipe();
                         if(equipe != null)
                             tournoiSelectionne.Inscrire(equipe);
+                        ChargeTournoisRejoignables();
                         break;
                 }
 
