@@ -12,7 +12,7 @@ USE GestionnaireDeTournoisRocketLeague;
 CREATE TABLE Prix 
 (
   id INT AUTO_INCREMENT,
-  montantArgent INT UNSIGNED NOT NULL,
+  montantArgent DOUBLE(10,2) NOT NULL,
   CONSTRAINT PK_Prix PRIMARY KEY (id)
 );
 
@@ -1290,7 +1290,7 @@ BEGIN
 			THEN LEAVE inscription_loop; 
 		END IF;
         
-        UPDATE Serie SET Serie.acronymeEquipe1 = equipe1Inscrite,  Serie.acronymeEquipe2 = equipe2Inscrite WHERE Serie.id = noSerie AND Serie.noTour = noTour AND Serie.idTournoi = pIdTournoi;
+        UPDATE Serie SET acronymeEquipe1 = equipe1Inscrite,  acronymeEquipe2 = equipe2Inscrite WHERE id = noSerie AND noTour = noTour AND idTournoi = pIdTournoi;
         SET noSerie = noSerie + 1;
         
     END LOOP;
@@ -1316,9 +1316,9 @@ BEGIN
 			-- Si la serie était impair -> acronymeEquipe1 dans la suivante sinon acronymeEquipe2
             IF pIdSerie % 2 <> 0
             THEN
-				UPDATE Serie SET Serie.acronymeEquipe1 = vainqueur WHERE Serie.id = nextSerie AND Serie.noTour = pNoTour - 1 AND Serie.idTournoi = pIdTournoi;
+				UPDATE Serie SET acronymeEquipe1 = vainqueur WHERE id = nextSerie AND noTour = pNoTour - 1 AND idTournoi = pIdTournoi;
             ELSE
-				UPDATE Serie SET Serie.acronymeEquipe2 = vainqueur WHERE Serie.id = nextSerie AND Serie.noTour = pNoTour - 1 AND Serie.idTournoi = pIdTournoi;
+				UPDATE Serie SET acronymeEquipe2 = vainqueur WHERE id = nextSerie AND noTour = pNoTour - 1 AND idTournoi = pIdTournoi;
             END IF;
         END IF;
     END IF;
@@ -1596,7 +1596,7 @@ BEGIN
     VALUE(NEW.acronyme, NEW.idResponsable, NOW(), NULL);
 	
 	-- Suppression de ses demandes
-	DELETE FROM Equipe_Joueur WHERE Equipe_Joueur.dateHeureArrivee = '0001-01-01 00:00:00' AND Equipe_Joueur.idJoueur = NEW.idResponsable;
+	DELETE FROM Equipe_Joueur WHERE dateHeureArrivee = '0001-01-01 00:00:00' AND idJoueur = NEW.idResponsable;
 END $$
 
 CREATE TRIGGER before_update_equipe
@@ -1695,7 +1695,7 @@ BEGIN
         THEN
 			SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = ' Le joueur ne peut pas être accepté, équipe pleine.';
 		ELSE
-			DELETE FROM Equipe_Joueur WHERE Equipe_Joueur.dateHeureArrivee = '0001-01-01 00:00:00' AND Equipe_Joueur.idJoueur = NEW.idJoueur;
+			DELETE FROM Equipe_Joueur WHERE dateHeureArrivee = '0001-01-01 00:00:00' AND idJoueur = NEW.idJoueur;
 		END IF;
     END IF;
 END $$
@@ -1768,7 +1768,7 @@ BEGIN
 		THEN 
  			IF vainqueurSerie(NEW.idSerie, NEW.noTour, NEW.idTournoi) IS NOT NULL
 			THEN
-				UPDATE Tournoi SET Tournoi.dateHeureFin = NOW() WHERE Tournoi.id = NEW.idTournoi;
+				UPDATE Tournoi SET dateHeureFin = NOW() WHERE id = NEW.idTournoi;
 			END IF;
 		END IF;
 	ELSE
@@ -1801,6 +1801,16 @@ AFTER UPDATE ON Match_Joueur
 FOR EACH ROW
 BEGIN
 	CALL tenterPromotion(NEW.idMatch, NEW.idSerie, NEW.noTour, NEW.idTournoi);
+END $$
+
+CREATE TRIGGER before_update_prix
+BEFORE UPDATE ON Prix
+FOR EACH ROW
+BEGIN
+	IF NEW.montantArgent < 0
+    THEN
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Le prix ne peux pas être négatif';
+	END IF;
 END $$
 
 -----------------------------------------------------
