@@ -958,13 +958,13 @@ END $$
 
 
 -- Compte pour une équipe sont nombre de victoire dans une série.
-CREATE FUNCTION compterVictoireDansSerie(pAcronymeEquipe VARCHAR(3), pIdSerie INT, pNoTour INT, pIdTournoi INT)
+CREATE FUNCTION compterVictoireDansSerie(pAcronymeEquipe VARCHAR(3), pIdSerie INT, pNoTour INT, pIdTournoi INT, pSignalerErreurMatch BOOLEAN)
 RETURNS INT
 DETERMINISTIC
 BEGIN
 	DECLARE nbVictoires INT;
     SET nbVictoires = (SELECT COUNT(1)  
-						FROM (SELECT `Match`.id  AS idMatch, Serie.id AS idSerie, Serie.noTour, Serie.idTournoi, vainqueurMatch(`Match`.id, Serie.id, Serie.noTour, Serie.idTournoi) AS vainqueur 
+						FROM (SELECT `Match`.id  AS idMatch, Serie.id AS idSerie, Serie.noTour, Serie.idTournoi, vainqueurMatch(`Match`.id, Serie.id, Serie.noTour, Serie.idTournoi, pSignalerErreurMatch) AS vainqueur 
 							  FROM Serie
 							  INNER JOIN `Match`
 								 ON `Match`.idSerie = Serie.id AND `Match`.noTour = Serie.noTour AND `Match`.idTournoi = Serie.idTournoi
@@ -1026,12 +1026,12 @@ BEGIN
 		RETURN TRUE;
 	END IF;
    
-    IF  pAcronymeEquipe1 IS NULL OR pAcronymeEquipe1 = vainqueurSerie( (pIdSerie * 2) - 1, pNoTour + 1, pIdTournoi)
+    IF  pAcronymeEquipe1 IS NULL OR pAcronymeEquipe1 = vainqueurSerie( (pIdSerie * 2) - 1, pNoTour + 1, pIdTournoi, TRUE)
     THEN 
 		SET equipe1OK = TRUE;
 	END IF;
     
-    IF  pAcronymeEquipe2 IS NULL OR  pAcronymeEquipe2 = vainqueurSerie( pIdSerie * 2, pNoTour + 1, pIdTournoi)
+    IF  pAcronymeEquipe2 IS NULL OR  pAcronymeEquipe2 = vainqueurSerie( pIdSerie * 2, pNoTour + 1, pIdTournoi, TRUE)
     THEN 
 		SET equipe2OK = TRUE;
 	END IF;
@@ -1040,7 +1040,7 @@ BEGIN
 END $$
 
 -- Retourne le vainqueur d'une série donnée si terminée sinon NULL.
-CREATE FUNCTION vainqueurSerie(pIdSerie INT, pNoTour INT, pIdTournoi INT)
+CREATE FUNCTION vainqueurSerie(pIdSerie INT, pNoTour INT, pIdTournoi INT, pSignalerErreurMatch BOOLEAN)
 RETURNS VARCHAR(3)
 DETERMINISTIC
 BEGIN
@@ -1055,8 +1055,8 @@ BEGIN
 	END IF;
     
     SELECT longueurMaxSerie INTO maxVictoire FROM Tour WHERE no = pNoTour AND idTournoi = pIdTournoi;
-	SET nbVictoireE1 = compterVictoireDansSerie(ae1, pIdSerie, pNoTour, pIdTournoi);
-    SET nbVictoireE2 = compterVictoireDansSerie(ae2, pIdSerie, pNoTour, pIdTournoi);
+	SET nbVictoireE1 = compterVictoireDansSerie(ae1, pIdSerie, pNoTour, pIdTournoi, pSignalerErreurMatch);
+    SET nbVictoireE2 = compterVictoireDansSerie(ae2, pIdSerie, pNoTour, pIdTournoi, pSignalerErreurMatch);
 	
     SET taux = (maxVictoire + 1) / 2;
     
@@ -1074,7 +1074,7 @@ BEGIN
 END $$
 
 -- Retourne le nom du vainqueur d'un match.
-CREATE FUNCTION vainqueurMatch(pIdMatch INT, pIdSerie INT, pNoTour INT, pIdTournoi INT)
+CREATE FUNCTION vainqueurMatch(pIdMatch INT, pIdSerie INT, pNoTour INT, pIdTournoi INT, pSignalerErreurMatch BOOLEAN)
 RETURNS VARCHAR(3)
 DETERMINISTIC
 BEGIN
@@ -1090,13 +1090,18 @@ BEGIN
     SELECT SUM(nbButs), COUNT(nbButs) INTO be2, nbe2 FROM Match_Joueur
 		WHERE idMatch = pIdMatch AND idSerie = pIdSerie AND noTour = pNoTour AND idTournoi = pIdTournoi AND equipeDuJoueurLorsDu(idJoueur, dateDuTournoi) = ae2;
         
-	IF nbe1 <> 3 OR nbe2 <> 3
+	IF ( nbe1 <> 3 OR nbe2 <> 3 ) AND pSignalerErreurMatch
     THEN    
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Une équipe n\'a pas obtenu trois performances de ses joueurs dans un match présent de la série.';
+	ELSE 
+		RETURN NULL;
     END IF;
     
-    IF be1 = be2 THEN
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Les équipes sont à égalité, résultat impossible.';
+    IF be1 = be2 AND pSignalerErreurMatch
+    THEN
+         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Les équipes sont à égalité, résultat impossible.';
+    ELSE 
+		RETURN NULL;
     END IF;
     
     IF be1 > be2 THEN
@@ -1308,7 +1313,7 @@ BEGIN
 	IF pNoTour <> 1 AND 6 = (SELECT COUNT(1) FROM Match_Joueur WHERE idMatch = pIdMatch AND idSerie = pIdSerie AND noTour = pNoTour AND idTournoi = pIdTournoi)
     THEN 
 		SET nextSerie = CEIL(pIdSerie / 2);
-		SET vainqueur = vainqueurSerie(pIdSerie, pNoTour, pIdTournoi);
+		SET vainqueur = vainqueurSerie(pIdSerie, pNoTour, pIdTournoi, TRUE);
         
         -- La série est terminée on promeut le vainqueur
         IF vainqueur IS NOT NULL
@@ -1408,7 +1413,7 @@ BEGIN
 	END IF;
     
     -- Si le tournoi est terminé, on empêche les mauvaises manipulations de la date de fin
-    IF vainqueurSerie(1,1,NEW.id) IS NOT NULL
+    IF vainqueurSerie(1,1,NEW.id, FALSE) IS NOT NULL
     THEN
 		IF  NEW.dateHeureFin IS NULL 
 		THEN
@@ -1698,7 +1703,7 @@ BEGIN
     THEN
 		SET nbJoueur = (SELECT COUNT(1) 
 			            FROM Equipe_Joueur 
-			            WHERE acronymeEquipe = pAcronymeEquipe AND dateHeureDepart IS NULL AND dateHeureArrivee <> '0001-01-01 00:00:00');
+			            WHERE acronymeEquipe = NEW.acronymeEquipe AND dateHeureDepart IS NULL AND dateHeureArrivee <> '0001-01-01 00:00:00');
 		IF nbJoueur > 3
         THEN
 			SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = ' Le joueur ne peut pas être accepté, équipe pleine.';
@@ -1732,7 +1737,7 @@ BEGIN
 	END IF;
     
     -- Si la serie connait déjà un vainqueur.
-	IF vainqueurSerie(NEW.idSerie, NEW.noTour, NEW.idTournoi) IS NOT NULL
+	IF vainqueurSerie(NEW.idSerie, NEW.noTour, NEW.idTournoi, TRUE) IS NOT NULL
     THEN
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Serie terminée, ajout de match impossible';
     END IF;
@@ -1774,7 +1779,7 @@ BEGIN
  	THEN 
 		IF 6 = (SELECT COUNT(1) FROM Match_Joueur WHERE idMatch = NEW.idMatch AND idSerie = NEW.idSerie AND noTour = NEW.noTour AND idTournoi = NEW.idTournoi)
 		THEN 
- 			IF vainqueurSerie(NEW.idSerie, NEW.noTour, NEW.idTournoi) IS NOT NULL
+ 			IF vainqueurSerie(NEW.idSerie, NEW.noTour, NEW.idTournoi, TRUE) IS NOT NULL
 			THEN
 				UPDATE Tournoi SET dateHeureFin = NOW() WHERE id = NEW.idTournoi;
 			END IF;
