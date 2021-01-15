@@ -58,7 +58,6 @@ namespace GestionnaireTournois.Models
 
         public void ModifierMatch(List<JoueurMatchData> datas)
         {
-
             DataBaseConnector.ModifierMatch(datas);
         }
     }

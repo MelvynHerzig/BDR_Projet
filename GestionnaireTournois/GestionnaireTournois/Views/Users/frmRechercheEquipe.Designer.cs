@@ -47,16 +47,18 @@ namespace GestionnaireTournois.Views.Users
             // 
             this.lbxRecherche.FormattingEnabled = true;
             this.lbxRecherche.ItemHeight = 16;
-            this.lbxRecherche.Location = new System.Drawing.Point(24, 30);
+            this.lbxRecherche.Location = new System.Drawing.Point(32, 37);
+            this.lbxRecherche.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.lbxRecherche.Name = "lbxRecherche";
-            this.lbxRecherche.Size = new System.Drawing.Size(167, 132);
+            this.lbxRecherche.Size = new System.Drawing.Size(221, 148);
             this.lbxRecherche.TabIndex = 12;
             // 
             // btnRejoindre
             // 
-            this.btnRejoindre.Location = new System.Drawing.Point(24, 168);
+            this.btnRejoindre.Location = new System.Drawing.Point(32, 207);
+            this.btnRejoindre.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnRejoindre.Name = "btnRejoindre";
-            this.btnRejoindre.Size = new System.Drawing.Size(167, 29);
+            this.btnRejoindre.Size = new System.Drawing.Size(223, 36);
             this.btnRejoindre.TabIndex = 13;
             this.btnRejoindre.Text = "Rejoindre";
             this.btnRejoindre.UseVisualStyleBackColor = true;
@@ -67,9 +69,11 @@ namespace GestionnaireTournois.Views.Users
             this.gbxRecherche.Controls.Add(this.btnRejoindre);
             this.gbxRecherche.Controls.Add(this.lbxRecherche);
             this.gbxRecherche.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.gbxRecherche.Location = new System.Drawing.Point(12, 12);
+            this.gbxRecherche.Location = new System.Drawing.Point(16, 15);
+            this.gbxRecherche.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.gbxRecherche.Name = "gbxRecherche";
-            this.gbxRecherche.Size = new System.Drawing.Size(217, 210);
+            this.gbxRecherche.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.gbxRecherche.Size = new System.Drawing.Size(289, 258);
             this.gbxRecherche.TabIndex = 14;
             this.gbxRecherche.TabStop = false;
             this.gbxRecherche.Text = "Recherche d\'équipe";
@@ -82,9 +86,11 @@ namespace GestionnaireTournois.Views.Users
             this.groupBox1.Controls.Add(this.tbxNom);
             this.groupBox1.Controls.Add(this.btnCreer);
             this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox1.Location = new System.Drawing.Point(16, 235);
+            this.groupBox1.Location = new System.Drawing.Point(21, 289);
+            this.groupBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(217, 196);
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox1.Size = new System.Drawing.Size(289, 241);
             this.groupBox1.TabIndex = 15;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Créer une équipe";
@@ -92,7 +98,8 @@ namespace GestionnaireTournois.Views.Users
             // lblNom
             // 
             this.lblNom.AutoSize = true;
-            this.lblNom.Location = new System.Drawing.Point(17, 91);
+            this.lblNom.Location = new System.Drawing.Point(23, 112);
+            this.lblNom.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblNom.Name = "lblNom";
             this.lblNom.Size = new System.Drawing.Size(94, 16);
             this.lblNom.TabIndex = 17;
@@ -101,7 +108,8 @@ namespace GestionnaireTournois.Views.Users
             // lblAcronyme
             // 
             this.lblAcronyme.AutoSize = true;
-            this.lblAcronyme.Location = new System.Drawing.Point(17, 33);
+            this.lblAcronyme.Location = new System.Drawing.Point(23, 41);
+            this.lblAcronyme.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblAcronyme.Name = "lblAcronyme";
             this.lblAcronyme.Size = new System.Drawing.Size(75, 16);
             this.lblAcronyme.TabIndex = 16;
@@ -109,23 +117,26 @@ namespace GestionnaireTournois.Views.Users
             // 
             // tbxAcronyme
             // 
-            this.tbxAcronyme.Location = new System.Drawing.Point(16, 52);
+            this.tbxAcronyme.Location = new System.Drawing.Point(21, 64);
+            this.tbxAcronyme.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.tbxAcronyme.Name = "tbxAcronyme";
-            this.tbxAcronyme.Size = new System.Drawing.Size(167, 22);
+            this.tbxAcronyme.Size = new System.Drawing.Size(221, 22);
             this.tbxAcronyme.TabIndex = 15;
             // 
             // tbxNom
             // 
-            this.tbxNom.Location = new System.Drawing.Point(16, 110);
+            this.tbxNom.Location = new System.Drawing.Point(21, 135);
+            this.tbxNom.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.tbxNom.Name = "tbxNom";
-            this.tbxNom.Size = new System.Drawing.Size(167, 22);
+            this.tbxNom.Size = new System.Drawing.Size(221, 22);
             this.tbxNom.TabIndex = 14;
             // 
             // btnCreer
             // 
-            this.btnCreer.Location = new System.Drawing.Point(20, 154);
+            this.btnCreer.Location = new System.Drawing.Point(27, 190);
+            this.btnCreer.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnCreer.Name = "btnCreer";
-            this.btnCreer.Size = new System.Drawing.Size(167, 29);
+            this.btnCreer.Size = new System.Drawing.Size(223, 36);
             this.btnCreer.TabIndex = 13;
             this.btnCreer.Text = "Créer";
             this.btnCreer.UseVisualStyleBackColor = true;
@@ -133,17 +144,18 @@ namespace GestionnaireTournois.Views.Users
             // 
             // frmRechercheEquipe
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(245, 441);
+            this.ClientSize = new System.Drawing.Size(327, 543);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.gbxRecherche);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.MaximizeBox = false;
             this.Name = "frmRechercheEquipe";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "frmRechercheEquipe";
+            this.Text = "Recherche / Création d\'une équipe";
             this.Load += new System.EventHandler(this.frmRechercheEquipe_Load);
             this.gbxRecherche.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);

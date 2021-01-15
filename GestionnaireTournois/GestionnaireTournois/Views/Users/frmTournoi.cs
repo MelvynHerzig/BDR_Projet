@@ -28,7 +28,7 @@ namespace GestionnaireTournois.Views.Users
 
         private void frmTournoi_Load(object sender, EventArgs e)
         {
-            wbrTreeStruct.DocumentText = TournamentArborescenceGenerator.Generate(Tournoi, "Voir");
+            GenererArborescence();
             wbrTreeStruct.Document.Click += Document_Click;
 
             Equipe equipe = Joueur.GetEquipeDurantTournoi(Tournoi);
@@ -89,7 +89,12 @@ namespace GestionnaireTournois.Views.Users
         private void btnAbandonnerTournoi_Click(object sender, EventArgs e)
         {
             Joueur.GetEquipeDurantTournoi(Tournoi).AbandonnerTournoi(Tournoi);
+            GenererArborescence();
         }
 
+        private void GenererArborescence()
+        {
+            wbrTreeStruct.DocumentText = TournamentArborescenceGenerator.Generate(Tournoi, "Voir");
+        }
     }
 }

@@ -102,7 +102,7 @@ namespace GestionnaireTournois.Models
 
         public static void Ajouter(Equipe equipe)
         {
-            //DataBaseConnector.Ajouter
+            DataBaseConnector.AjouterEquipe(equipe);
         }
 
 

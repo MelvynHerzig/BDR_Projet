@@ -92,7 +92,7 @@ namespace GestionnaireTournois
                             else if ((position_in_match_span == ((match_span >> 1) + 1)) && (effective_row % match_span == position_in_match_span))
                             {
                                 string disabled = "";
-                                if(serie.GetEquipes() == null || serie.GetEquipes().Contains(null))
+                                if(serie == null || serie.GetEquipes() == null || serie.GetEquipes().Contains(null))
                                 {
                                     disabled = "disabled";
                                 }

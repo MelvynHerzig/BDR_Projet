@@ -48,14 +48,14 @@ namespace GestionnaireTournois
             this.gbxAdmin.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.gbxAdmin.Location = new System.Drawing.Point(12, 78);
             this.gbxAdmin.Name = "gbxAdmin";
-            this.gbxAdmin.Size = new System.Drawing.Size(411, 151);
+            this.gbxAdmin.Size = new System.Drawing.Size(328, 151);
             this.gbxAdmin.TabIndex = 0;
             this.gbxAdmin.TabStop = false;
             this.gbxAdmin.Text = "Mode administrateur";
             // 
             // btnAdmin
             // 
-            this.btnAdmin.Location = new System.Drawing.Point(132, 55);
+            this.btnAdmin.Location = new System.Drawing.Point(90, 55);
             this.btnAdmin.Name = "btnAdmin";
             this.btnAdmin.Size = new System.Drawing.Size(150, 48);
             this.btnAdmin.TabIndex = 5;
@@ -72,7 +72,7 @@ namespace GestionnaireTournois
             this.gbxUser.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.gbxUser.Location = new System.Drawing.Point(12, 235);
             this.gbxUser.Name = "gbxUser";
-            this.gbxUser.Size = new System.Drawing.Size(411, 132);
+            this.gbxUser.Size = new System.Drawing.Size(328, 132);
             this.gbxUser.TabIndex = 1;
             this.gbxUser.TabStop = false;
             this.gbxUser.Text = "Mode utilisateur";
@@ -90,7 +90,7 @@ namespace GestionnaireTournois
             // btnSignIn
             // 
             this.btnSignIn.Enabled = false;
-            this.btnSignIn.Location = new System.Drawing.Point(292, 83);
+            this.btnSignIn.Location = new System.Drawing.Point(188, 83);
             this.btnSignIn.Name = "btnSignIn";
             this.btnSignIn.Size = new System.Drawing.Size(100, 23);
             this.btnSignIn.TabIndex = 3;
@@ -101,7 +101,7 @@ namespace GestionnaireTournois
             // lblEmail
             // 
             this.lblEmail.AutoSize = true;
-            this.lblEmail.Location = new System.Drawing.Point(25, 41);
+            this.lblEmail.Location = new System.Drawing.Point(25, 29);
             this.lblEmail.Name = "lblEmail";
             this.lblEmail.Size = new System.Drawing.Size(87, 16);
             this.lblEmail.TabIndex = 1;
@@ -110,7 +110,7 @@ namespace GestionnaireTournois
             // tbxEmail
             // 
             this.tbxEmail.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbxEmail.Location = new System.Drawing.Point(132, 41);
+            this.tbxEmail.Location = new System.Drawing.Point(28, 48);
             this.tbxEmail.Name = "tbxEmail";
             this.tbxEmail.Size = new System.Drawing.Size(260, 21);
             this.tbxEmail.TabIndex = 0;
@@ -120,7 +120,7 @@ namespace GestionnaireTournois
             // 
             this.lblModeChoice.AutoSize = true;
             this.lblModeChoice.Font = new System.Drawing.Font("Microsoft Sans Serif", 21.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblModeChoice.Location = new System.Drawing.Point(46, 27);
+            this.lblModeChoice.Location = new System.Drawing.Point(66, 29);
             this.lblModeChoice.Name = "lblModeChoice";
             this.lblModeChoice.Size = new System.Drawing.Size(224, 33);
             this.lblModeChoice.TabIndex = 2;
@@ -130,7 +130,7 @@ namespace GestionnaireTournois
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(435, 378);
+            this.ClientSize = new System.Drawing.Size(362, 378);
             this.Controls.Add(this.lblModeChoice);
             this.Controls.Add(this.gbxUser);
             this.Controls.Add(this.gbxAdmin);
