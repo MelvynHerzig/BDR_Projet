@@ -1090,19 +1090,25 @@ BEGIN
     SELECT SUM(nbButs), COUNT(nbButs) INTO be2, nbe2 FROM Match_Joueur
 		WHERE idMatch = pIdMatch AND idSerie = pIdSerie AND noTour = pNoTour AND idTournoi = pIdTournoi AND equipeDuJoueurLorsDu(idJoueur, dateDuTournoi) = ae2;
         
-	IF ( nbe1 <> 3 OR nbe2 <> 3 ) AND pSignalerErreurMatch
+	IF ( nbe1 <> 3 OR nbe2 <> 3 )
     THEN    
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Une équipe n\'a pas obtenu trois performances de ses joueurs dans un match présent de la série.';
-	ELSE 
-		RETURN NULL;
-    END IF;
-    
+		IF pSignalerErreurMatch
+        THEN
+			SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Une équipe n\'a pas obtenu trois performances de ses joueurs dans un match présent de la série.';
+		ELSE
+			RETURN NULL;
+		END IF;
+	END IF;
+	 
     IF be1 = be2 AND pSignalerErreurMatch
     THEN
-         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Les équipes sont à égalité, résultat impossible.';
-    ELSE 
-		RETURN NULL;
-    END IF;
+         IF pSignalerErreurMatch
+        THEN
+			SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Les équipes sont à égalité, résultat impossible.';
+		ELSE
+			RETURN NULL;
+		END IF;
+   END IF;
     
     IF be1 > be2 THEN
         RETURN ae1;
@@ -1707,8 +1713,6 @@ BEGIN
 		IF nbJoueur > 3
         THEN
 			SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = ' Le joueur ne peut pas être accepté, équipe pleine.';
-		ELSE
-			DELETE FROM Equipe_Joueur WHERE dateHeureArrivee = '0001-01-01 00:00:00' AND idJoueur = NEW.idJoueur;
 		END IF;
     END IF;
 END $$
