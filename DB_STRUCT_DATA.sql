@@ -3,7 +3,7 @@
 -- Model: New Model    Version: 1.0
 -- Berney Alec, Forestier Quentin, Herzig Melvyn
 
-DROP SCHEMA IF EXISTS GestionnaireDeTournoisRocketLeague;
+DROP SCHEMA IF EXISTS GestionnaireDeTournoisRocketLeague ;
 
 CREATE SCHEMA IF NOT EXISTS GestionnaireDeTournoisRocketLeague DEFAULT CHARACTER SET utf8mb4;
 USE GestionnaireDeTournoisRocketLeague;
@@ -12,7 +12,7 @@ USE GestionnaireDeTournoisRocketLeague;
 CREATE TABLE Prix 
 (
   id INT AUTO_INCREMENT,
-  montantArgent DECIMAL(10,2) NOT NULL,
+  montantArgent INT UNSIGNED NOT NULL,
   CONSTRAINT PK_Prix PRIMARY KEY (id)
 );
 
@@ -302,17 +302,17 @@ VALUES
 
 INSERT INTO Prix (montantArgent)
 VALUES 
-( 50.00 ),
-( 100.00 ),
-( 150.00 ),
-( 200.00 ),
-( 250.00 ),
-( 300.00 ),
-( 350.00 ),
-( 500.00 ),
-( 1000.00 ),
-( 1500.00 ),
-( 2000.00 );
+( 50 ),
+( 100 ),
+( 150 ),
+( 200 ),
+( 250 ),
+( 300 ),
+( 350 ),
+( 500 ),
+( 1000 ),
+( 1500 ),
+( 2000 );
 
 INSERT INTO Prix_Objet 
 VALUES 
@@ -324,7 +324,7 @@ VALUES
 
 INSERT INTO Joueur (nom, prenom, email, pseudo, dateNaissance)
 VALUES 
-( 'Forestier', 'Quentin', 'quentin.forestier@heig-vd.ch', 'Dudude', '2001-05-16' ),
+( 'Forestier', 'Qunetin', 'quentin.forestier@heig-vd.ch', 'Dudude', '2001-05-16' ),
 ( 'Herzig', 'Melvyn', 'melvyn.herzig@heig-vd.ch', 'Wheald', '1997-09-11' ),
 ( 'Crausaz', 'Nicolas', 'nicolas.crausaz@heig-vd.ch', 'itsaboi', '1999-08-03' ),
 ( 'Brescard', 'Julien', 'Jujuju@lse.ch', 'Jujuju', '2002-09-16' ),
@@ -810,7 +810,6 @@ VALUES
 INSERT INTO Serie
 VALUES ( 1, 1, 6, NULL, NULL );
 
-
 -- Tournoi 7
 INSERT INTO Serie
 VALUES 
@@ -818,14 +817,12 @@ VALUES
 ( 2, 2, 7, NULL, NULL ),
 ( 1, 1, 7, NULL, NULL );
 
-
 -- Tournoi 8
 INSERT INTO Serie
 VALUES 
 ( 1, 2, 8, NULL, NULL ),
 ( 2, 2, 8, NULL, NULL ),
 ( 1, 1, 8, NULL, NULL );
-
 
 -- Tournoi 9
 INSERT INTO Serie
@@ -896,7 +893,7 @@ BEGIN
 	FROM Equipe_Joueur
 	WHERE idJoueur = pIdJoueur AND dateHeureArrivee = (SELECT MAX(dateHeureArrivee) 
 													   FROM Equipe_Joueur 
-                                                       WHERE idJoueur = pIdJoueur AND dateHeureArrivee <> "0001-01-01 00:00:00" 
+                                                       WHERE idJoueur = pIdJoueur AND dateHeureArrivee <> '0001-01-01 00:00:00' 
 																				  AND dateHeureArrivee < pDate 
 																				  AND (dateHeureDepart IS NULL OR dateHeureDepart > pDate));
     RETURN nomEquipe;
@@ -907,9 +904,9 @@ CREATE FUNCTION estComplete(pAcronymeEquipe VARCHAR(3))
 RETURNS BOOLEAN
 DETERMINISTIC
 BEGIN
-	IF ( 3 = (SELECT COUNT(*) 
-			  FROM Equipe_Joueur 
-              WHERE Equipe_Joueur.acronymeEquipe = pAcronymeEquipe AND Equipe_Joueur.dateHeureDepart IS NULL AND Equipe_Joueur.dateHeureArrivee <> '0001-01-01 00:00:00'))
+	IF  3 = (SELECT COUNT(1) 
+			 FROM Equipe_Joueur 
+			 WHERE Equipe_Joueur.acronymeEquipe = pAcronymeEquipe AND Equipe_Joueur.dateHeureDepart IS NULL AND Equipe_Joueur.dateHeureArrivee <> '0001-01-01 00:00:00')
 	THEN RETURN 1;
     ELSE RETURN 0;
     END IF;
@@ -1116,7 +1113,7 @@ END $$
 -- Vérifier si la longueur maximale d'une série est bonne.
 CREATE PROCEDURE verifierLongueurMaxSerie(pLongueurSerie INT)
 BEGIN
-	 IF FIND_IN_SET( pLongueurSerie , "1,3,5,7") = 0 
+	 IF FIND_IN_SET( pLongueurSerie , '1,3,5,7') = 0 
      THEN 
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Une série ne peut se dérouler qu\'en 3,5 ou 7 matchs';
 	 END IF;
@@ -1148,37 +1145,6 @@ BEGIN
 	END IF;
 END $$
 
--- Indique que le no de tour ne peut pas être modifié
-CREATE PROCEDURE verifierNoTour(pNoTour INT, pIdTournoi INT)
-BEGIN
-	 
-     SET @maxTeam = (SELECT Tournoi.nbEquipesMax FROM Tournoi WHERE Tournoi.id = pIdTournoi);
-	 IF (pNoTour < 0 OR pNoTour > calculerNbTours(@maxTeam))
-     THEN
-		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Nouvel id de tour invalide';
-	 END IF;
-END $$
-
--- Indique que le id de série ne peut pas être modifié
-CREATE PROCEDURE verifierIdSerie(pIdSerie INT, pNoTour INT, pIdTournoi INT)
-BEGIN
-	 IF pIdSerie <= 0 OR pIdSerie > POWER(2, pNoTour - 1)
-     THEN 
-		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Nouvel id de série invalide';
-	 END IF;
-END $$
-
--- Indique que le id de match ne peut pas être modifié
-CREATE PROCEDURE verifierIdMatch(pIdMatch INT, pIdSerie INT, pNoTour INT, pIdTournoi INT)
-BEGIN
-	 SET @maxMatch = (SELECT Tour.longueurMaxSerie FROM Tour WHERE Tour.idTournoi = pIdTournoi AND Tour.no = pNoTour);
-     SET @noDernierMatch = (SELECT MAX(`Match`.id) FROM `Match` WHERE `Match`.idSerie = pIdSerie AND `Match`.noTour = pNoTour AND `Match`.idTournoi = pIdTournoi);
-	 IF pIdMatch > @maxMatch OR  ( @noDernierMatch IS NULL AND pIdMatch <> 1 ) OR ( @noDernierMatch IS NOT NULL AND pIdMatch <> (@noDernierMatch + 1) )
-     THEN
- 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Nouvel id de match invalide';
-	 END IF;
-END $$
-
 -- Vérifie que le nom de l'équipe ait au moins 1 caractère.
 CREATE PROCEDURE verifierAcronyme(pAcronymeEquipe VARCHAR(3))
 BEGIN
@@ -1207,12 +1173,12 @@ BEGIN
 	START TRANSACTION;
 	IF estEnAttente(pIdTournoi) 
     THEN
-		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "Il est trop tôt pour démarrer le tournoi";
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Il est trop tôt pour démarrer le tournoi';
 	END IF;
     
     IF NOT estComplet(pIdTournoi)
 	THEN
-		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "Pas suffisament d\'équipes inscrites pour lancer le tournoi";
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Pas suffisament d\'équipes inscrites pour lancer le tournoi';
 	END IF; 
 
 	-- création du seeding 
@@ -1233,16 +1199,6 @@ BEGIN
     END LOOP;
     CLOSE curInscription;
     COMMIT;
-END $$
-
--- Vérifie si un enregistrement de match_joueur idSerie, noTour et idTournoi peut être modifié
-CREATE PROCEDURE verifierSerieSuivanteCommencee(pIdSerie INT, pNoTour INT, pIdTournoi INT)
-BEGIN
-	SET @serieSuivante = CEIL(pIdSerie / 2);
-	IF pNoTour <> 1 AND 0 <> (SELECT COUNT(1) FROM Match_Joueur WHERE Match_Joueur.idSerie = @serieSuivante AND Match_Joueur.noTour = pNoTour - 1 AND Match_Joueur.idTournoi = pIdTournoi)
-    THEN
-		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = " Modification/insertion du score du joueur impossible, la serie suivante a déjà commencée.";
-	END IF;
 END $$
 
 -- Après insertion du 6ème joueur, vérifie si la série est finie et fait progresser l'arbre de tournoi
@@ -1266,6 +1222,36 @@ BEGIN
             END IF;
         END IF;
     END IF;
+END $$
+
+-- Vérifie si un email a un format valable
+CREATE PROCEDURE verifierEmail(pEmail VARCHAR(250))
+BEGIN
+	IF pEmail NOT REGEXP '^[a-zA-Z0-9][a-zA-Z0-9._-]*@[a-zA-Z0-9][a-zA-Z0-9._-]*\.[a-zA-Z]{2,4}$'
+    THEN 
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Format de l\'email invalide';
+	END IF;
+END $$
+
+-- Effectue les vérifications d'inscription à un tournoi pour l'équipe donnée.
+CREATE PROCEDURE verifierInscriptionEquipe(pAcronymeEquipe VARCHAR(3), pIdTournoi INT)
+BEGIN
+	IF estComplet(pIdTournoi)
+    THEN
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Les inscriptions du tournoi sont complètes';
+	END IF;
+
+	-- Le tournoi est-il encore en attente
+    CALL verifierTournoiEnAttente(pIdTournoi);
+    
+    -- Equipe déjà inscrite à un autre tournoi ? 
+    IF aUneInscriptionEnCours(pAcronymeEquipe)
+    THEN
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'L\'équipe participe déjà à un tournoi';
+    END IF;
+    
+    -- Equipe complète ? 
+	CALL verifierEquipeComplete(pAcronymeEquipe); 
 END $$
 
 -----------------------------------------------------
@@ -1296,16 +1282,37 @@ BEFORE UPDATE ON Tournoi
 FOR EACH ROW
 BEGIN
 	
+    -- On empêche de change la taille du tournoi afin de ne pas avoir besoin de modifier le nombre de tour "dynamiquement"
 	IF (OLD.nbEquipesMax <> NEW.nbEquipesMax) 
     THEN
-		-- Cette restriction a lieu pour ne pas avoir besoin de modifier le nombre de tour "dynamiquement"
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Impossible de modifier le nombre maximal d\'équipes.';
 	END IF;
     
+    -- Si modification de la date de début
     IF(NEW.dateHeureDebut <> OLD.dateHeureDebut)
     THEN
-		CALL verifierDatePassee(NEW.dateHeureDebut);
+		IF NOT estEnAttente(OLD.id)
+        THEN
+			SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Impossible de modifié la date de début d\'un tournoi déjà commencé.';
+		ELSE
+			CALL verifierDatePassee(NEW.dateHeureDebut);
+		END IF;
 	END IF;
+    
+    -- Si le tournoi est terminé, on empêche les mauvaises manipulations de la date de fin
+    IF vainqueurSerie(1,1,NEW.id) IS NOT NULL
+    THEN
+		IF  NEW.dateHeureFin IS NULL 
+		THEN
+			SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Impossiblede retirer la date de fin d\'tournoi terminé.';
+        END IF;
+    ELSE
+		IF  NEW.dateHeureFin IS NOT NULL 
+        THEN
+			SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Impossible de terminer le tournoi tant que la finale n\'a pas de vainqueur.';
+        END IF;
+    END IF;
+    
     CALL verifierDatePlusPetite(NEW.dateHeureDebut, NEW.dateHeureFin);
 END $$
 
@@ -1313,10 +1320,11 @@ CREATE TRIGGER before_delete_tournoi
 BEFORE DELETE ON Tournoi
 FOR EACH ROW
 BEGIN
-	-- Si la date de départ est dépassées il sera supprimé automatiquement
+	-- Si la date de départ est dépassées et qu'il n'est pas complet il sera supprimé automatiquement par 
+    -- les événements annuler_tournoi et supprimer_tournoi_annule
 	IF ((OLD.dateHeureDebut < NOW() AND OLD.dateHeureFin IS NULL) OR OLD.dateHeureDebut <> OLD.dateHeureFin)
     THEN
-		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "Impossible de supprimer un tournoi commencé ou non annulé";
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Impossible de supprimer un tournoi commencé ou non annulé';
 	END IF;
 END $$
 
@@ -1324,6 +1332,7 @@ CREATE TRIGGER generer_arbre_tournoi
 AFTER INSERT ON Tournoi
 FOR EACH ROW
 BEGIN
+
 	DECLARE vNoTour INT DEFAULT 1;
     DECLARE vNoSerie INT DEFAULT 1;
     
@@ -1344,23 +1353,7 @@ CREATE TRIGGER before_insert_tournoi_equipe
 BEFORE INSERT ON Tournoi_Equipe
 FOR EACH ROW
 BEGIN
-	IF estComplet(NEW.idTournoi)
-    THEN
-		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Les inscriptions du tournoi sont complètes';
-	END IF;
-
-	-- Le tournoi est-il encore en attente
-    CALL verifierTournoiEnAttente(NEW.idTournoi);
-    
-    -- Equipe déjà inscrite à un autre tournoi ? 
-    IF (aUneInscriptionEnCours(NEW.acronymeEquipe))
-    THEN
-		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'L\'équipe participe déjà à un tournoi';
-    END IF;
-    
-    -- Equipe complète ? 
-	CALL verifierEquipeComplete(NEW.acronymeEquipe); 
-	
+	CALL verifierInscriptionEquipe(NEW.acronymeEquipe, NEW.idTournoi);
 	SET NEW.dateInscription = NOW();
 END $$
 
@@ -1368,13 +1361,8 @@ CREATE TRIGGER before_update_tournoi_equipe
 BEFORE UPDATE ON Tournoi_Equipe
 FOR EACH ROW
 BEGIN
-    -- Le tournoi est-il encore en attente ?
-    CALL verifierTournoiEnAttente(NEW.idTournoi);
-	IF (NEW.acronymeEquipe <> OLD.acronymeEquipe AND aUneInscriptionEnCours(NEW.acronymeEquipe))
-		THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'L\'equipe participe déjà à un tournoi';
-    END IF;
-    
-    CALL verifierEquipeComplete(NEW.acronymeEquipe);
+   CALL verifierInscriptionEquipe(NEW.acronymeEquipe, NEW.idTournoi);
+   SET NEW.dateInscription = NOW();
 END $$
 
 CREATE TRIGGER before_delete_tournoi_equipe
@@ -1383,9 +1371,9 @@ FOR EACH ROW
 BEGIN
 	-- cas cascade, le tournoi a été supprimé, pas de problème
     -- cas manuel, le tournoi est encore présent
-	IF estEnAttente(OLD.idTournoi)
+	IF NOT estEnAttente(OLD.idTournoi)
 	THEN
-		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "Impossible de désinscrire une équipe quand le tournoi a débuté.";
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Impossible de désinscrire une équipe quand le tournoi a débuté.';
 	END IF;
 END $$
 
@@ -1394,7 +1382,13 @@ CREATE TRIGGER before_insert_tour
 BEFORE INSERT ON Tour
 FOR EACH ROW
 BEGIN
-	CALL verifierNoTour(NEW.no, NEW.idTournoi);
+	-- Verification du numéro de tour
+	SET @maxTeam = (SELECT Tournoi.nbEquipesMax FROM Tournoi WHERE Tournoi.id = NEW.idTournoi);
+    SET @dernierNoTour = (SELECT MAX(Tour.no) FROM Tour WHERE Tour.idTournoi = NEW.idTournoi);
+	IF NEW.no <> 1 AND (NEW.no < 0 OR NEW.no > calculerNbTours(@maxTeam) OR NEW.no <> @dernierNoTour + 1)
+	THEN
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Nouvel id de tour invalide';
+	END IF;
     CALL verifierLongueurMaxSerie(NEW.longueurMaxSerie);
 END $$
 
@@ -1402,13 +1396,19 @@ CREATE TRIGGER before_update_tour
 BEFORE UPDATE ON Tour
 FOR EACH ROW
 BEGIN
-	CALL verifierNoTour(NEW.no, NEW.idTournoi);
+	-- Blocage de la modification du numéro
+    IF OLD.no <> NEW.no 
+    THEN
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Impossible de modifier le numero de tour';
+	END IF;
+    
 	-- Si le tournoi a débuté on ne modifie pas
     SET @debutTournoi = (SELECT Tournoi.dateHeureDebut FROM Tournoi WHERE Tournoi.id = NEW.idTournoi);
     IF(@debutTournoi < NOW())
     THEN
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Mise à jour du tour impossible, le tournoi a débuté';
 	END IF;
+    
     CALL verifierLongueurMaxSerie(NEW.longueurMaxSerie);
 END $$
 
@@ -1420,7 +1420,7 @@ BEGIN
     -- cas manuel, le tournoi est il encore présent 
 	IF EXISTS (SELECT Tournoi.id FROM Tournoi WHERE Tournoi.id = OLD.idTournoi)
 	THEN
-		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "Suppression du tour impossible";
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Suppression du tour impossible';
 	END IF;
 END $$
 
@@ -1429,7 +1429,12 @@ CREATE TRIGGER before_insert_serie
 BEFORE INSERT ON serie
 FOR EACH ROW
 BEGIN
-	CALL verifierIdSerie(NEW.id, NEW.noTour, NEW.idTournoi);
+	SET @dernierIdSerie = (SELECT MAX(Serie.id) FROM Serie WHERE Serie.noTour = NEW.noTour AND Serie.idTournoi = NEW.idTournoi);
+	IF NEW.id <> 1 AND ( NEW.id <= 0 OR NEW.id > POWER(2, NEW.noTour - 1) OR NEW.id <> @dernierIdSerie + 1)
+     THEN 
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Nouvel id de série invalide';
+	 END IF;
+    
 	CALL verifierInscription(NEW.acronymeEquipe1, new.idTournoi);
     CALL verifierInscription(NEW.acronymeEquipe2, new.idTournoi);
 	CALL verifierMemeEquipe(NEW.acronymeEquipe1, NEW.acronymeEquipe2);
@@ -1440,9 +1445,17 @@ CREATE TRIGGER before_update_serie
 BEFORE UPDATE ON serie
 FOR EACH ROW
 BEGIN
+	-- Blocage de la modification du numéro
+    IF OLD.id <> NEW.id OR OLD.noTour <> NEW.noTour OR OLD.idTournoi <> NEW.idTournoi 
+    THEN
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Impossible de modifier le numero de la série';
+	END IF;
 
-	CALL verifierSerieSuivanteCommencee(NEW.id, NEW.noTour, NEW.idTournoi);
-	CALL verifierIdSerie(NEW.id, NEW.noTour, NEW.idTournoi);
+	-- Si la série a déjà commencé, qu'elle a déjà des performances de joueurs
+	IF NEW.noTour <> 1 AND 0 <> (SELECT COUNT(1) FROM Match_Joueur WHERE Match_Joueur.idSerie = NEW.id AND Match_Joueur.noTour = NEW.noTour AND Match_Joueur.idTournoi = NEW.idTournoi)
+    THEN
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = ' Modification de la série impossible, les matchs ont déjà débutés.';
+	END IF;
 	CALL verifierInscription(NEW.acronymeEquipe1, new.idTournoi);
     CALL verifierInscription(NEW.acronymeEquipe2, new.idTournoi);
 	CALL verifierMemeEquipe(NEW.acronymeEquipe1, NEW.acronymeEquipe2);
@@ -1457,7 +1470,7 @@ BEGIN
     -- cas manuel, le tournoi est il encore présent 
 	IF EXISTS (SELECT Tour.no FROM Tour WHERE Tour.no = OLD.noTour AND Tour.idTournoi = OLD.idTournoi)
 	THEN
-		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "Suppression de la série impossible";
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Suppression de la série impossible';
 	END IF;
 END $$
 ----------------------- EQUIPE --------------------
@@ -1472,6 +1485,7 @@ CREATE TRIGGER after_insert_equipe
 AFTER INSERT ON Equipe
 FOR EACH ROW
 BEGIN
+	-- La vérification qui affirme que le responsable n''est pas déjà dans une équie s'effectue au moment de l'insertion dans equipe_joueur.
 	INSERT INTO Equipe_Joueur (acronymeEquipe, idJoueur, dateHeureArrivee, dateHeureDepart)
     VALUE(NEW.acronyme, NEW.idResponsable, NOW(), NULL);
 END $$
@@ -1492,7 +1506,8 @@ CREATE TRIGGER before_insert_joueur
 BEFORE INSERT ON Joueur
 FOR EACH ROW
 BEGIN
-    CALL  verifierDateFuture(NEW.dateNaissance);
+    CALL verifierDateFuture(NEW.dateNaissance);
+    CALL verifierEmail(NEW.email);
 END $$
 
 CREATE TRIGGER before_update_joueur
@@ -1500,6 +1515,7 @@ BEFORE UPDATE ON Joueur
 FOR EACH ROW
 BEGIN
     CALL verifierDateFuture(NEW.dateNaissance);
+    CALL verifierEmail(NEW.email);
 END $$
 
 ----------------------- EQUIPE_JOUEUR --------------------
@@ -1508,7 +1524,7 @@ BEFORE INSERT ON Equipe_Joueur
 FOR EACH ROW
 BEGIN
     CALL  verifierDatePlusPetite(NEW.dateHeureArrivee,NEW.dateHeureDepart);
-    IF ( estComplete(NEW.acronymeEquipe) )
+    IF ( NEW.dateHeureArrivee <> '0001-01-01 00:00:00' AND estComplete(NEW.acronymeEquipe) )
     THEN 
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Impossible de rejoindre l\'equipe, elle est complète';
     END IF;
@@ -1532,9 +1548,14 @@ BEGIN
     CALL verifierDatePlusPetite(NEW.dateHeureArrivee,NEW.dateHeureDepart);
     
     -- Le joueur rejoint l'équipe, supression des autres demandes
-    IF(OLD.dateHeureArrivee = '0001-01-01 00:00:00' AND NEW.dateHeureArrivee <> OLD.dateHeureArrivee AND NOT estComplete(NEW.acronymeEquipe))
+    IF(OLD.dateHeureArrivee = '0001-01-01 00:00:00' AND NEW.dateHeureArrivee <> OLD.dateHeureArrivee)
     THEN
-		DELETE FROM Equipe_Joueur WHERE Equipe_Joueur.dateHeureArrivee = '0001-01-01 00:00:00' AND Equipe_Joueur.idJoueur = NEW.idJoueur;
+		IF estComplete(NEW.acronymeEquipe)
+        THEN
+			SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = ' Le joueur ne peut pas être accepté, équipe pleine.';
+		ELSE
+			DELETE FROM Equipe_Joueur WHERE Equipe_Joueur.dateHeureArrivee = '0001-01-01 00:00:00' AND Equipe_Joueur.idJoueur = NEW.idJoueur;
+		END IF;
     END IF;
     
     -- Si on tente de lui le re-refaire rejoindre l'équipe avec le même enregistrement
@@ -1547,9 +1568,11 @@ BEGIN
     IF (NEW.dateHeureDepart IS NOT NULL AND OLD.dateHeureDepart IS NULL)
     THEN
 		-- Est-ce que son équipe participe à un tournoi.
-        IF( aUneInscriptionEnCours(OLD.acronymeEquipe) ) THEN 
+        IF( aUneInscriptionEnCours(OLD.acronymeEquipe) ) 
+        THEN 
 			SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Le joueur ne peut pas quitter une équipe inscrite à un tournoi.';
         END IF;
+        SET NEW.dateHeureDepart = NOW();
 	END IF;
     
     -- Impossible de destituer le responsable
@@ -1564,6 +1587,7 @@ CREATE TRIGGER before_insert_match
 BEFORE INSERT ON `Match`
 FOR EACH ROW
 BEGIN
+	-- La serie du match contient elle deux équipes ? 
 	DECLARE e1 VARCHAR(3);
     DECLARE e2 VARCHAR(3);
     SELECT Serie.AcronymeEquipe1, Serie.AcronymeEquipe2 INTO e1, e2 FROM Serie WHERE Serie.id = NEW.idSerie AND Serie.noTour = NEW.noTour AND Serie.idTournoi = NEW.idTournoi;
@@ -1572,18 +1596,26 @@ BEGIN
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Impossible de créer un match tant que la série n\'a pas deux équipes';
 	END IF;
     
+    -- Vérification de l'id
+	SET @maxMatch = (SELECT Tour.longueurMaxSerie FROM Tour WHERE Tour.idTournoi = NEW.idTournoi AND Tour.no = NEW.noTour);
+	SET @noDernierMatch = (SELECT MAX(`Match`.id) FROM `Match` WHERE `Match`.idSerie = NEW.idSerie AND `Match`.noTour = NEW.noTour AND `Match`.idTournoi = NEW.idTournoi);
+	IF NEW.id <> 1 AND ( NEW.id > @maxMatch OR NEW.id <= 0 OR NEW.id <> (@noDernierMatch + 1) )
+	THEN
+ 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Nouvel id de match invalide';
+	END IF;
+    
+    -- Si la serie connait déjà un vainqueur.
 	IF(vainqueurSerie(NEW.idSerie, NEW.noTour, NEW.idTournoi) IS NOT NULL)
     THEN
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Serie terminée, ajout de match impossible';
     END IF;
-	CALL verifierIdMatch(NEW.id, NEW.idSerie, NEW.noTour, NEW.idTournoi);
 END $$
 
 CREATE TRIGGER before_update_match
 BEFORE UPDATE ON `Match`
 FOR EACH ROW
 BEGIN
-	CALL verifierIdMatch(NEW.id, NEW.idSerie, NEW.noTour, NEW.idTournoi);
+	SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Impossible de modifier la clé du tournoi.';
 END $$
 
 CREATE TRIGGER before_delete_match
@@ -1620,17 +1652,27 @@ BEGIN
 				UPDATE Tournoi SET Tournoi.dateHeureFin = NOW() WHERE Tournoi.id = NEW.idTournoi;
 			END IF;
 		END IF;
-	 ELSE
+	ELSE
 		CALL tenterPromotion(NEW.idMatch, NEW.idSerie, NEW.noTour, NEW.idTournoi);
-     END IF;
+    END IF;
 END $$
 
 CREATE TRIGGER before_update_match_joueur
 BEFORE UPDATE ON Match_Joueur
 FOR EACH ROW
 BEGIN
-	CALL verifierSerieSuivanteCommencee(NEW.idSerie, NEW.noTour, NEW.idTournoi);
-    CALL verifierJoueurEstDansEquipeSerie(NEW.idJoueur, NEW.idSerie, NEW.noTour, NEW.idTournoi);
+	-- Blocage de la modification de la clé.
+    IF OLD.idJoueur <> NEW.idJoueur OR OLD.idMatch <> NEW.idMatch OR OLD.idSerie <> NEW.idSerie OR NEW.noTour <> OLD.noTour OR OLD.idTournoi <> NEW.idTournoi
+    THEN
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = ' Modification de la clé du match impossible.';
+	END IF;
+
+	-- Si la série suivante a déjà commencé on bloque la modification des performances
+	SET @serieSuivante = CEIL(NEW.idSerie / 2);
+	IF NEW.noTour <> 1 AND 0 <> (SELECT COUNT(1) FROM Match_Joueur WHERE Match_Joueur.idSerie = @serieSuivante AND Match_Joueur.noTour = NEW.noTour - 1 AND Match_Joueur.idTournoi = NEW.idTournoi)
+    THEN
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = ' Modification/insertion du score du joueur impossible, la serie suivante a déjà commencée.';
+	END IF;
 END $$
 
 CREATE TRIGGER after_update_match_joueur
@@ -1640,12 +1682,6 @@ BEGIN
 	CALL tenterPromotion(NEW.idMatch, NEW.idSerie, NEW.noTour, NEW.idTournoi);
 END $$
 
-CREATE TRIGGER before_delete_match_joueur
-BEFORE DELETE ON Match_Joueur
-FOR EACH ROW
-BEGIN
-	SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT  = "Impossible de supprimer les résultats d'un match.";
-END $$
 -----------------------------------------------------
 -- EVENTS
 -----------------------------------------------------
@@ -1668,13 +1704,6 @@ BEGIN
 	DELETE FROM Tournoi 
     WHERE Tournoi.dateHeureFin = Tournoi.dateHeureDebut AND DATEDIFF(NOW(), Tournoi.dateHeureDebut) >= 7;
 END $$
-
--- --------------------------------
--- USER
--- --------------------------------
-DROP USER IF EXISTS 'GDTRL_Manager';
-CREATE USER 'GDTRL_Manager' IDENTIFIED BY 'P@$$w0rd1sHArDt0F1nd';
-GRANT DELETE, INSERT, SELECT, UPDATE ON GestionnaireDeTournoisRocketLeague.* TO 'Tablut_User';
 
 DELIMITER ;
 
