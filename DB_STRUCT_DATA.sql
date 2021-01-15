@@ -1575,10 +1575,14 @@ CREATE TRIGGER after_update_equipe_joueur
 AFTER UPDATE ON Equipe_Joueur
 FOR EACH ROW
 BEGIN
+	DECLARE nbJoueur INT;
 	-- Le joueur rejoint l'équipe, supression des autres demandes
     IF(OLD.dateHeureArrivee = '0001-01-01 00:00:00' AND NEW.dateHeureArrivee <> OLD.dateHeureArrivee)
     THEN
-		IF estComplete(NEW.acronymeEquipe)
+		SET nbJoueur =(SELECT COUNT(1) 
+			           FROM Equipe_Joueur 
+			           WHERE Equipe_Joueur.acronymeEquipe = pAcronymeEquipe AND Equipe_Joueur.dateHeureDepart IS NULL AND Equipe_Joueur.dateHeureArrivee <> '0001-01-01 00:00:00')
+		IF nbJoueur > 3
         THEN
 			SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = ' Le joueur ne peut pas être accepté, équipe pleine.';
 		ELSE
