@@ -12,7 +12,7 @@ USE GestionnaireDeTournoisRocketLeague;
 CREATE TABLE Prix 
 (
   id INT AUTO_INCREMENT,
-  montantArgent DOUBLE(10,2) NOT NULL,
+  montantArgent DOUBLE NOT NULL,
   CONSTRAINT PK_Prix PRIMARY KEY (id)
 );
 
@@ -1365,7 +1365,7 @@ BEGIN
 	CALL verifierEquipeComplete(pAcronymeEquipe); 
 END $$
 
-CREATE PROCEDURE verifierPrixNegatif(pPrix DOUBLE(10,2))
+CREATE PROCEDURE verifierPrixNegatif(pPrix DOUBLE)
 BEGIN
 	IF NEW.montantArgent < 0
     THEN
@@ -1373,6 +1373,20 @@ BEGIN
 	END IF;
 END $$
 
+
+CREATE PROCEDURE accepterJoueur(pAcronymeEquipe VARCHAR(3), pIdJoueur INT)
+BEGIN
+	DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK; 
+        RESIGNAL;
+    END;
+
+	START TRANSACTION;
+	UPDATE Equipe_Joueur SET dateHeureArrivee = NOW() WHERE idJoueur = pIdJoueur AND acronymeEquipe = pAcronymeEquipe;
+    DELETE FROM Equipe_Joueur WHERE idJoueur = pIdJoueur AND dateHeureArrivee = '0001-01-01 00:00:00';
+    COMMIT;
+END $$
 -----------------------------------------------------
 -- TRIGGER
 -----------------------------------------------------
@@ -1670,7 +1684,7 @@ BEGIN
     
     IF OLD.acronymeEquipe <> NEW.acronymeEquipe
     THEN
-		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Impossible de modifier l\'équipe du joueur dans un enregistremen Equipe_joueur';
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Impossible de modifier l\'équipe du joueur dans un enregistrement Equipe_joueur';
 	END IF;
     
     CALL verifierDatePlusPetite(NEW.dateHeureArrivee,NEW.dateHeureDepart);
@@ -1680,6 +1694,14 @@ BEGIN
 	THEN 
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Impossible de rejoindre a nouveau l\'équipe avec le même enregistrement';
 	END IF;
+    
+	IF OLD.dateHeureArrivee = '0001-01-01 00:00:00' AND NEW.dateHeureArrivee <> OLD.dateHeureArrivee
+    THEN
+		IF estComplete(NEW.acronymeEquipe)
+        THEN
+			SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = ' Le joueur ne peut pas être accepté, équipe pleine.';
+		END IF;
+    END IF;
     
     -- Si on tente de lui faire quitter l'équipe
     IF NEW.dateHeureDepart IS NOT NULL AND OLD.dateHeureDepart IS NULL
@@ -1697,24 +1719,6 @@ BEGIN
     THEN 
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Le responsable ne peut pas quitter son équiper, on a besoin de lui.';
 	END IF;
-END $$
-
-CREATE TRIGGER after_update_equipe_joueur
-AFTER UPDATE ON Equipe_Joueur
-FOR EACH ROW
-BEGIN
-	DECLARE nbJoueur INT;
-	-- Le joueur rejoint l'équipe, supression des autres demandes
-    IF OLD.dateHeureArrivee = '0001-01-01 00:00:00' AND NEW.dateHeureArrivee <> OLD.dateHeureArrivee
-    THEN
-		SET nbJoueur = (SELECT COUNT(1) 
-			            FROM Equipe_Joueur 
-			            WHERE acronymeEquipe = NEW.acronymeEquipe AND dateHeureDepart IS NULL AND dateHeureArrivee <> '0001-01-01 00:00:00');
-		IF nbJoueur > 3
-        THEN
-			SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = ' Le joueur ne peut pas être accepté, équipe pleine.';
-		END IF;
-    END IF;
 END $$
 
 ------------------------- MATCH --------------------
