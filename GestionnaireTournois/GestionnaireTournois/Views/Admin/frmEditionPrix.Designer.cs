@@ -29,6 +29,7 @@ namespace GestionnaireTournois.Views.Admin
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmEditionPrix));
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.btnRetirerObjet = new System.Windows.Forms.Button();
             this.nudMontantArgent = new System.Windows.Forms.NumericUpDown();
@@ -187,6 +188,7 @@ namespace GestionnaireTournois.Views.Admin
             this.Controls.Add(this.gbxPrix);
             this.Controls.Add(this.groupBox1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "frmEditionPrix";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;

@@ -29,15 +29,16 @@ namespace GestionnaireTournois.Views.Users
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmRechercheEquipe));
             this.lbxRecherche = new System.Windows.Forms.ListBox();
             this.btnRejoindre = new System.Windows.Forms.Button();
             this.gbxRecherche = new System.Windows.Forms.GroupBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.btnCreer = new System.Windows.Forms.Button();
-            this.tbxNom = new System.Windows.Forms.TextBox();
-            this.tbxAcronyme = new System.Windows.Forms.TextBox();
-            this.lblAcronyme = new System.Windows.Forms.Label();
             this.lblNom = new System.Windows.Forms.Label();
+            this.lblAcronyme = new System.Windows.Forms.Label();
+            this.tbxAcronyme = new System.Windows.Forms.TextBox();
+            this.tbxNom = new System.Windows.Forms.TextBox();
+            this.btnCreer = new System.Windows.Forms.Button();
             this.gbxRecherche.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -88,29 +89,14 @@ namespace GestionnaireTournois.Views.Users
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Créer une équipe";
             // 
-            // btnCreer
+            // lblNom
             // 
-            this.btnCreer.Location = new System.Drawing.Point(20, 154);
-            this.btnCreer.Name = "btnCreer";
-            this.btnCreer.Size = new System.Drawing.Size(167, 29);
-            this.btnCreer.TabIndex = 13;
-            this.btnCreer.Text = "Créer";
-            this.btnCreer.UseVisualStyleBackColor = true;
-            this.btnCreer.Click += new System.EventHandler(this.btnCreer_Click);
-            // 
-            // tbxNom
-            // 
-            this.tbxNom.Location = new System.Drawing.Point(16, 110);
-            this.tbxNom.Name = "tbxNom";
-            this.tbxNom.Size = new System.Drawing.Size(167, 22);
-            this.tbxNom.TabIndex = 14;
-            // 
-            // tbxAcronyme
-            // 
-            this.tbxAcronyme.Location = new System.Drawing.Point(16, 52);
-            this.tbxAcronyme.Name = "tbxAcronyme";
-            this.tbxAcronyme.Size = new System.Drawing.Size(167, 22);
-            this.tbxAcronyme.TabIndex = 15;
+            this.lblNom.AutoSize = true;
+            this.lblNom.Location = new System.Drawing.Point(17, 91);
+            this.lblNom.Name = "lblNom";
+            this.lblNom.Size = new System.Drawing.Size(94, 16);
+            this.lblNom.TabIndex = 17;
+            this.lblNom.Text = "Nom complet :";
             // 
             // lblAcronyme
             // 
@@ -121,14 +107,29 @@ namespace GestionnaireTournois.Views.Users
             this.lblAcronyme.TabIndex = 16;
             this.lblAcronyme.Text = "Acronyme :";
             // 
-            // lblNom
+            // tbxAcronyme
             // 
-            this.lblNom.AutoSize = true;
-            this.lblNom.Location = new System.Drawing.Point(17, 91);
-            this.lblNom.Name = "lblNom";
-            this.lblNom.Size = new System.Drawing.Size(94, 16);
-            this.lblNom.TabIndex = 17;
-            this.lblNom.Text = "Nom complet :";
+            this.tbxAcronyme.Location = new System.Drawing.Point(16, 52);
+            this.tbxAcronyme.Name = "tbxAcronyme";
+            this.tbxAcronyme.Size = new System.Drawing.Size(167, 22);
+            this.tbxAcronyme.TabIndex = 15;
+            // 
+            // tbxNom
+            // 
+            this.tbxNom.Location = new System.Drawing.Point(16, 110);
+            this.tbxNom.Name = "tbxNom";
+            this.tbxNom.Size = new System.Drawing.Size(167, 22);
+            this.tbxNom.TabIndex = 14;
+            // 
+            // btnCreer
+            // 
+            this.btnCreer.Location = new System.Drawing.Point(20, 154);
+            this.btnCreer.Name = "btnCreer";
+            this.btnCreer.Size = new System.Drawing.Size(167, 29);
+            this.btnCreer.TabIndex = 13;
+            this.btnCreer.Text = "Créer";
+            this.btnCreer.UseVisualStyleBackColor = true;
+            this.btnCreer.Click += new System.EventHandler(this.btnCreer_Click);
             // 
             // frmRechercheEquipe
             // 
@@ -138,6 +139,7 @@ namespace GestionnaireTournois.Views.Users
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.gbxRecherche);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "frmRechercheEquipe";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;

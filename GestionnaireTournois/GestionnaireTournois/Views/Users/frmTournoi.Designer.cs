@@ -29,11 +29,12 @@ namespace GestionnaireTournois.Views.Users
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmTournoi));
             this.wbrTreeStruct = new System.Windows.Forms.WebBrowser();
             this.gbxEquipe = new System.Windows.Forms.GroupBox();
-            this.lblJ1 = new System.Windows.Forms.Label();
-            this.lblJ2 = new System.Windows.Forms.Label();
             this.lblJ3 = new System.Windows.Forms.Label();
+            this.lblJ2 = new System.Windows.Forms.Label();
+            this.lblJ1 = new System.Windows.Forms.Label();
             this.gbxEquipe.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -57,15 +58,14 @@ namespace GestionnaireTournois.Views.Users
             this.gbxEquipe.TabStop = false;
             this.gbxEquipe.Text = "Membres de votre équipe";
             // 
-            // lblJ1
+            // lblJ3
             // 
-            this.lblJ1.AutoSize = true;
-            this.lblJ1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblJ1.Location = new System.Drawing.Point(57, 40);
-            this.lblJ1.Name = "lblJ1";
-            this.lblJ1.Size = new System.Drawing.Size(11, 15);
-            this.lblJ1.TabIndex = 0;
-            this.lblJ1.Text = " ";
+            this.lblJ3.AutoSize = true;
+            this.lblJ3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblJ3.Location = new System.Drawing.Point(371, 40);
+            this.lblJ3.Name = "lblJ3";
+            this.lblJ3.Size = new System.Drawing.Size(0, 15);
+            this.lblJ3.TabIndex = 2;
             // 
             // lblJ2
             // 
@@ -77,14 +77,15 @@ namespace GestionnaireTournois.Views.Users
             this.lblJ2.TabIndex = 1;
             this.lblJ2.Text = " ";
             // 
-            // lblJ3
+            // lblJ1
             // 
-            this.lblJ3.AutoSize = true;
-            this.lblJ3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblJ3.Location = new System.Drawing.Point(371, 40);
-            this.lblJ3.Name = "lblJ3";
-            this.lblJ3.Size = new System.Drawing.Size(0, 15);
-            this.lblJ3.TabIndex = 2;
+            this.lblJ1.AutoSize = true;
+            this.lblJ1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblJ1.Location = new System.Drawing.Point(57, 40);
+            this.lblJ1.Name = "lblJ1";
+            this.lblJ1.Size = new System.Drawing.Size(11, 15);
+            this.lblJ1.TabIndex = 0;
+            this.lblJ1.Text = " ";
             // 
             // frmTournoi
             // 
@@ -93,6 +94,7 @@ namespace GestionnaireTournois.Views.Users
             this.ClientSize = new System.Drawing.Size(517, 513);
             this.Controls.Add(this.gbxEquipe);
             this.Controls.Add(this.wbrTreeStruct);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "frmTournoi";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "frmTournoi";

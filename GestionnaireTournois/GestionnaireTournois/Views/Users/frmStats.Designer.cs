@@ -29,6 +29,7 @@ namespace GestionnaireTournois.Views.Users
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmStats));
             this.lblTtitreMoyenneButs = new System.Windows.Forms.Label();
             this.lblMoyenneButs = new System.Windows.Forms.Label();
             this.lblTitreMoyenneArrets = new System.Windows.Forms.Label();
@@ -180,6 +181,7 @@ namespace GestionnaireTournois.Views.Users
             this.Controls.Add(this.lblTitreMoyenneArrets);
             this.Controls.Add(this.lblMoyenneButs);
             this.Controls.Add(this.lblTtitreMoyenneButs);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "frmStats";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "frmStats";

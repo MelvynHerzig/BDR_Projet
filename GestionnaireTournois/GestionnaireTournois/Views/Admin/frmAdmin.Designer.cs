@@ -29,6 +29,7 @@ namespace GestionnaireTournois
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmAdmin));
             this.mstrpAdmin = new System.Windows.Forms.MenuStrip();
             this.tsmiFile = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmiModeChoice = new System.Windows.Forms.ToolStripMenuItem();
@@ -70,7 +71,7 @@ namespace GestionnaireTournois
             // tsmiModeChoice
             // 
             this.tsmiModeChoice.Name = "tsmiModeChoice";
-            this.tsmiModeChoice.Size = new System.Drawing.Size(156, 22);
+            this.tsmiModeChoice.Size = new System.Drawing.Size(155, 22);
             this.tsmiModeChoice.Text = "Choix du mode";
             this.tsmiModeChoice.Click += new System.EventHandler(this.tsmiModeChoice_Click);
             // 
@@ -199,6 +200,7 @@ namespace GestionnaireTournois
             this.Controls.Add(this.lbxTournament);
             this.Controls.Add(this.mstrpAdmin);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.mstrpAdmin;
             this.MaximizeBox = false;
             this.Name = "frmAdmin";
