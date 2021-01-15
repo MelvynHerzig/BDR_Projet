@@ -31,7 +31,6 @@ namespace GestionnaireTournois.Views.Users
             wbrTreeStruct.DocumentText = TournamentArborescenceGenerator.Generate(Tournoi, "Voir");
             wbrTreeStruct.Document.Click += Document_Click;
 
-
             Equipe equipe = Joueur.GetEquipeDurantTournoi(Tournoi);
 
             if (equipe != null)
@@ -40,13 +39,28 @@ namespace GestionnaireTournois.Views.Users
 
                 List<Joueur> joueurs = equipe.GetJoueursFromTournoi(Tournoi);
 
-                if(joueurs.Count != 0)
+                if (joueurs.Count != 0)
                 {
                     lblJ1.Text = joueurs[0].Pseudo;
                     lblJ2.Text = joueurs[1].Pseudo;
                     lblJ3.Text = joueurs[2].Pseudo;
                 }
             }
+
+            if(Joueur.Id == Joueur.GetEquipe().IdResponsable && Tournoi.DateHeureFin == DateTime.MinValue)
+            {
+                btnAbandonnerTournoi.Visible = true;
+            }
+
+            if (Tournoi.EstEnAttente())
+            {
+                btnAbandonnerTournoi.Text = "Se désinscrire";
+            }
+            else
+            {
+                btnAbandonnerTournoi.Text = "Abandonner";
+            }
+            
 
         }
 
@@ -72,10 +86,9 @@ namespace GestionnaireTournois.Views.Users
             }
         }
 
-
-        private void cbxEtatsTournoi_SelectedIndexChanged(object sender, EventArgs e)
+        private void btnAbandonnerTournoi_Click(object sender, EventArgs e)
         {
-
+            Joueur.GetEquipeDurantTournoi(Tournoi).AbandonnerTournoi(Tournoi);
         }
 
     }
