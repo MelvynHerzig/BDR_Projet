@@ -1417,7 +1417,7 @@ BEGIN
     THEN
 		IF  NEW.dateHeureFin IS NULL 
 		THEN
-			SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Impossiblede retirer la date de fin d\'tournoi terminé.';
+			SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Impossiblede retirer la date de fin d\'un tournoi terminé.';
         END IF;
     ELSE
 		IF  NEW.dateHeureFin IS NOT NULL 
