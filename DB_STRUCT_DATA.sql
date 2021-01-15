@@ -1488,9 +1488,6 @@ BEGIN
 	-- La vérification qui affirme que le responsable n''est pas déjà dans une équie s'effectue au moment de l'insertion dans equipe_joueur.
 	INSERT INTO Equipe_Joueur (acronymeEquipe, idJoueur, dateHeureArrivee, dateHeureDepart)
     VALUE(NEW.acronyme, NEW.idResponsable, NOW(), NULL);
-	
-	-- Suppression de ses demandes
-	DELETE FROM Equipe_Joueur WHERE Equipe_Joueur.dateHeureArrivee = '0001-01-01 00:00:00' AND Equipe_Joueur.idJoueur = NEW.idResponsable;
 END $$
 
 CREATE TRIGGER before_update_equipe
