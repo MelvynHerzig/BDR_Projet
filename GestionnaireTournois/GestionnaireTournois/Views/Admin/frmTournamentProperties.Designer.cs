@@ -56,18 +56,23 @@ namespace GestionnaireTournois
             this.gbxPrix = new System.Windows.Forms.GroupBox();
             this.btn2emePrix = new System.Windows.Forms.Button();
             this.btn1erPrix = new System.Windows.Forms.Button();
+            this.gbxEquipesInscrites = new System.Windows.Forms.GroupBox();
+            this.lbxEquipesInscrites = new System.Windows.Forms.ListBox();
+            this.btnRetirerEquipe = new System.Windows.Forms.Button();
             this.gbxInfos.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudLongueurSerie)).BeginInit();
             this.gbxTours.SuspendLayout();
             this.gbxPrix.SuspendLayout();
+            this.gbxEquipesInscrites.SuspendLayout();
             this.SuspendLayout();
             // 
             // lblId
             // 
             this.lblId.AutoSize = true;
-            this.lblId.Location = new System.Drawing.Point(90, 28);
+            this.lblId.Location = new System.Drawing.Point(120, 34);
+            this.lblId.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblId.Name = "lblId";
-            this.lblId.Size = new System.Drawing.Size(25, 13);
+            this.lblId.Size = new System.Drawing.Size(28, 16);
             this.lblId.TabIndex = 0;
             this.lblId.Text = "Id : ";
             // 
@@ -89,9 +94,11 @@ namespace GestionnaireTournois
             this.gbxInfos.Controls.Add(this.tbxId);
             this.gbxInfos.Controls.Add(this.lblName);
             this.gbxInfos.Controls.Add(this.lblId);
-            this.gbxInfos.Location = new System.Drawing.Point(12, 12);
+            this.gbxInfos.Location = new System.Drawing.Point(16, 15);
+            this.gbxInfos.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.gbxInfos.Name = "gbxInfos";
-            this.gbxInfos.Size = new System.Drawing.Size(264, 325);
+            this.gbxInfos.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.gbxInfos.Size = new System.Drawing.Size(352, 400);
             this.gbxInfos.TabIndex = 1;
             this.gbxInfos.TabStop = false;
             this.gbxInfos.Text = "Informations sur le tournoi";
@@ -99,18 +106,20 @@ namespace GestionnaireTournois
             // lblHeureFin
             // 
             this.lblHeureFin.AutoSize = true;
-            this.lblHeureFin.Location = new System.Drawing.Point(58, 183);
+            this.lblHeureFin.Location = new System.Drawing.Point(77, 225);
+            this.lblHeureFin.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblHeureFin.Name = "lblHeureFin";
-            this.lblHeureFin.Size = new System.Drawing.Size(56, 13);
+            this.lblHeureFin.Size = new System.Drawing.Size(67, 16);
             this.lblHeureFin.TabIndex = 21;
             this.lblHeureFin.Text = "Heure fin :";
             // 
             // lblHeureDebut
             // 
             this.lblHeureDebut.AutoSize = true;
-            this.lblHeureDebut.Location = new System.Drawing.Point(42, 123);
+            this.lblHeureDebut.Location = new System.Drawing.Point(56, 151);
+            this.lblHeureDebut.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblHeureDebut.Name = "lblHeureDebut";
-            this.lblHeureDebut.Size = new System.Drawing.Size(72, 13);
+            this.lblHeureDebut.Size = new System.Drawing.Size(88, 16);
             this.lblHeureDebut.TabIndex = 20;
             this.lblHeureDebut.Text = "Heure début :";
             // 
@@ -118,43 +127,48 @@ namespace GestionnaireTournois
             // 
             this.dtpHeureFin.Enabled = false;
             this.dtpHeureFin.Format = System.Windows.Forms.DateTimePickerFormat.Time;
-            this.dtpHeureFin.Location = new System.Drawing.Point(128, 177);
+            this.dtpHeureFin.Location = new System.Drawing.Point(171, 218);
+            this.dtpHeureFin.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.dtpHeureFin.Name = "dtpHeureFin";
             this.dtpHeureFin.ShowUpDown = true;
-            this.dtpHeureFin.Size = new System.Drawing.Size(118, 20);
+            this.dtpHeureFin.Size = new System.Drawing.Size(156, 22);
             this.dtpHeureFin.TabIndex = 19;
             // 
             // dtpDateFin
             // 
             this.dtpDateFin.Enabled = false;
             this.dtpDateFin.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtpDateFin.Location = new System.Drawing.Point(128, 151);
+            this.dtpDateFin.Location = new System.Drawing.Point(171, 186);
+            this.dtpDateFin.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.dtpDateFin.Name = "dtpDateFin";
-            this.dtpDateFin.Size = new System.Drawing.Size(118, 20);
+            this.dtpDateFin.Size = new System.Drawing.Size(156, 22);
             this.dtpDateFin.TabIndex = 18;
             // 
             // dtpHeureDebut
             // 
             this.dtpHeureDebut.Format = System.Windows.Forms.DateTimePickerFormat.Time;
-            this.dtpHeureDebut.Location = new System.Drawing.Point(128, 117);
+            this.dtpHeureDebut.Location = new System.Drawing.Point(171, 144);
+            this.dtpHeureDebut.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.dtpHeureDebut.Name = "dtpHeureDebut";
             this.dtpHeureDebut.ShowUpDown = true;
-            this.dtpHeureDebut.Size = new System.Drawing.Size(118, 20);
+            this.dtpHeureDebut.Size = new System.Drawing.Size(156, 22);
             this.dtpHeureDebut.TabIndex = 17;
             // 
             // dtpDateDebut
             // 
             this.dtpDateDebut.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtpDateDebut.Location = new System.Drawing.Point(127, 91);
+            this.dtpDateDebut.Location = new System.Drawing.Point(169, 112);
+            this.dtpDateDebut.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.dtpDateDebut.Name = "dtpDateDebut";
-            this.dtpDateDebut.Size = new System.Drawing.Size(118, 20);
+            this.dtpDateDebut.Size = new System.Drawing.Size(156, 22);
             this.dtpDateDebut.TabIndex = 8;
             // 
             // btnSupprimerTournoi
             // 
-            this.btnSupprimerTournoi.Location = new System.Drawing.Point(16, 281);
+            this.btnSupprimerTournoi.Location = new System.Drawing.Point(21, 346);
+            this.btnSupprimerTournoi.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnSupprimerTournoi.Name = "btnSupprimerTournoi";
-            this.btnSupprimerTournoi.Size = new System.Drawing.Size(229, 32);
+            this.btnSupprimerTournoi.Size = new System.Drawing.Size(305, 39);
             this.btnSupprimerTournoi.TabIndex = 16;
             this.btnSupprimerTournoi.Text = "Supprimer le tournoi";
             this.btnSupprimerTournoi.UseVisualStyleBackColor = true;
@@ -162,9 +176,10 @@ namespace GestionnaireTournois
             // 
             // btnSaveInfo
             // 
-            this.btnSaveInfo.Location = new System.Drawing.Point(16, 243);
+            this.btnSaveInfo.Location = new System.Drawing.Point(21, 299);
+            this.btnSaveInfo.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnSaveInfo.Name = "btnSaveInfo";
-            this.btnSaveInfo.Size = new System.Drawing.Size(229, 32);
+            this.btnSaveInfo.Size = new System.Drawing.Size(305, 39);
             this.btnSaveInfo.TabIndex = 7;
             this.btnSaveInfo.Text = "Enregistrer les modifications";
             this.btnSaveInfo.UseVisualStyleBackColor = true;
@@ -173,27 +188,30 @@ namespace GestionnaireTournois
             // tbxMaxJoueurs
             // 
             this.tbxMaxJoueurs.Enabled = false;
-            this.tbxMaxJoueurs.Location = new System.Drawing.Point(128, 210);
+            this.tbxMaxJoueurs.Location = new System.Drawing.Point(171, 258);
+            this.tbxMaxJoueurs.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.tbxMaxJoueurs.Name = "tbxMaxJoueurs";
             this.tbxMaxJoueurs.ReadOnly = true;
-            this.tbxMaxJoueurs.Size = new System.Drawing.Size(117, 20);
+            this.tbxMaxJoueurs.Size = new System.Drawing.Size(155, 22);
             this.tbxMaxJoueurs.TabIndex = 13;
             // 
             // lblNombreMaxJoueurs
             // 
             this.lblNombreMaxJoueurs.AutoSize = true;
-            this.lblNombreMaxJoueurs.Location = new System.Drawing.Point(6, 213);
+            this.lblNombreMaxJoueurs.Location = new System.Drawing.Point(8, 262);
+            this.lblNombreMaxJoueurs.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblNombreMaxJoueurs.Name = "lblNombreMaxJoueurs";
-            this.lblNombreMaxJoueurs.Size = new System.Drawing.Size(109, 13);
+            this.lblNombreMaxJoueurs.Size = new System.Drawing.Size(138, 16);
             this.lblNombreMaxJoueurs.TabIndex = 12;
             this.lblNombreMaxJoueurs.Text = "Nombre joueurs max :";
             // 
             // lblDateFin
             // 
             this.lblDateFin.AutoSize = true;
-            this.lblDateFin.Location = new System.Drawing.Point(64, 157);
+            this.lblDateFin.Location = new System.Drawing.Point(85, 193);
+            this.lblDateFin.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblDateFin.Name = "lblDateFin";
-            this.lblDateFin.Size = new System.Drawing.Size(50, 13);
+            this.lblDateFin.Size = new System.Drawing.Size(59, 16);
             this.lblDateFin.TabIndex = 10;
             this.lblDateFin.Text = "Date fin :";
             this.lblDateFin.Visible = false;
@@ -201,43 +219,48 @@ namespace GestionnaireTournois
             // lblDateDebut
             // 
             this.lblDateDebut.AutoSize = true;
-            this.lblDateDebut.Location = new System.Drawing.Point(49, 97);
+            this.lblDateDebut.Location = new System.Drawing.Point(65, 119);
+            this.lblDateDebut.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblDateDebut.Name = "lblDateDebut";
-            this.lblDateDebut.Size = new System.Drawing.Size(66, 13);
+            this.lblDateDebut.Size = new System.Drawing.Size(80, 16);
             this.lblDateDebut.TabIndex = 4;
             this.lblDateDebut.Text = "Date début :";
             // 
             // tbxName
             // 
-            this.tbxName.Location = new System.Drawing.Point(128, 55);
+            this.tbxName.Location = new System.Drawing.Point(171, 68);
+            this.tbxName.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.tbxName.Name = "tbxName";
-            this.tbxName.Size = new System.Drawing.Size(117, 20);
+            this.tbxName.Size = new System.Drawing.Size(155, 22);
             this.tbxName.TabIndex = 3;
             // 
             // tbxId
             // 
             this.tbxId.Enabled = false;
-            this.tbxId.Location = new System.Drawing.Point(128, 25);
+            this.tbxId.Location = new System.Drawing.Point(171, 31);
+            this.tbxId.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.tbxId.Name = "tbxId";
             this.tbxId.ReadOnly = true;
-            this.tbxId.Size = new System.Drawing.Size(117, 20);
+            this.tbxId.Size = new System.Drawing.Size(155, 22);
             this.tbxId.TabIndex = 2;
             // 
             // lblName
             // 
             this.lblName.AutoSize = true;
-            this.lblName.Location = new System.Drawing.Point(80, 58);
+            this.lblName.Location = new System.Drawing.Point(107, 71);
+            this.lblName.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblName.Name = "lblName";
-            this.lblName.Size = new System.Drawing.Size(35, 13);
+            this.lblName.Size = new System.Drawing.Size(43, 16);
             this.lblName.TabIndex = 1;
             this.lblName.Text = "Nom :";
             // 
             // cbxTours
             // 
             this.cbxTours.FormattingEnabled = true;
-            this.cbxTours.Location = new System.Drawing.Point(127, 15);
+            this.cbxTours.Location = new System.Drawing.Point(20, 63);
+            this.cbxTours.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.cbxTours.Name = "cbxTours";
-            this.cbxTours.Size = new System.Drawing.Size(118, 21);
+            this.cbxTours.Size = new System.Drawing.Size(156, 24);
             this.cbxTours.TabIndex = 3;
             this.cbxTours.SelectedIndexChanged += new System.EventHandler(this.cbxTours_SelectedIndexChanged);
             // 
@@ -248,7 +271,8 @@ namespace GestionnaireTournois
             0,
             0,
             0});
-            this.nudLongueurSerie.Location = new System.Drawing.Point(128, 50);
+            this.nudLongueurSerie.Location = new System.Drawing.Point(20, 112);
+            this.nudLongueurSerie.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.nudLongueurSerie.Maximum = new decimal(new int[] {
             7,
             0,
@@ -260,7 +284,7 @@ namespace GestionnaireTournois
             0,
             0});
             this.nudLongueurSerie.Name = "nudLongueurSerie";
-            this.nudLongueurSerie.Size = new System.Drawing.Size(117, 20);
+            this.nudLongueurSerie.Size = new System.Drawing.Size(156, 22);
             this.nudLongueurSerie.TabIndex = 4;
             this.nudLongueurSerie.Value = new decimal(new int[] {
             1,
@@ -276,18 +300,21 @@ namespace GestionnaireTournois
             this.gbxTours.Controls.Add(this.lblNoTour);
             this.gbxTours.Controls.Add(this.cbxTours);
             this.gbxTours.Controls.Add(this.nudLongueurSerie);
-            this.gbxTours.Location = new System.Drawing.Point(12, 343);
+            this.gbxTours.Location = new System.Drawing.Point(412, 15);
+            this.gbxTours.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.gbxTours.Name = "gbxTours";
-            this.gbxTours.Size = new System.Drawing.Size(264, 115);
+            this.gbxTours.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.gbxTours.Size = new System.Drawing.Size(199, 208);
             this.gbxTours.TabIndex = 5;
             this.gbxTours.TabStop = false;
             this.gbxTours.Text = "Propriétés des tours";
             // 
             // btnSaveTours
             // 
-            this.btnSaveTours.Location = new System.Drawing.Point(16, 85);
+            this.btnSaveTours.Location = new System.Drawing.Point(20, 144);
+            this.btnSaveTours.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnSaveTours.Name = "btnSaveTours";
-            this.btnSaveTours.Size = new System.Drawing.Size(229, 25);
+            this.btnSaveTours.Size = new System.Drawing.Size(156, 31);
             this.btnSaveTours.TabIndex = 6;
             this.btnSaveTours.Text = "Enregistrer";
             this.btnSaveTours.UseVisualStyleBackColor = true;
@@ -296,18 +323,20 @@ namespace GestionnaireTournois
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(13, 52);
+            this.label2.Location = new System.Drawing.Point(17, 92);
+            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(108, 13);
+            this.label2.Size = new System.Drawing.Size(136, 16);
             this.label2.TabIndex = 6;
             this.label2.Text = "Longueur des séries :";
             // 
             // lblNoTour
             // 
             this.lblNoTour.AutoSize = true;
-            this.lblNoTour.Location = new System.Drawing.Point(35, 18);
+            this.lblNoTour.Location = new System.Drawing.Point(17, 43);
+            this.lblNoTour.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblNoTour.Name = "lblNoTour";
-            this.lblNoTour.Size = new System.Drawing.Size(86, 13);
+            this.lblNoTour.Size = new System.Drawing.Size(105, 16);
             this.lblNoTour.TabIndex = 5;
             this.lblNoTour.Text = "Numéro du tour :";
             // 
@@ -315,18 +344,21 @@ namespace GestionnaireTournois
             // 
             this.gbxPrix.Controls.Add(this.btn2emePrix);
             this.gbxPrix.Controls.Add(this.btn1erPrix);
-            this.gbxPrix.Location = new System.Drawing.Point(12, 464);
+            this.gbxPrix.Location = new System.Drawing.Point(412, 240);
+            this.gbxPrix.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.gbxPrix.Name = "gbxPrix";
-            this.gbxPrix.Size = new System.Drawing.Size(264, 115);
+            this.gbxPrix.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.gbxPrix.Size = new System.Drawing.Size(199, 175);
             this.gbxPrix.TabIndex = 7;
             this.gbxPrix.TabStop = false;
             this.gbxPrix.Text = "Prix";
             // 
             // btn2emePrix
             // 
-            this.btn2emePrix.Location = new System.Drawing.Point(59, 71);
+            this.btn2emePrix.Location = new System.Drawing.Point(20, 103);
+            this.btn2emePrix.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btn2emePrix.Name = "btn2emePrix";
-            this.btn2emePrix.Size = new System.Drawing.Size(146, 34);
+            this.btn2emePrix.Size = new System.Drawing.Size(156, 42);
             this.btn2emePrix.TabIndex = 1;
             this.btn2emePrix.Text = "Deuxième prix";
             this.btn2emePrix.UseVisualStyleBackColor = true;
@@ -334,24 +366,57 @@ namespace GestionnaireTournois
             // 
             // btn1erPrix
             // 
-            this.btn1erPrix.Location = new System.Drawing.Point(59, 19);
+            this.btn1erPrix.Location = new System.Drawing.Point(20, 33);
+            this.btn1erPrix.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btn1erPrix.Name = "btn1erPrix";
-            this.btn1erPrix.Size = new System.Drawing.Size(146, 34);
+            this.btn1erPrix.Size = new System.Drawing.Size(156, 42);
             this.btn1erPrix.TabIndex = 0;
             this.btn1erPrix.Text = "Premier prix";
             this.btn1erPrix.UseVisualStyleBackColor = true;
             this.btn1erPrix.Click += new System.EventHandler(this.btn1erPrix_Click);
             // 
+            // gbxEquipesInscrites
+            // 
+            this.gbxEquipesInscrites.Controls.Add(this.btnRetirerEquipe);
+            this.gbxEquipesInscrites.Controls.Add(this.lbxEquipesInscrites);
+            this.gbxEquipesInscrites.Location = new System.Drawing.Point(650, 15);
+            this.gbxEquipesInscrites.Name = "gbxEquipesInscrites";
+            this.gbxEquipesInscrites.Size = new System.Drawing.Size(200, 400);
+            this.gbxEquipesInscrites.TabIndex = 9;
+            this.gbxEquipesInscrites.TabStop = false;
+            this.gbxEquipesInscrites.Text = "Équipes inscrites";
+            // 
+            // lbxEquipesInscrites
+            // 
+            this.lbxEquipesInscrites.FormattingEnabled = true;
+            this.lbxEquipesInscrites.ItemHeight = 16;
+            this.lbxEquipesInscrites.Location = new System.Drawing.Point(18, 43);
+            this.lbxEquipesInscrites.Name = "lbxEquipesInscrites";
+            this.lbxEquipesInscrites.Size = new System.Drawing.Size(162, 292);
+            this.lbxEquipesInscrites.TabIndex = 0;
+            // 
+            // btnRetirerEquipe
+            // 
+            this.btnRetirerEquipe.Location = new System.Drawing.Point(18, 347);
+            this.btnRetirerEquipe.Name = "btnRetirerEquipe";
+            this.btnRetirerEquipe.Size = new System.Drawing.Size(162, 38);
+            this.btnRetirerEquipe.TabIndex = 1;
+            this.btnRetirerEquipe.Text = "Retirer équipe";
+            this.btnRetirerEquipe.UseVisualStyleBackColor = true;
+            this.btnRetirerEquipe.Click += new System.EventHandler(this.btnRetirerEquipe_Click);
+            // 
             // frmTournamentProperties
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(292, 588);
+            this.ClientSize = new System.Drawing.Size(865, 431);
+            this.Controls.Add(this.gbxEquipesInscrites);
             this.Controls.Add(this.gbxPrix);
             this.Controls.Add(this.gbxTours);
             this.Controls.Add(this.gbxInfos);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.MaximizeBox = false;
             this.Name = "frmTournamentProperties";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
@@ -363,6 +428,7 @@ namespace GestionnaireTournois
             this.gbxTours.ResumeLayout(false);
             this.gbxTours.PerformLayout();
             this.gbxPrix.ResumeLayout(false);
+            this.gbxEquipesInscrites.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -395,5 +461,8 @@ namespace GestionnaireTournois
         private System.Windows.Forms.Label lblHeureDebut;
         private System.Windows.Forms.DateTimePicker dtpHeureFin;
         private System.Windows.Forms.DateTimePicker dtpDateFin;
+        private System.Windows.Forms.GroupBox gbxEquipesInscrites;
+        private System.Windows.Forms.Button btnRetirerEquipe;
+        private System.Windows.Forms.ListBox lbxEquipesInscrites;
     }
 }

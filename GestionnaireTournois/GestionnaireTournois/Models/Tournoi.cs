@@ -71,6 +71,10 @@ namespace GestionnaireTournois.Models
             return DataBaseConnector.GetTourByNo(this, noTour);
         }
 
+        public List<Equipe> GetEquipesInscrites()
+        {
+            return DataBaseConnector.GetEquipesInscritesTournoi(this);
+        }
         public bool EstEnAttente()
         {
             return DataBaseConnector.IsTournoiEnAttente(this);

@@ -48,7 +48,8 @@ namespace GestionnaireTournois.Views.Users
             // 
             this.lblTtitreMoyenneButs.AutoSize = true;
             this.lblTtitreMoyenneButs.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTtitreMoyenneButs.Location = new System.Drawing.Point(15, 136);
+            this.lblTtitreMoyenneButs.Location = new System.Drawing.Point(20, 167);
+            this.lblTtitreMoyenneButs.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblTtitreMoyenneButs.Name = "lblTtitreMoyenneButs";
             this.lblTtitreMoyenneButs.Size = new System.Drawing.Size(184, 17);
             this.lblTtitreMoyenneButs.TabIndex = 0;
@@ -58,7 +59,8 @@ namespace GestionnaireTournois.Views.Users
             // 
             this.lblMoyenneButs.AutoSize = true;
             this.lblMoyenneButs.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblMoyenneButs.Location = new System.Drawing.Point(244, 136);
+            this.lblMoyenneButs.Location = new System.Drawing.Point(325, 167);
+            this.lblMoyenneButs.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblMoyenneButs.Name = "lblMoyenneButs";
             this.lblMoyenneButs.Size = new System.Drawing.Size(16, 17);
             this.lblMoyenneButs.TabIndex = 1;
@@ -68,7 +70,8 @@ namespace GestionnaireTournois.Views.Users
             // 
             this.lblTitreMoyenneArrets.AutoSize = true;
             this.lblTitreMoyenneArrets.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTitreMoyenneArrets.Location = new System.Drawing.Point(15, 170);
+            this.lblTitreMoyenneArrets.Location = new System.Drawing.Point(20, 209);
+            this.lblTitreMoyenneArrets.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblTitreMoyenneArrets.Name = "lblTitreMoyenneArrets";
             this.lblTitreMoyenneArrets.Size = new System.Drawing.Size(185, 17);
             this.lblTitreMoyenneArrets.TabIndex = 2;
@@ -78,7 +81,8 @@ namespace GestionnaireTournois.Views.Users
             // 
             this.lblMoyenneArret.AutoSize = true;
             this.lblMoyenneArret.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblMoyenneArret.Location = new System.Drawing.Point(244, 170);
+            this.lblMoyenneArret.Location = new System.Drawing.Point(325, 209);
+            this.lblMoyenneArret.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblMoyenneArret.Name = "lblMoyenneArret";
             this.lblMoyenneArret.Size = new System.Drawing.Size(16, 17);
             this.lblMoyenneArret.TabIndex = 3;
@@ -88,7 +92,8 @@ namespace GestionnaireTournois.Views.Users
             // 
             this.lblTitreRapportSerie.AutoSize = true;
             this.lblTitreRapportSerie.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTitreRapportSerie.Location = new System.Drawing.Point(16, 206);
+            this.lblTitreRapportSerie.Location = new System.Drawing.Point(21, 254);
+            this.lblTitreRapportSerie.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblTitreRapportSerie.Name = "lblTitreRapportSerie";
             this.lblTitreRapportSerie.Size = new System.Drawing.Size(217, 17);
             this.lblTitreRapportSerie.TabIndex = 4;
@@ -98,7 +103,8 @@ namespace GestionnaireTournois.Views.Users
             // 
             this.lblRapportSerie.AutoSize = true;
             this.lblRapportSerie.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblRapportSerie.Location = new System.Drawing.Point(244, 206);
+            this.lblRapportSerie.Location = new System.Drawing.Point(325, 254);
+            this.lblRapportSerie.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblRapportSerie.Name = "lblRapportSerie";
             this.lblRapportSerie.Size = new System.Drawing.Size(16, 17);
             this.lblRapportSerie.TabIndex = 5;
@@ -108,7 +114,8 @@ namespace GestionnaireTournois.Views.Users
             // 
             this.lblTitreNbButs.AutoSize = true;
             this.lblTitreNbButs.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTitreNbButs.Location = new System.Drawing.Point(16, 73);
+            this.lblTitreNbButs.Location = new System.Drawing.Point(21, 90);
+            this.lblTitreNbButs.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblTitreNbButs.Name = "lblTitreNbButs";
             this.lblTitreNbButs.Size = new System.Drawing.Size(109, 17);
             this.lblTitreNbButs.TabIndex = 6;
@@ -118,7 +125,8 @@ namespace GestionnaireTournois.Views.Users
             // 
             this.lblTitreNbArrets.AutoSize = true;
             this.lblTitreNbArrets.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTitreNbArrets.Location = new System.Drawing.Point(16, 101);
+            this.lblTitreNbArrets.Location = new System.Drawing.Point(21, 124);
+            this.lblTitreNbArrets.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblTitreNbArrets.Name = "lblTitreNbArrets";
             this.lblTitreNbArrets.Size = new System.Drawing.Size(110, 17);
             this.lblTitreNbArrets.TabIndex = 7;
@@ -128,7 +136,8 @@ namespace GestionnaireTournois.Views.Users
             // 
             this.lblNbArrets.AutoSize = true;
             this.lblNbArrets.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblNbArrets.Location = new System.Drawing.Point(244, 101);
+            this.lblNbArrets.Location = new System.Drawing.Point(325, 124);
+            this.lblNbArrets.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblNbArrets.Name = "lblNbArrets";
             this.lblNbArrets.Size = new System.Drawing.Size(16, 17);
             this.lblNbArrets.TabIndex = 8;
@@ -138,7 +147,8 @@ namespace GestionnaireTournois.Views.Users
             // 
             this.lblNbButs.AutoSize = true;
             this.lblNbButs.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblNbButs.Location = new System.Drawing.Point(244, 73);
+            this.lblNbButs.Location = new System.Drawing.Point(325, 90);
+            this.lblNbButs.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblNbButs.Name = "lblNbButs";
             this.lblNbButs.Size = new System.Drawing.Size(16, 17);
             this.lblNbButs.TabIndex = 9;
@@ -148,7 +158,8 @@ namespace GestionnaireTournois.Views.Users
             // 
             this.lblStats.AutoSize = true;
             this.lblStats.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblStats.Location = new System.Drawing.Point(15, 13);
+            this.lblStats.Location = new System.Drawing.Point(20, 16);
+            this.lblStats.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblStats.Name = "lblStats";
             this.lblStats.Size = new System.Drawing.Size(204, 24);
             this.lblStats.TabIndex = 10;
@@ -158,7 +169,8 @@ namespace GestionnaireTournois.Views.Users
             // 
             this.lblPseudoJoueur.AutoSize = true;
             this.lblPseudoJoueur.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblPseudoJoueur.Location = new System.Drawing.Point(239, 13);
+            this.lblPseudoJoueur.Location = new System.Drawing.Point(319, 16);
+            this.lblPseudoJoueur.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblPseudoJoueur.Name = "lblPseudoJoueur";
             this.lblPseudoJoueur.Size = new System.Drawing.Size(75, 24);
             this.lblPseudoJoueur.TabIndex = 11;
@@ -166,9 +178,9 @@ namespace GestionnaireTournois.Views.Users
             // 
             // frmStats
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(345, 260);
+            this.ClientSize = new System.Drawing.Size(460, 320);
             this.Controls.Add(this.lblPseudoJoueur);
             this.Controls.Add(this.lblStats);
             this.Controls.Add(this.lblNbButs);
@@ -182,9 +194,10 @@ namespace GestionnaireTournois.Views.Users
             this.Controls.Add(this.lblMoyenneButs);
             this.Controls.Add(this.lblTtitreMoyenneButs);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "frmStats";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "frmStats";
+            this.Text = "Statistiques";
             this.Load += new System.EventHandler(this.frmStats_Load);
             this.ResumeLayout(false);
             this.PerformLayout();

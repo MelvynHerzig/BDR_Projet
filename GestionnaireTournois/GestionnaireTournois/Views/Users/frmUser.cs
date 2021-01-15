@@ -28,15 +28,24 @@ namespace GestionnaireTournois
 
         private void frmUser_Load(object sender, EventArgs e)
         {
-            if(Joueur.GetEquipe() == null || Joueur.Id != Joueur.GetEquipe().IdResponsable)
+            RechargerAffichage();
+        }
+
+        private void RechargerAffichage()
+        {
+            if (Joueur.GetEquipe() == null || Joueur.Id != Joueur.GetEquipe().IdResponsable)
             {
                 lblTypeTournoi.Visible = false;
                 cbxTypeTournois.Visible = false;
             }
+            else
+            {
+                lblTypeTournoi.Visible = true;
+                cbxTypeTournois.Visible = true;
+            }
 
             cbxTypeTournois.SelectedIndex = 0;
         }
-
 
         private void dgvTournois_CellClick(object sender, DataGridViewCellEventArgs e)
         {
@@ -54,7 +63,7 @@ namespace GestionnaireTournois
                         break;
                     case "Tournois rejoignables":
                         Equipe equipe = Joueur.GetEquipe();
-                        if(equipe != null)
+                        if (equipe != null)
                             tournoiSelectionne.Inscrire(equipe);
                         ChargeTournoisRejoignables();
                         break;
@@ -82,6 +91,8 @@ namespace GestionnaireTournois
                 frmRechercheEquipe frm = new frmRechercheEquipe(Joueur);
 
                 frm.ShowDialog();
+
+                RechargerAffichage();
             }
             else
             {
@@ -112,7 +123,14 @@ namespace GestionnaireTournois
 
             foreach (Tournoi t in TournoisAffiches)
             {
-                dgvTournois.Rows.Add(t.Nom, t.DateHeureDebut, t.DateHeureFin, t.NbEquipesMax, "Voir");
+                if (t.DateHeureFin == DateTime.MinValue)
+                {
+                    dgvTournois.Rows.Add(t.Nom, t.DateHeureDebut, "Non terminé", t.NbEquipesMax, "Voir");
+                }
+                else
+                {
+                    dgvTournois.Rows.Add(t.Nom, t.DateHeureDebut, t.DateHeureFin, t.NbEquipesMax, "Voir");
+                }
             }
         }
 
@@ -124,9 +142,9 @@ namespace GestionnaireTournois
 
             foreach (Tournoi t in TournoisAffiches)
             {
-                if(t.DateHeureFin == DateTime.MinValue)
+                if (t.DateHeureFin == DateTime.MinValue)
                 {
-                    dgvTournois.Rows.Add(t.Nom, t.DateHeureDebut, "non terminé", t.NbEquipesMax, "S'inscrire");
+                    dgvTournois.Rows.Add(t.Nom, t.DateHeureDebut, "Non terminé", t.NbEquipesMax, "S'inscrire");
                 }
                 else
                 {

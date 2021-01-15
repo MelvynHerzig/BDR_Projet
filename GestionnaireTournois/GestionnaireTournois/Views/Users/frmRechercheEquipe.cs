@@ -55,6 +55,8 @@ namespace GestionnaireTournois.Views.Users
             Equipe equipe = new Equipe(tbxAcronyme.Text, tbxNom.Text, Joueur.Id);
 
             Equipe.Ajouter(equipe);
+
+            this.Close();
         }
     }
 }

@@ -78,107 +78,121 @@ namespace GestionnaireTournois.Views.Admin
             this.gbxEquipe1.Controls.Add(this.tbxE1J1Arrets);
             this.gbxEquipe1.Controls.Add(this.tbxE1J1Buts);
             this.gbxEquipe1.Controls.Add(this.tbxE1J1);
-            this.gbxEquipe1.Location = new System.Drawing.Point(258, 35);
+            this.gbxEquipe1.Location = new System.Drawing.Point(344, 43);
+            this.gbxEquipe1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.gbxEquipe1.Name = "gbxEquipe1";
-            this.gbxEquipe1.Size = new System.Drawing.Size(530, 149);
+            this.gbxEquipe1.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.gbxEquipe1.Size = new System.Drawing.Size(707, 183);
             this.gbxEquipe1.TabIndex = 0;
             this.gbxEquipe1.TabStop = false;
             this.gbxEquipe1.Text = "Equipe 1";
             // 
             // tbxE1J3Arrets
             // 
-            this.tbxE1J3Arrets.Location = new System.Drawing.Point(385, 100);
+            this.tbxE1J3Arrets.Location = new System.Drawing.Point(513, 123);
+            this.tbxE1J3Arrets.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.tbxE1J3Arrets.Name = "tbxE1J3Arrets";
-            this.tbxE1J3Arrets.Size = new System.Drawing.Size(118, 20);
+            this.tbxE1J3Arrets.Size = new System.Drawing.Size(156, 22);
             this.tbxE1J3Arrets.TabIndex = 11;
             // 
             // tbxE1J3Buts
             // 
-            this.tbxE1J3Buts.Location = new System.Drawing.Point(385, 74);
+            this.tbxE1J3Buts.Location = new System.Drawing.Point(513, 91);
+            this.tbxE1J3Buts.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.tbxE1J3Buts.Name = "tbxE1J3Buts";
-            this.tbxE1J3Buts.Size = new System.Drawing.Size(118, 20);
+            this.tbxE1J3Buts.Size = new System.Drawing.Size(156, 22);
             this.tbxE1J3Buts.TabIndex = 10;
             // 
             // tbxE1J3
             // 
             this.tbxE1J3.Enabled = false;
-            this.tbxE1J3.Location = new System.Drawing.Point(385, 28);
+            this.tbxE1J3.Location = new System.Drawing.Point(513, 34);
+            this.tbxE1J3.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.tbxE1J3.Name = "tbxE1J3";
             this.tbxE1J3.ReadOnly = true;
-            this.tbxE1J3.Size = new System.Drawing.Size(118, 20);
+            this.tbxE1J3.Size = new System.Drawing.Size(156, 22);
             this.tbxE1J3.TabIndex = 9;
             // 
             // tbxE1J2Arrets
             // 
-            this.tbxE1J2Arrets.Location = new System.Drawing.Point(234, 100);
+            this.tbxE1J2Arrets.Location = new System.Drawing.Point(312, 123);
+            this.tbxE1J2Arrets.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.tbxE1J2Arrets.Name = "tbxE1J2Arrets";
-            this.tbxE1J2Arrets.Size = new System.Drawing.Size(118, 20);
+            this.tbxE1J2Arrets.Size = new System.Drawing.Size(156, 22);
             this.tbxE1J2Arrets.TabIndex = 8;
             // 
             // tbxE1J2Buts
             // 
-            this.tbxE1J2Buts.Location = new System.Drawing.Point(234, 74);
+            this.tbxE1J2Buts.Location = new System.Drawing.Point(312, 91);
+            this.tbxE1J2Buts.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.tbxE1J2Buts.Name = "tbxE1J2Buts";
-            this.tbxE1J2Buts.Size = new System.Drawing.Size(118, 20);
+            this.tbxE1J2Buts.Size = new System.Drawing.Size(156, 22);
             this.tbxE1J2Buts.TabIndex = 7;
             // 
             // tbxE1J2
             // 
             this.tbxE1J2.Enabled = false;
-            this.tbxE1J2.Location = new System.Drawing.Point(234, 28);
+            this.tbxE1J2.Location = new System.Drawing.Point(312, 34);
+            this.tbxE1J2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.tbxE1J2.Name = "tbxE1J2";
             this.tbxE1J2.ReadOnly = true;
-            this.tbxE1J2.Size = new System.Drawing.Size(118, 20);
+            this.tbxE1J2.Size = new System.Drawing.Size(156, 22);
             this.tbxE1J2.TabIndex = 6;
             // 
             // lblArrets
             // 
             this.lblArrets.AutoSize = true;
-            this.lblArrets.Location = new System.Drawing.Point(23, 103);
+            this.lblArrets.Location = new System.Drawing.Point(31, 127);
+            this.lblArrets.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblArrets.Name = "lblArrets";
-            this.lblArrets.Size = new System.Drawing.Size(40, 13);
+            this.lblArrets.Size = new System.Drawing.Size(49, 16);
             this.lblArrets.TabIndex = 5;
             this.lblArrets.Text = "Arrêts :";
             // 
             // lblJoueurs
             // 
             this.lblJoueurs.AutoSize = true;
-            this.lblJoueurs.Location = new System.Drawing.Point(7, 31);
+            this.lblJoueurs.Location = new System.Drawing.Point(9, 38);
+            this.lblJoueurs.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblJoueurs.Name = "lblJoueurs";
-            this.lblJoueurs.Size = new System.Drawing.Size(50, 13);
+            this.lblJoueurs.Size = new System.Drawing.Size(62, 16);
             this.lblJoueurs.TabIndex = 4;
             this.lblJoueurs.Text = "Joueurs :";
             // 
             // lblButs
             // 
             this.lblButs.AutoSize = true;
-            this.lblButs.Location = new System.Drawing.Point(23, 77);
+            this.lblButs.Location = new System.Drawing.Point(31, 95);
+            this.lblButs.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblButs.Name = "lblButs";
-            this.lblButs.Size = new System.Drawing.Size(34, 13);
+            this.lblButs.Size = new System.Drawing.Size(40, 16);
             this.lblButs.TabIndex = 3;
             this.lblButs.Text = "Buts :";
             // 
             // tbxE1J1Arrets
             // 
-            this.tbxE1J1Arrets.Location = new System.Drawing.Point(80, 100);
+            this.tbxE1J1Arrets.Location = new System.Drawing.Point(107, 123);
+            this.tbxE1J1Arrets.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.tbxE1J1Arrets.Name = "tbxE1J1Arrets";
-            this.tbxE1J1Arrets.Size = new System.Drawing.Size(118, 20);
+            this.tbxE1J1Arrets.Size = new System.Drawing.Size(156, 22);
             this.tbxE1J1Arrets.TabIndex = 2;
             // 
             // tbxE1J1Buts
             // 
-            this.tbxE1J1Buts.Location = new System.Drawing.Point(80, 74);
+            this.tbxE1J1Buts.Location = new System.Drawing.Point(107, 91);
+            this.tbxE1J1Buts.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.tbxE1J1Buts.Name = "tbxE1J1Buts";
-            this.tbxE1J1Buts.Size = new System.Drawing.Size(118, 20);
+            this.tbxE1J1Buts.Size = new System.Drawing.Size(156, 22);
             this.tbxE1J1Buts.TabIndex = 1;
             // 
             // tbxE1J1
             // 
             this.tbxE1J1.Enabled = false;
-            this.tbxE1J1.Location = new System.Drawing.Point(80, 28);
+            this.tbxE1J1.Location = new System.Drawing.Point(107, 34);
+            this.tbxE1J1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.tbxE1J1.Name = "tbxE1J1";
             this.tbxE1J1.ReadOnly = true;
-            this.tbxE1J1.Size = new System.Drawing.Size(118, 20);
+            this.tbxE1J1.Size = new System.Drawing.Size(156, 22);
             this.tbxE1J1.TabIndex = 0;
             // 
             // gbxEquipe2
@@ -195,114 +209,129 @@ namespace GestionnaireTournois.Views.Admin
             this.gbxEquipe2.Controls.Add(this.tbxE2J1Arrets);
             this.gbxEquipe2.Controls.Add(this.tbxE2J1Buts);
             this.gbxEquipe2.Controls.Add(this.tbxE2J1);
-            this.gbxEquipe2.Location = new System.Drawing.Point(258, 202);
+            this.gbxEquipe2.Location = new System.Drawing.Point(344, 249);
+            this.gbxEquipe2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.gbxEquipe2.Name = "gbxEquipe2";
-            this.gbxEquipe2.Size = new System.Drawing.Size(530, 149);
+            this.gbxEquipe2.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.gbxEquipe2.Size = new System.Drawing.Size(707, 183);
             this.gbxEquipe2.TabIndex = 12;
             this.gbxEquipe2.TabStop = false;
             this.gbxEquipe2.Text = "Equipe 2";
             // 
             // tbxE2J3Arrets
             // 
-            this.tbxE2J3Arrets.Location = new System.Drawing.Point(385, 100);
+            this.tbxE2J3Arrets.Location = new System.Drawing.Point(513, 123);
+            this.tbxE2J3Arrets.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.tbxE2J3Arrets.Name = "tbxE2J3Arrets";
-            this.tbxE2J3Arrets.Size = new System.Drawing.Size(118, 20);
+            this.tbxE2J3Arrets.Size = new System.Drawing.Size(156, 22);
             this.tbxE2J3Arrets.TabIndex = 11;
             // 
             // tbxE2J3Buts
             // 
-            this.tbxE2J3Buts.Location = new System.Drawing.Point(385, 74);
+            this.tbxE2J3Buts.Location = new System.Drawing.Point(513, 91);
+            this.tbxE2J3Buts.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.tbxE2J3Buts.Name = "tbxE2J3Buts";
-            this.tbxE2J3Buts.Size = new System.Drawing.Size(118, 20);
+            this.tbxE2J3Buts.Size = new System.Drawing.Size(156, 22);
             this.tbxE2J3Buts.TabIndex = 10;
             // 
             // tbxE2J3
             // 
             this.tbxE2J3.Enabled = false;
-            this.tbxE2J3.Location = new System.Drawing.Point(385, 28);
+            this.tbxE2J3.Location = new System.Drawing.Point(513, 34);
+            this.tbxE2J3.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.tbxE2J3.Name = "tbxE2J3";
             this.tbxE2J3.ReadOnly = true;
-            this.tbxE2J3.Size = new System.Drawing.Size(118, 20);
+            this.tbxE2J3.Size = new System.Drawing.Size(156, 22);
             this.tbxE2J3.TabIndex = 9;
             // 
             // tbxE2J2Arrets
             // 
-            this.tbxE2J2Arrets.Location = new System.Drawing.Point(234, 100);
+            this.tbxE2J2Arrets.Location = new System.Drawing.Point(312, 123);
+            this.tbxE2J2Arrets.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.tbxE2J2Arrets.Name = "tbxE2J2Arrets";
-            this.tbxE2J2Arrets.Size = new System.Drawing.Size(118, 20);
+            this.tbxE2J2Arrets.Size = new System.Drawing.Size(156, 22);
             this.tbxE2J2Arrets.TabIndex = 8;
             // 
             // tbxE2J2Buts
             // 
-            this.tbxE2J2Buts.Location = new System.Drawing.Point(234, 74);
+            this.tbxE2J2Buts.Location = new System.Drawing.Point(312, 91);
+            this.tbxE2J2Buts.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.tbxE2J2Buts.Name = "tbxE2J2Buts";
-            this.tbxE2J2Buts.Size = new System.Drawing.Size(118, 20);
+            this.tbxE2J2Buts.Size = new System.Drawing.Size(156, 22);
             this.tbxE2J2Buts.TabIndex = 7;
             // 
             // tbxE2J2
             // 
             this.tbxE2J2.Enabled = false;
-            this.tbxE2J2.Location = new System.Drawing.Point(234, 28);
+            this.tbxE2J2.Location = new System.Drawing.Point(312, 34);
+            this.tbxE2J2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.tbxE2J2.Name = "tbxE2J2";
             this.tbxE2J2.ReadOnly = true;
-            this.tbxE2J2.Size = new System.Drawing.Size(118, 20);
+            this.tbxE2J2.Size = new System.Drawing.Size(156, 22);
             this.tbxE2J2.TabIndex = 6;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(23, 103);
+            this.label1.Location = new System.Drawing.Point(31, 127);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(40, 13);
+            this.label1.Size = new System.Drawing.Size(49, 16);
             this.label1.TabIndex = 5;
             this.label1.Text = "Arrêts :";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(7, 31);
+            this.label2.Location = new System.Drawing.Point(9, 38);
+            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(50, 13);
+            this.label2.Size = new System.Drawing.Size(62, 16);
             this.label2.TabIndex = 4;
             this.label2.Text = "Joueurs :";
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(23, 77);
+            this.label3.Location = new System.Drawing.Point(31, 95);
+            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(34, 13);
+            this.label3.Size = new System.Drawing.Size(40, 16);
             this.label3.TabIndex = 3;
             this.label3.Text = "Buts :";
             // 
             // tbxE2J1Arrets
             // 
-            this.tbxE2J1Arrets.Location = new System.Drawing.Point(80, 100);
+            this.tbxE2J1Arrets.Location = new System.Drawing.Point(107, 123);
+            this.tbxE2J1Arrets.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.tbxE2J1Arrets.Name = "tbxE2J1Arrets";
-            this.tbxE2J1Arrets.Size = new System.Drawing.Size(118, 20);
+            this.tbxE2J1Arrets.Size = new System.Drawing.Size(156, 22);
             this.tbxE2J1Arrets.TabIndex = 2;
             // 
             // tbxE2J1Buts
             // 
-            this.tbxE2J1Buts.Location = new System.Drawing.Point(80, 74);
+            this.tbxE2J1Buts.Location = new System.Drawing.Point(107, 91);
+            this.tbxE2J1Buts.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.tbxE2J1Buts.Name = "tbxE2J1Buts";
-            this.tbxE2J1Buts.Size = new System.Drawing.Size(118, 20);
+            this.tbxE2J1Buts.Size = new System.Drawing.Size(156, 22);
             this.tbxE2J1Buts.TabIndex = 1;
             // 
             // tbxE2J1
             // 
             this.tbxE2J1.Enabled = false;
-            this.tbxE2J1.Location = new System.Drawing.Point(80, 28);
+            this.tbxE2J1.Location = new System.Drawing.Point(107, 34);
+            this.tbxE2J1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.tbxE2J1.Name = "tbxE2J1";
             this.tbxE2J1.ReadOnly = true;
-            this.tbxE2J1.Size = new System.Drawing.Size(118, 20);
+            this.tbxE2J1.Size = new System.Drawing.Size(156, 22);
             this.tbxE2J1.TabIndex = 0;
             // 
             // btnModifier
             // 
-            this.btnModifier.Location = new System.Drawing.Point(258, 361);
+            this.btnModifier.Location = new System.Drawing.Point(344, 444);
+            this.btnModifier.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnModifier.Name = "btnModifier";
-            this.btnModifier.Size = new System.Drawing.Size(118, 29);
+            this.btnModifier.Size = new System.Drawing.Size(157, 36);
             this.btnModifier.TabIndex = 13;
             this.btnModifier.Text = "Modifier";
             this.btnModifier.UseVisualStyleBackColor = true;
@@ -311,26 +340,30 @@ namespace GestionnaireTournois.Views.Admin
             // lbxMatchs
             // 
             this.lbxMatchs.FormattingEnabled = true;
-            this.lbxMatchs.Location = new System.Drawing.Point(12, 35);
+            this.lbxMatchs.ItemHeight = 16;
+            this.lbxMatchs.Location = new System.Drawing.Point(16, 43);
+            this.lbxMatchs.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.lbxMatchs.Name = "lbxMatchs";
-            this.lbxMatchs.Size = new System.Drawing.Size(224, 355);
+            this.lbxMatchs.Size = new System.Drawing.Size(297, 436);
             this.lbxMatchs.TabIndex = 14;
             this.lbxMatchs.SelectedIndexChanged += new System.EventHandler(this.lbxMatchs_SelectedIndexChanged);
             // 
             // lblMatchs
             // 
             this.lblMatchs.AutoSize = true;
-            this.lblMatchs.Location = new System.Drawing.Point(9, 19);
+            this.lblMatchs.Location = new System.Drawing.Point(12, 23);
+            this.lblMatchs.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblMatchs.Name = "lblMatchs";
-            this.lblMatchs.Size = new System.Drawing.Size(92, 13);
+            this.lblMatchs.Size = new System.Drawing.Size(114, 16);
             this.lblMatchs.TabIndex = 16;
             this.lblMatchs.Text = "Liste des matchs :";
             // 
             // btnAjoutMatch
             // 
-            this.btnAjoutMatch.Location = new System.Drawing.Point(670, 361);
+            this.btnAjoutMatch.Location = new System.Drawing.Point(893, 444);
+            this.btnAjoutMatch.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnAjoutMatch.Name = "btnAjoutMatch";
-            this.btnAjoutMatch.Size = new System.Drawing.Size(118, 29);
+            this.btnAjoutMatch.Size = new System.Drawing.Size(157, 36);
             this.btnAjoutMatch.TabIndex = 17;
             this.btnAjoutMatch.Text = "Ajouter un match";
             this.btnAjoutMatch.UseVisualStyleBackColor = true;
@@ -338,9 +371,9 @@ namespace GestionnaireTournois.Views.Admin
             // 
             // frmSerie
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 409);
+            this.ClientSize = new System.Drawing.Size(1067, 503);
             this.Controls.Add(this.btnAjoutMatch);
             this.Controls.Add(this.lblMatchs);
             this.Controls.Add(this.lbxMatchs);
@@ -349,10 +382,11 @@ namespace GestionnaireTournois.Views.Admin
             this.Controls.Add(this.gbxEquipe1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.MaximizeBox = false;
             this.Name = "frmSerie";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Edition de la série";
+            this.Text = "Aperçu de la série";
             this.Load += new System.EventHandler(this.frmEditionSerie_Load);
             this.gbxEquipe1.ResumeLayout(false);
             this.gbxEquipe1.PerformLayout();

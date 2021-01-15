@@ -235,6 +235,46 @@ namespace GestionnaireTournois
             return result;
         }
 
+        public static List<Equipe> GetEquipesInscritesTournoi(Tournoi tournoi)
+        {
+            List<Equipe> equipes = new List<Equipe>();
+
+
+            MySqlConnection myConnection = new MySqlConnection(connection);
+
+            myConnection.Open();
+
+            MySqlCommand cmd = myConnection.CreateCommand();
+
+            try
+            {
+                cmd.CommandText = "SELECT acronyme, nom, idResponsable FROM equipe JOIN tournoi_equipe ON tournoi_equipe.acronymeEquipe = equipe.acronyme WHERE tournoi_equipe.idTournoi = @idTournoi";
+
+                cmd.Parameters.AddWithValue("idTournoi", tournoi.Id);
+
+                cmd.Prepare();
+
+                MySqlDataReader reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    equipes.Add(new Equipe(reader.GetString("acronyme"), reader.GetString("nom"), reader.GetInt32("idResponsable")));
+                }
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("An exception of type " + e.Message +
+               " was encountered.");
+            }
+            finally
+            {
+                myConnection.Close();
+            }
+
+            return equipes;
+        }
+
         public static int GetNbToursTournoi(Tournoi tournoi)
         {
 
@@ -1294,7 +1334,39 @@ namespace GestionnaireTournois
             return equipes;
         }
 
+        public static void AjouterEquipe(Equipe equipe)
+        {
+            MySqlConnection myConnection = new MySqlConnection(connection);
 
+            myConnection.Open();
+
+            MySqlCommand cmd = myConnection.CreateCommand();
+
+            try
+            {
+
+                cmd.CommandText = "INSERT INTO equipe(acronyme, nom, idResponsable) VALUES (@acronyme, @nom, @idResponsable);";
+
+                cmd.Parameters.AddWithValue("nom", equipe.Nom);
+                cmd.Parameters.AddWithValue("acronyme", equipe.Acronyme);
+                cmd.Parameters.AddWithValue("idResponsable", equipe.IdResponsable);
+
+                cmd.Prepare();
+
+                cmd.ExecuteNonQuery();
+
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message, "Impossible d'effectuer votre requête", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Console.WriteLine("An exception of type " + e.Message +
+               " was encountered.");
+            }
+            finally
+            {
+                myConnection.Close();
+            }
+        }
 
         #endregion
 

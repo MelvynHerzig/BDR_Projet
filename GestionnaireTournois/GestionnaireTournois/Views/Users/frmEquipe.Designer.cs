@@ -32,9 +32,7 @@ namespace GestionnaireTournois.Views.Users
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmEquipe));
             this.btnQuitter = new System.Windows.Forms.Button();
             this.lblEquipe = new System.Windows.Forms.Label();
-            this.lblTitre = new System.Windows.Forms.Label();
             this.dgvAffichage = new System.Windows.Forms.DataGridView();
-            this.cbxInfosJoueur = new System.Windows.Forms.ComboBox();
             this.colPseudo = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colNom = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colPrenom = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -45,14 +43,16 @@ namespace GestionnaireTournois.Views.Users
             this.colMoyenneButs = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colMoyenneArrets = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colActions = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.cbxInfosJoueur = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.dgvAffichage)).BeginInit();
             this.SuspendLayout();
             // 
             // btnQuitter
             // 
-            this.btnQuitter.Location = new System.Drawing.Point(16, 60);
+            this.btnQuitter.Location = new System.Drawing.Point(21, 15);
+            this.btnQuitter.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnQuitter.Name = "btnQuitter";
-            this.btnQuitter.Size = new System.Drawing.Size(158, 31);
+            this.btnQuitter.Size = new System.Drawing.Size(211, 38);
             this.btnQuitter.TabIndex = 0;
             this.btnQuitter.Text = "Quitter l\'équipe";
             this.btnQuitter.UseVisualStyleBackColor = true;
@@ -62,21 +62,12 @@ namespace GestionnaireTournois.Views.Users
             // 
             this.lblEquipe.AutoSize = true;
             this.lblEquipe.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblEquipe.Location = new System.Drawing.Point(236, 9);
+            this.lblEquipe.Location = new System.Drawing.Point(315, 11);
+            this.lblEquipe.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblEquipe.Name = "lblEquipe";
             this.lblEquipe.Size = new System.Drawing.Size(71, 24);
             this.lblEquipe.TabIndex = 13;
             this.lblEquipe.Text = "Equipe";
-            // 
-            // lblTitre
-            // 
-            this.lblTitre.AutoSize = true;
-            this.lblTitre.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTitre.Location = new System.Drawing.Point(12, 9);
-            this.lblTitre.Name = "lblTitre";
-            this.lblTitre.Size = new System.Drawing.Size(172, 24);
-            this.lblTitre.TabIndex = 12;
-            this.lblTitre.Text = "Equipe du joueur : ";
             // 
             // dgvAffichage
             // 
@@ -84,7 +75,7 @@ namespace GestionnaireTournois.Views.Users
             this.dgvAffichage.AllowUserToDeleteRows = false;
             this.dgvAffichage.AllowUserToResizeRows = false;
             this.dgvAffichage.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            this.dgvAffichage.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvAffichage.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.dgvAffichage.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.colPseudo,
             this.colNom,
@@ -96,14 +87,75 @@ namespace GestionnaireTournois.Views.Users
             this.colMoyenneButs,
             this.colMoyenneArrets,
             this.colActions});
-            this.dgvAffichage.Location = new System.Drawing.Point(16, 101);
+            this.dgvAffichage.Location = new System.Drawing.Point(21, 84);
+            this.dgvAffichage.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.dgvAffichage.Name = "dgvAffichage";
             this.dgvAffichage.ReadOnly = true;
             this.dgvAffichage.RowHeadersVisible = false;
             this.dgvAffichage.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
-            this.dgvAffichage.Size = new System.Drawing.Size(648, 204);
+            this.dgvAffichage.Size = new System.Drawing.Size(864, 292);
             this.dgvAffichage.TabIndex = 14;
             this.dgvAffichage.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvAffichage_CellClick);
+            // 
+            // colPseudo
+            // 
+            this.colPseudo.HeaderText = "Pseudo";
+            this.colPseudo.Name = "colPseudo";
+            this.colPseudo.ReadOnly = true;
+            // 
+            // colNom
+            // 
+            this.colNom.HeaderText = "Nom";
+            this.colNom.Name = "colNom";
+            this.colNom.ReadOnly = true;
+            // 
+            // colPrenom
+            // 
+            this.colPrenom.HeaderText = "Prénom";
+            this.colPrenom.Name = "colPrenom";
+            this.colPrenom.ReadOnly = true;
+            // 
+            // colEmail
+            // 
+            this.colEmail.HeaderText = "Email";
+            this.colEmail.Name = "colEmail";
+            this.colEmail.ReadOnly = true;
+            // 
+            // colNbSerieGagnee
+            // 
+            this.colNbSerieGagnee.HeaderText = "Nombre de série gagnée";
+            this.colNbSerieGagnee.Name = "colNbSerieGagnee";
+            this.colNbSerieGagnee.ReadOnly = true;
+            // 
+            // colTotButs
+            // 
+            this.colTotButs.HeaderText = "Total des buts";
+            this.colTotButs.Name = "colTotButs";
+            this.colTotButs.ReadOnly = true;
+            // 
+            // colTotArrets
+            // 
+            this.colTotArrets.HeaderText = "Total des arrêts";
+            this.colTotArrets.Name = "colTotArrets";
+            this.colTotArrets.ReadOnly = true;
+            // 
+            // colMoyenneButs
+            // 
+            this.colMoyenneButs.HeaderText = "Moyenne des buts";
+            this.colMoyenneButs.Name = "colMoyenneButs";
+            this.colMoyenneButs.ReadOnly = true;
+            // 
+            // colMoyenneArrets
+            // 
+            this.colMoyenneArrets.HeaderText = "Moyenne des arrêts";
+            this.colMoyenneArrets.Name = "colMoyenneArrets";
+            this.colMoyenneArrets.ReadOnly = true;
+            // 
+            // colActions
+            // 
+            this.colActions.HeaderText = "Actions";
+            this.colActions.Name = "colActions";
+            this.colActions.ReadOnly = true;
             // 
             // cbxInfosJoueur
             // 
@@ -113,108 +165,29 @@ namespace GestionnaireTournois.Views.Users
             "Joueurs actuels",
             "Anciens joueurs",
             "Joueurs en attente"});
-            this.cbxInfosJoueur.Location = new System.Drawing.Point(543, 66);
+            this.cbxInfosJoueur.Location = new System.Drawing.Point(724, 27);
+            this.cbxInfosJoueur.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.cbxInfosJoueur.Name = "cbxInfosJoueur";
-            this.cbxInfosJoueur.Size = new System.Drawing.Size(121, 21);
+            this.cbxInfosJoueur.Size = new System.Drawing.Size(160, 24);
             this.cbxInfosJoueur.TabIndex = 15;
             this.cbxInfosJoueur.SelectedIndexChanged += new System.EventHandler(this.cbxInfosJoueur_SelectedIndexChanged);
             // 
-            // colPseudo
-            // 
-            this.colPseudo.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
-            this.colPseudo.HeaderText = "Pseudo";
-            this.colPseudo.Name = "colPseudo";
-            this.colPseudo.ReadOnly = true;
-            this.colPseudo.Width = 68;
-            // 
-            // colNom
-            // 
-            this.colNom.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
-            this.colNom.HeaderText = "Nom";
-            this.colNom.Name = "colNom";
-            this.colNom.ReadOnly = true;
-            this.colNom.Width = 54;
-            // 
-            // colPrenom
-            // 
-            this.colPrenom.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
-            this.colPrenom.HeaderText = "Prénom";
-            this.colPrenom.Name = "colPrenom";
-            this.colPrenom.ReadOnly = true;
-            this.colPrenom.Width = 68;
-            // 
-            // colEmail
-            // 
-            this.colEmail.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
-            this.colEmail.HeaderText = "Email";
-            this.colEmail.Name = "colEmail";
-            this.colEmail.ReadOnly = true;
-            this.colEmail.Width = 57;
-            // 
-            // colNbSerieGagnee
-            // 
-            this.colNbSerieGagnee.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
-            this.colNbSerieGagnee.HeaderText = "Nombre de série gagnée";
-            this.colNbSerieGagnee.Name = "colNbSerieGagnee";
-            this.colNbSerieGagnee.ReadOnly = true;
-            this.colNbSerieGagnee.Width = 103;
-            // 
-            // colTotButs
-            // 
-            this.colTotButs.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
-            this.colTotButs.HeaderText = "Total des buts";
-            this.colTotButs.Name = "colTotButs";
-            this.colTotButs.ReadOnly = true;
-            this.colTotButs.Width = 73;
-            // 
-            // colTotArrets
-            // 
-            this.colTotArrets.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
-            this.colTotArrets.HeaderText = "Total des arrêts";
-            this.colTotArrets.Name = "colTotArrets";
-            this.colTotArrets.ReadOnly = true;
-            this.colTotArrets.Width = 96;
-            // 
-            // colMoyenneButs
-            // 
-            this.colMoyenneButs.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
-            this.colMoyenneButs.HeaderText = "Moyenne des buts";
-            this.colMoyenneButs.Name = "colMoyenneButs";
-            this.colMoyenneButs.ReadOnly = true;
-            this.colMoyenneButs.Width = 91;
-            // 
-            // colMoyenneArrets
-            // 
-            this.colMoyenneArrets.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
-            this.colMoyenneArrets.HeaderText = "Moyenne des arrêts";
-            this.colMoyenneArrets.Name = "colMoyenneArrets";
-            this.colMoyenneArrets.ReadOnly = true;
-            this.colMoyenneArrets.Width = 91;
-            // 
-            // colActions
-            // 
-            this.colActions.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
-            this.colActions.HeaderText = "Actions";
-            this.colActions.Name = "colActions";
-            this.colActions.ReadOnly = true;
-            this.colActions.Width = 48;
-            // 
             // frmEquipe
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(676, 317);
+            this.ClientSize = new System.Drawing.Size(901, 390);
             this.Controls.Add(this.cbxInfosJoueur);
             this.Controls.Add(this.dgvAffichage);
             this.Controls.Add(this.lblEquipe);
-            this.Controls.Add(this.lblTitre);
             this.Controls.Add(this.btnQuitter);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.MaximizeBox = false;
             this.Name = "frmEquipe";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "frmEquipe";
+            this.Text = "Aperçu de l\'équipe";
             this.Load += new System.EventHandler(this.frmEquipe_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dgvAffichage)).EndInit();
             this.ResumeLayout(false);
@@ -226,7 +199,6 @@ namespace GestionnaireTournois.Views.Users
 
         private System.Windows.Forms.Button btnQuitter;
         private System.Windows.Forms.Label lblEquipe;
-        private System.Windows.Forms.Label lblTitre;
         private System.Windows.Forms.DataGridView dgvAffichage;
         private System.Windows.Forms.ComboBox cbxInfosJoueur;
         private System.Windows.Forms.DataGridViewTextBoxColumn colPseudo;

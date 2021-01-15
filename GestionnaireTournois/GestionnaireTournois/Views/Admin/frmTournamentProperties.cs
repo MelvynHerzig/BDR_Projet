@@ -31,6 +31,8 @@ namespace GestionnaireTournois
 
         private void LoadInfoTournoi()
         {
+            lbxEquipesInscrites.Items.Clear();
+
             tbxId.Text = Tournoi.Id.ToString();
             tbxName.Text = Tournoi.Nom;
 
@@ -50,6 +52,8 @@ namespace GestionnaireTournois
             lblHeureFin.Visible = Tournoi.DateHeureFin != DateTime.MinValue;
             
             tbxMaxJoueurs.Text = Tournoi.NbEquipesMax.ToString();
+
+            lbxEquipesInscrites.Items.AddRange(Tournoi.GetEquipesInscrites().ToArray());
         }
 
         private void LoadInfoTours()
@@ -100,6 +104,17 @@ namespace GestionnaireTournois
         private void btnSaveInfo_Click(object sender, EventArgs e)
         {
             Tournoi.ModifierProprietes(tbxName.Text, dtpDateDebut.Value.Date + dtpHeureDebut.Value.TimeOfDay);
+        }
+
+        private void btnRetirerEquipe_Click(object sender, EventArgs e)
+        {
+            Equipe equipe = (Equipe)lbxEquipesInscrites.SelectedItem;
+
+            if(equipe != null)
+            {
+                equipe.AbandonnerTournoi(Tournoi);
+                LoadInfoTournoi();
+            }
         }
     }
 }
