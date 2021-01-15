@@ -302,17 +302,17 @@ VALUES
 
 INSERT INTO Prix (montantArgent)
 VALUES 
-( 50 ),
-( 100 ),
-( 150 ),
-( 200 ),
-( 250 ),
-( 300 ),
-( 350 ),
-( 500 ),
-( 1000 ),
-( 1500 ),
-( 2000 );
+( 50.00 ),
+( 100.00 ),
+( 150.00 ),
+( 200.00 ),
+( 250.00 ),
+( 300.00 ),
+( 350.00 ),
+( 500.00 ),
+( 1000.00 ),
+( 1500.00 ),
+( 2000.00 );
 
 INSERT INTO Prix_Objet 
 VALUES 
@@ -324,7 +324,7 @@ VALUES
 
 INSERT INTO Joueur (nom, prenom, email, pseudo, dateNaissance)
 VALUES 
-( 'Forestier', 'Qunetin', 'quentin.forestier@heig-vd.ch', 'Dudude', '2001-05-16' ),
+( 'Forestier', 'Quentin', 'quentin.forestier@heig-vd.ch', 'Dudude', '2001-05-16' ),
 ( 'Herzig', 'Melvyn', 'melvyn.herzig@heig-vd.ch', 'Wheald', '1997-09-11' ),
 ( 'Crausaz', 'Nicolas', 'nicolas.crausaz@heig-vd.ch', 'itsaboi', '1999-08-03' ),
 ( 'Brescard', 'Julien', 'Jujuju@lse.ch', 'Jujuju', '2002-09-16' ),
@@ -358,8 +358,44 @@ VALUES
 ( 'Kiroule', 'Pierre', 'pierre@uc2.com', 'pierre', '1990-02-01' ),
 ( 'Kévin', 'Jean', 'kevin@uc2.com', 'kévin', '1990-03-01' ),
 ( 'Gabin', 'Jean', 'gabin@sansequipe.com', 'gabin', '1990-04-01' ),
-( 'Berset', 'Alin', 'theking@sansequipe.com', 'theking', '1980-04-01' ),
-( 'Maxime', 'Berthoud', 'max@sansequipe.com', 'max', '2005-04-01' );
+( 'Berset', 'Alain', 'theking@sansequipe.com', 'theking', '1980-04-01' ),
+( 'Maxime', 'Berthoud', 'max@sansequipe.com', 'max', '2005-04-01' ),
+( 'Keith', 'MaleDaugherty', 'Cum.sociis@luctusaliquet.com', 'Demetrius Ross', '2020-06-04' ), 
+( 'Tiger', 'MaleConner', 'vitae.diam.Proin@justoProin.com', 'David Carrillo', '2021-11-25' ), 
+( 'Jeremy', 'MaleSchultz', 'egestas@diamDuismi.co.uk', 'Jamal Vasquez', '2021-06-02' ), 
+( 'Kasper', 'MaleHopper', 'sed.sapien.Nunc@Sedeu.edu', 'Rafael Perry', '2020-07-28' ), 
+( 'Jamal', 'MaleWilson', 'neque@augueutlacus.ca', 'Driscoll Hubbard', '2021-10-14' ), 
+( 'Barclay', 'MaleEmerson', 'quam.Curabitur.vel@rutrumnonhendrerit.ca', 'Quentin Johnson', '2020-02-02' ), 
+( 'Colt', 'MaleMoore', 'Maecenas.libero@egestasDuis.edu', 'Allen Briggs', '2021-01-08' ), 
+( 'Melvin', 'MaleBooth', 'luctus.felis.purus@massalobortisultrices.co.uk', 'Owen Finley', '2020-05-16' ), 
+( 'Joshua', 'MaleBooker', 'ut@vitae.edu', 'Aladdin Howe', '2021-09-11' ), 
+( 'Dolan', 'MaleManning', 'gravida.Praesent@sitamet.edu', 'Cody Zimmerman', '2020-07-29' ), 
+( 'Clayton', 'MaleWiley', 'ac@convallisligulaDonec.ca', 'Dean Phelps', '2020-01-20' ), 
+( 'Paki', 'MaleRomero', 'gravida@Proinsed.co.uk', 'Brenden Kennedy', '2020-12-26' ), 
+( 'Knox', 'MaleRodriguez', 'in@facilisisloremtristique.com', 'Hu Wilkinson', '2021-02-24' ), 
+( 'Chancellor', 'MaleStout', 'imperdiet.nec@amet.com', 'Carter Heath', '2022-01-02' ), 
+( 'Fuller', 'MaleMcfadden', 'Curabitur.sed@lectussit.org', 'Cairo Kemp', '2020-08-13' ), 
+( 'Rajah', 'MaleHester', 'in@purus.co.uk', 'Peter Hess', '2020-05-28' ), 
+( 'Zachery', 'MaleBeach', 'scelerisque.neque@egestasligula.edu', 'Gray Carey', '2021-02-07' ), 
+( 'Chase', 'MaleBullock', 'suscipit.nonummy.Fusce@maurisidsapien.co.uk', 'Brendan Puckett', '2020-07-04' ), 
+( 'Demetrius', 'MaleSmall', 'eget@loremsit.ca', 'Emerson Mueller', '2021-03-08' ), 
+( 'Steven', 'MaleJordan', 'eget.laoreet@Nullam.com', 'Hamish Bennett', '2020-07-28' ), 
+( 'Paki', 'MaleMcconnell', 'ut@etnetuset.com', 'Lucian Phillips', '2021-04-13' ), 
+( 'Drake', 'MaleRasmussen', 'sit@nullavulputate.com', 'Ishmael Rollins', '2020-03-30' ), 
+( 'Luke', 'MaleConrad', 'erat.volutpat@eleifendnunc.edu', 'Herrod Gentry', '2021-12-18' ), 
+( 'Chester', 'MaleReese', 'consequat.purus.Maecenas@estmollisnon.com', 'Wallace Donaldson', '2021-10-29' ), 
+( 'Ryder', 'MaleWalters', 'ante.Nunc@etpede.org', 'Oleg Wallace', '2021-12-18' ), 
+( 'Nissim', 'MaleAustin', 'arcu.Morbi@lectus.edu', 'Elliott Kinney', '2020-09-17' ), 
+( 'Nicholas', 'MaleLeach', 'vitae.semper@accumsaninterdumlibero.co.uk', 'Quamar Thornton', '2020-05-26' ), 
+( 'Cadman', 'MalePage', 'orci.Phasellus@Cumsociis.co.uk', 'Curran Gardner', '2020-07-19' ), 
+( 'Xavier', 'MaleMoody', 'elit.elit@In.org', 'Malachi Pierce', '2021-12-15' ), 
+( 'Orson', 'MaleJacobs', 'ultricies.ornare@vulputatemaurissagittis.edu', 'Carlos Maynard', '2020-03-20' ), 
+( 'Dorian', 'MaleWebster', 'congue.a.aliquet@lectusCum.ca', 'Drake Berg', '2020-10-10' ), 
+( 'Simon', 'MalePatterson', 'turpis.egestas@vitaemauris.co.uk', 'Akeem Maldonado', '2020-06-22' ), 
+( 'Kasimir', 'MaleFowler', 'sit.amet@mi.edu', 'Sean Greene', '2020-10-09' ), 
+( 'Kyle', 'MaleBradshaw', 'est.mollis@doloregestasrhoncus.com', 'Bruno Clay', '2021-04-26' ), 
+( 'Geoffrey', 'MaleVega', 'Vivamus.non.lorem@mollisvitae.com', 'Michael Freeman', '2021-04-23' ), 
+( 'David', 'MaleMaldonado', 'ac@faucibus.net', 'Colby Bean', '2022-01-03' );
 
 
 INSERT INTO Equipe
@@ -375,7 +411,19 @@ VALUES
 ( 'GAR', 'Galaxy Racer', 25 ),
 ( 'GIA', 'Giants Gaming', 28 ),
 ( 'UC1', 'Uncomplete1',  31),
-( 'UC2', 'Uncomplete2',  33);
+( 'UC2', 'Uncomplete2',  33),
+( 'AAA', 'Vivamus Nibh PC', 37), 
+( 'BBB', 'Pede Ultrices A Industries', 40), 
+( 'CCC', 'Cum Foundation', 43), 
+( 'DDD', 'Vulputate Velit Eu Institute', 46), 
+( 'EEE', 'Vulputate Ullamcorper Inc.', 49), 
+( 'FFF', 'Nam Corp.', 52), 
+( 'GGG', 'Felis Ullamcorper Limited', 55), 
+( 'HHH', 'Lectus Rutrum Urna Foundation', 58), 
+( 'III', 'Arcu Corporation', 61), 
+( 'JJJ', 'Kameto Korp', 64), 
+( 'KKK', 'Mi Incorporated', 67), 
+( 'LLL', 'Etiam Gravida Molestie Company', 70);
 
 
 INSERT INTO Equipe_Joueur
@@ -384,14 +432,14 @@ VALUES
 ( 'SLY', 2,  '2015-01-01 00:00:00','2018-04-01 00:00:00' ),
 ( 'SLY', 3,  '2016-01-01 00:00:00','2018-02-01 00:00:00' ),
 
-('ROC', 34, '0001-01-01 00:00:00', NULL ),
-('SLY', 35, '0001-01-01 00:00:00', NULL ),
+( 'UC1', 34, '0001-01-01 00:00:00', NULL ),
+( 'UC2', 35, '0001-01-01 00:00:00', NULL ),
 
 ( 'ROC', 1,  '2020-01-01 00:00:00', NULL ),
 ( 'ROC', 2,  '2020-01-01 00:00:00', NULL ),
 ( 'ROC', 3,  '2020-01-01 00:00:00', NULL ),
 ( 'LSE', 4,  '2020-01-01 00:00:00', NULL ),
-( 'LSE', 5,  '2020-01-01 00:00:00', '2020-12-25 11:00:00' ),
+( 'LSE', 5,  '2020-01-01 00:00:00', '2020-08-25 11:00:00' ),
 ( 'LSE', 6,  '2020-01-01 00:00:00', NULL ),
 ( 'SLY', 7,  '2020-01-01 00:00:00', NULL ),
 ( 'SLY', 8,  '2020-01-01 00:00:00', NULL ),
@@ -401,12 +449,12 @@ VALUES
 ( 'TL', 12,  '2020-01-01 00:00:00', NULL ),
 ( 'EE', 13,  '2020-01-01 00:00:00', NULL ),
 ( 'EE', 14,  '2020-01-01 00:00:00', NULL ),
-( 'EE', 15,  '2020-01-01 00:00:00', '2020-12-28 17:00:00' ),
+( 'EE', 15,  '2020-01-01 00:00:00', '2020-08-28 17:00:00' ),
 ( 'VIT', 16,  '2020-01-01 00:00:00', NULL ),
-( 'VIT', 17,  '2020-01-01 00:00:00', '2020-12-27 20:00:00' ),
+( 'VIT', 17,  '2020-01-01 00:00:00', '2020-08-27 20:00:00' ),
 ( 'VIT', 18,  '2020-01-01 00:00:00', NULL ),
 ( 'DIG', 19,  '2020-01-01 00:00:00', NULL ),
-( 'DIG', 20,  '2020-01-01 00:00:00', '2020-12-26 19:00:00' ),
+( 'DIG', 20,  '2020-01-01 00:00:00', '2020-08-26 19:00:00' ),
 ( 'DIG', 21,  '2020-01-01 00:00:00', NULL ),
 ( 'FCB', 22,  '2020-01-01 00:00:00', NULL ),
 ( 'FCB', 23,  '2020-01-01 00:00:00', NULL ),
@@ -418,16 +466,53 @@ VALUES
 ( 'GIA', 29,  '2020-01-01 00:00:00', NULL ),
 ( 'GIA', 30,  '2020-01-01 00:00:00', NULL ),
 
-( 'VIT', 20,  '2020-12-28 00:00:00', NULL ),
-( 'DIG', 17,  '2020-12-29 00:00:00', NULL ),
+( 'VIT', 20,  '2020-08-28 00:00:00', NULL ),
+( 'DIG', 17,  '2020-08-29 00:00:00', NULL ),
 
-( 'EE', 5,  '2020-12-30 00:00:00', NULL ),
-( 'LSE', 15,  '2020-12-30 00:00:00', NULL ),
+( 'EE', 5,  '2020-08-30 00:00:00', NULL ),
+( 'LSE', 15,  '2020-08-30 00:00:00', NULL ),
 
 ( 'UC1', 31,  '2020-01-30 00:00:00', NULL ),
 ( 'UC1', 32,  '2020-01-30 00:00:00', NULL ),
 ( 'UC2', 33,  '2020-01-30 00:00:00', NULL ),
-( 'UC2', 36,  '2020-01-30 00:00:00', '2021-01-01 20:00:00' );
+( 'UC2', 36,  '2020-01-30 00:00:00', '2021-01-01 20:00:00' ),
+
+( 'AAA', 37,  '2020-01-01 00:00:00', NULL ),
+( 'AAA', 38,  '2020-01-01 00:00:00', NULL ),
+( 'AAA', 39,  '2020-01-01 00:00:00', NULL ),
+( 'BBB', 40,  '2020-01-01 00:00:00', NULL ),
+( 'BBB', 41,  '2020-01-01 00:00:00', NULL ),
+( 'BBB', 42,  '2020-01-01 00:00:00', NULL ),
+( 'CCC', 43,  '2020-01-01 00:00:00', NULL ),
+( 'CCC', 44,  '2020-01-01 00:00:00', NULL ),
+( 'CCC', 45,  '2020-01-01 00:00:00', NULL ),
+( 'DDD', 46,  '2020-01-01 00:00:00', NULL ),
+( 'DDD', 47,  '2020-01-01 00:00:00', NULL ),
+( 'DDD', 48,  '2020-01-01 00:00:00', NULL ),
+( 'EEE', 49,  '2020-01-01 00:00:00', NULL ),
+( 'EEE', 50,  '2020-01-01 00:00:00', NULL ),
+( 'EEE', 51,  '2020-01-01 00:00:00', NULL ),
+( 'FFF', 52,  '2020-01-01 00:00:00', NULL ),
+( 'FFF', 53,  '2020-01-01 00:00:00', NULL ),
+( 'FFF', 54,  '2020-01-01 00:00:00', NULL ),
+( 'GGG', 55,  '2020-01-01 00:00:00', NULL ),
+( 'GGG', 56,  '2020-01-01 00:00:00', NULL ),
+( 'GGG', 57,  '2020-01-01 00:00:00', NULL ),
+( 'HHH', 58,  '2020-01-01 00:00:00', NULL ),
+( 'HHH', 59,  '2020-01-01 00:00:00', NULL ),
+( 'HHH', 60,  '2020-01-01 00:00:00', NULL ),
+( 'III', 61,  '2020-01-01 00:00:00', NULL ),
+( 'III', 62,  '2020-01-01 00:00:00', NULL ),
+( 'III', 63,  '2020-01-01 00:00:00', NULL ),
+( 'JJJ', 64,  '2020-01-01 00:00:00', NULL ),
+( 'JJJ', 65,  '2020-01-01 00:00:00', NULL ),
+( 'JJJ', 66,  '2020-01-01 00:00:00', NULL ),
+( 'KKK', 67,  '2020-01-01 00:00:00', NULL ),
+( 'KKK', 68,  '2020-01-01 00:00:00', NULL ),
+( 'KKK', 69,  '2020-01-01 00:00:00', NULL ),
+( 'LLL', 70,  '2020-01-01 00:00:00', NULL ),
+( 'LLL', 71,  '2020-01-01 00:00:00', NULL ),
+( 'LLL', 72,  '2020-01-01 00:00:00', NULL );
 
 
 INSERT INTO Tournoi (dateHeureDebut, nom, nbEquipesMax, dateHeureFin, idPrixPremier, idPrixSecond)
@@ -490,31 +575,31 @@ VALUES
 ( 3, 'ROC', '2020-01-12 20-00-00' ),
 ( 3, 'SLY', '2020-02-12 20-01-00' ),
 
-( 4, 'ROC', '2020-10-12 20-00-00' ),
+( 4, 'ROC', '2020-10-11 20-00-00' ),
 
 ( 5, 'GAR', '2020-11-05 20-04-00' ),
 ( 5, 'LSE', '2020-11-06 20-05-00' ),
 ( 5, 'GIA', '2020-11-07 20-05-00' ),
-( 5, 'SLY', '2020-11-08 20-06-00' ),
+( 5, 'DIG', '2020-11-08 20-06-00' ),
 
-( 6, 'ROC', '2020-09-01 20-00-00' ),
-( 6, 'SLY', '2020-10-02 20-01-00' ),
-( 6, 'LSE', '2020-11-03 20-02-00' ),
+( 6, 'EE', '2020-09-01 20-00-00' ),
+( 6, 'TL', '2020-10-02 20-01-00' ),
+( 6, 'FCB', '2020-11-03 20-02-00' ),
 ( 6, 'VIT', '2020-12-01 20-02-00' ),
 
-( 7, 'GIA', '2020-09-01 20-00-00' ),
-( 7, 'EE', '2020-10-02 20-01-00' ),
-( 7, 'LSE', '2020-11-03 20-02-00' ),
+( 7, 'AAA', '2020-09-01 20-00-00' ),
+( 7, 'BBB', '2020-10-02 20-01-00' ),
+( 7, 'CCC', '2020-11-03 20-02-00' ),
 
-( 8, 'ROC', '2020-09-01 20-00-00' ),
-( 8, 'SLY', '2020-10-02 20-01-00' ),
-( 8, 'LSE', '2020-11-03 20-02-00' ),
-( 8, 'VIT', '2020-12-01 20-02-00' ),
+( 8, 'DDD', '2020-09-01 20-00-00' ),
+( 8, 'EEE', '2020-10-02 20-01-00' ),
+( 8, 'FFF', '2020-11-03 20-02-00' ),
+( 8, 'GGG', '2020-12-01 20-02-00' ),
 
-( 9, 'TL', '2020-08-01 20-00-00' ),
-( 9, 'FCB', '2020-09-02 20-01-00' ),
-( 9, 'GAR', '2020-09-03 20-02-00' ),
-( 9, 'GIA', '2020-10-01 20-02-00' );
+( 9, 'HHH', '2020-08-01 20-00-00' ),
+( 9, 'III', '2020-09-02 20-01-00' ),
+( 9, 'KKK', '2020-09-03 20-02-00' ),
+( 9, 'LLL', '2020-10-01 20-02-00' );
 
 
 -- Tournoi 1
@@ -696,6 +781,7 @@ VALUES
 ( 4, 0, 2, 1, 1, 1, 2 ),
 ( 5, 1, 3, 1, 1, 1, 2 ),
 ( 6, 0, 4, 1, 1, 1, 2 ),
+
 ( 1, 1, 1, 2, 1, 1, 2 ),
 ( 2, 1, 5, 2, 1, 1, 2 ),
 ( 3, 1, 2, 2, 1, 1, 2 ),
@@ -738,14 +824,14 @@ VALUES
 INSERT INTO Match_Joueur
 VALUES 
 ( 4, 1, 5, 1, 1, 2, 5 ),
-( 5, 3, 1, 1, 1, 2, 5 ),
+( 15, 3, 1, 1, 1, 2, 5 ),
 ( 6, 2, 2, 1, 1, 2, 5 ),
 ( 25, 0, 1, 1, 1, 2, 5 ),
 ( 26, 1, 3, 1, 1, 2, 5 ),
 ( 27, 2, 0, 1, 1, 2, 5 );
 
 INSERT INTO Serie
-VALUES ( 2, 2, 5, 'GIA', 'SLY' );
+VALUES ( 2, 2, 5, 'GIA', 'DIG' );
 
 INSERT INTO `Match`
 VALUES 
@@ -754,21 +840,21 @@ VALUES
 
 INSERT INTO Match_Joueur
 VALUES 
-( 7, 2, 8, 1, 2, 2, 5 ),
-( 8, 3, 2, 1, 2, 2, 5 ),
-( 9, 1, 0, 1, 2, 2, 5 ),
-( 28, 1, 4, 1, 2, 2, 5 ),
-( 29, 0, 1, 1, 2, 2, 5 ),
-( 30, 1, 3, 1, 2, 2, 5 );
+( 28, 2, 8, 1, 2, 2, 5 ),
+( 29, 3, 2, 1, 2, 2, 5 ),
+( 30, 1, 0, 1, 2, 2, 5 ),
+( 17, 1, 4, 1, 2, 2, 5 ),
+( 19, 0, 1, 1, 2, 2, 5 ),
+( 21, 1, 3, 1, 2, 2, 5 );
 
 INSERT INTO Match_Joueur
 VALUES 
 ( 7, 1, 3, 2, 2, 2, 5 ),
 ( 8, 0, 2, 2, 2, 2, 5 ),
 ( 9, 2, 0, 2, 2, 2, 5 ),
-( 28, 3, 5, 2, 2, 2, 5 ),
-( 29, 2, 2, 2, 2, 2, 5 ),
-( 30, 0, 3, 2, 2, 2, 5 );
+( 17, 3, 5, 2, 2, 2, 5 ),
+( 19, 2, 2, 2, 2, 2, 5 ),
+( 21, 0, 3, 2, 2, 2, 5 );
 
 INSERT INTO Serie
 VALUES ( 1, 1, 5, NULL, NULL );
@@ -776,7 +862,7 @@ VALUES ( 1, 1, 5, NULL, NULL );
 
 -- Tournoi 6
 INSERT INTO Serie
-VALUES ( 1, 2, 6, 'ROC', 'SLY' );
+VALUES ( 1, 2, 6, 'EE', 'TL' );
 
 INSERT INTO `Match`
 VALUES 
@@ -784,15 +870,15 @@ VALUES
 
 INSERT INTO Match_Joueur
 VALUES 
-( 1, 6, 1, 1, 1, 2, 6 ),
-( 2, 0, 6, 1, 1, 2, 6 ),
-( 3, 2, 5, 1, 1, 2, 6 ),
-( 7, 2, 2, 1, 1, 2, 6 ),
-( 8, 1, 3, 1, 1, 2, 6 ),
-( 9, 1, 1, 1, 1, 2, 6 );
+( 13, 6, 1, 1, 1, 2, 6 ),
+( 14, 0, 6, 1, 1, 2, 6 ),
+( 5, 2, 5, 1, 1, 2, 6 ),
+( 10, 2, 2, 1, 1, 2, 6 ),
+( 11, 1, 3, 1, 1, 2, 6 ),
+( 12, 1, 1, 1, 1, 2, 6 );
 
 INSERT INTO Serie
-VALUES ( 2, 2, 6, 'LSE', 'VIT' );
+VALUES ( 2, 2, 6, 'FCB', 'VIT' );
 
 INSERT INTO `Match`
 VALUES 
@@ -800,15 +886,16 @@ VALUES
 
 INSERT INTO Match_Joueur
 VALUES 
-( 4, 2, 1, 1, 2, 2, 6 ),
-( 5, 0, 3, 1, 2, 2, 6 ),
-( 6, 1, 5, 1, 2, 2, 6 ),
+( 22, 2, 1, 1, 2, 2, 6 ),
+( 23, 0, 3, 1, 2, 2, 6 ),
+( 24, 1, 5, 1, 2, 2, 6 ),
 ( 16, 0, 2, 1, 2, 2, 6 ),
-( 17, 0, 1, 1, 2, 2, 6 ),
+( 20, 0, 1, 1, 2, 2, 6 ),
 ( 18, 1, 4, 1, 2, 2, 6 );
 
 INSERT INTO Serie
 VALUES ( 1, 1, 6, NULL, NULL );
+
 
 -- Tournoi 7
 INSERT INTO Serie
@@ -817,12 +904,14 @@ VALUES
 ( 2, 2, 7, NULL, NULL ),
 ( 1, 1, 7, NULL, NULL );
 
+
 -- Tournoi 8
 INSERT INTO Serie
 VALUES 
 ( 1, 2, 8, NULL, NULL ),
 ( 2, 2, 8, NULL, NULL ),
 ( 1, 1, 8, NULL, NULL );
+
 
 -- Tournoi 9
 INSERT INTO Serie
