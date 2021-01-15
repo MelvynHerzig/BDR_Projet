@@ -980,7 +980,7 @@ RETURNS VARCHAR(3)
 DETERMINISTIC
 BEGIN
 	DECLARE nomEquipe VARCHAR(3);
-	SELECT Equipe_Joueur.acronymeEquipe INTO nomEquipe
+	SELECT acronymeEquipe INTO nomEquipe
 	FROM Equipe_Joueur
 	WHERE idJoueur = pIdJoueur AND dateHeureArrivee = (SELECT MAX(dateHeureArrivee) 
 													   FROM Equipe_Joueur 
@@ -997,7 +997,7 @@ DETERMINISTIC
 BEGIN
 	IF  3 = (SELECT COUNT(1) 
 			 FROM Equipe_Joueur 
-			 WHERE Equipe_Joueur.acronymeEquipe = pAcronymeEquipe AND Equipe_Joueur.dateHeureDepart IS NULL AND Equipe_Joueur.dateHeureArrivee <> '0001-01-01 00:00:00')
+			 WHERE acronymeEquipe = pAcronymeEquipe AND dateHeureDepart IS NULL AND dateHeureArrivee <> '0001-01-01 00:00:00')
 	THEN RETURN 1;
     ELSE RETURN 0;
     END IF;
@@ -1008,7 +1008,7 @@ CREATE FUNCTION estEnAttente(pIdTournoi INT)
 RETURNS BOOLEAN
 DETERMINISTIC
 BEGIN
-	RETURN NOW() < (SELECT Tournoi.dateHeureDebut FROM Tournoi WHERE Tournoi.id = pIdTournoi);
+	RETURN NOW() < (SELECT dateHeureDebut FROM Tournoi WHERE id = pIdTournoi);
 END $$
 
 -- Vérifie si les deux équipes peuvent jouer la série. 
@@ -1020,7 +1020,7 @@ BEGIN
     DECLARE equipe2OK BOOLEAN DEFAULT FALSE;
     DECLARE nbEquipe INT;
 	-- Si premier tour du tournoi aucune vérification n'est nécessaire
-    SET nbEquipe = (SELECT Tournoi.nbEquipesMax FROM Tournoi WHERE Tournoi.id = pIdTournoi);
+    SET nbEquipe = (SELECT nbEquipesMax FROM Tournoi WHERE id = pIdTournoi);
     IF  calculerNbTours(nbEquipe) = pNoTour
     THEN
 		RETURN TRUE;
@@ -1047,14 +1047,14 @@ BEGIN
     
     DECLARE ae1, ae2 VARCHAR(3); -- Acronymes des équipes de la série
     DECLARE maxVictoire, nbVictoireE1, nbVictoireE2, taux INT;
-    SELECT Serie.acronymeEquipe1, Serie.acronymeEquipe2 INTO ae1, ae2 FROM Serie WHERE Serie.id = pIdSerie AND Serie.noTour = pNoTour AND Serie.idTournoi = pIdTournoi;
+    SELECT acronymeEquipe1, acronymeEquipe2 INTO ae1, ae2 FROM Serie WHERE id = pIdSerie AND noTour = pNoTour AND idTournoi = pIdTournoi;
     
     IF ae1 IS NULL OR ae2 IS NULL
     THEN
 		RETURN NULL;
 	END IF;
     
-    SELECT longueurMaxSerie INTO maxVictoire FROM Tour WHERE Tour.no = pNoTour AND Tour.idTournoi = pIdTournoi;
+    SELECT longueurMaxSerie INTO maxVictoire FROM Tour WHERE no = pNoTour AND idTournoi = pIdTournoi;
 	SET nbVictoireE1 = compterVictoireDansSerie(ae1, pIdSerie, pNoTour, pIdTournoi);
     SET nbVictoireE2 = compterVictoireDansSerie(ae2, pIdSerie, pNoTour, pIdTournoi);
 	
@@ -1082,13 +1082,13 @@ BEGIN
     DECLARE be1, be2, nbe1, nbe2 INT; -- nb but et nb d'enregistrements par équipe
     DECLARE ae1, ae2 VARCHAR(3);
     
-    SELECT Tournoi.dateHeureDebut INTO dateDuTournoi FROM Tournoi WHERE Tournoi.id = pIdTournoi;
-    SELECT Serie.acronymeEquipe1, Serie.acronymeEquipe2 INTO ae1, ae2 FROM Serie WHERE Serie.id = pIdSerie AND Serie.noTour = pNoTour AND Serie.idTournoi = pIdTournoi;
+    SELECT dateHeureDebut INTO dateDuTournoi FROM Tournoi WHERE id = pIdTournoi;
+    SELECT acronymeEquipe1, acronymeEquipe2 INTO ae1, ae2 FROM Serie WHERE id = pIdSerie AND noTour = pNoTour AND idTournoi = pIdTournoi;
     
-	SELECT SUM(Match_Joueur.nbButs), COUNT(Match_Joueur.nbButs) INTO be1, nbe1 FROM Match_Joueur 
-		WHERE Match_Joueur.idMatch = pIdMatch AND Match_Joueur.idSerie = pIdSerie AND Match_Joueur.noTour = pNoTour AND Match_Joueur.idTournoi = pIdTournoi AND equipeDuJoueurLorsDu(Match_Joueur.idJoueur, dateDuTournoi) = ae1;
-    SELECT SUM(Match_Joueur.nbButs), COUNT(Match_Joueur.nbButs) INTO be2, nbe2 FROM Match_Joueur
-		WHERE Match_Joueur.idMatch = pIdMatch AND Match_Joueur.idSerie = pIdSerie AND Match_Joueur.noTour = pNoTour AND Match_Joueur.idTournoi = pIdTournoi AND equipeDuJoueurLorsDu(Match_Joueur.idJoueur, dateDuTournoi) = ae2;
+	SELECT SUM(nbButs), COUNT(nbButs) INTO be1, nbe1 FROM Match_Joueur 
+		WHERE idMatch = pIdMatch AND idSerie = pIdSerie AND noTour = pNoTour AND idTournoi = pIdTournoi AND equipeDuJoueurLorsDu(idJoueur, dateDuTournoi) = ae1;
+    SELECT SUM(nbButs), COUNT(nbButs) INTO be2, nbe2 FROM Match_Joueur
+		WHERE idMatch = pIdMatch AND idSerie = pIdSerie AND noTour = pNoTour AND idTournoi = pIdTournoi AND equipeDuJoueurLorsDu(idJoueur, dateDuTournoi) = ae2;
         
 	IF nbe1 <> 3 OR nbe2 <> 3
     THEN    
@@ -1113,8 +1113,8 @@ DETERMINISTIC
 BEGIN
 	DECLARE maxEquipe, nbEquipe INT;
 	-- Nombre d'équipes max atteint ? 
-    SET maxEquipe = (SELECT Tournoi.nbEquipesMax FROM Tournoi WHERE Tournoi.id = pIdTournoi );
-    SET nbEquipe = (SELECT COUNT(1) FROM Tournoi_Equipe WHERE Tournoi_Equipe.idTournoi = pIdTournoi);
+    SET maxEquipe = (SELECT nbEquipesMax FROM Tournoi WHERE id = pIdTournoi );
+    SET nbEquipe = (SELECT COUNT(1) FROM Tournoi_Equipe WHERE idTournoi = pIdTournoi);
 	RETURN maxEquipe = nbEquipe;
 END $$
 
@@ -1124,10 +1124,10 @@ RETURNS BOOLEAN
 DETERMINISTIC
 BEGIN
 	DECLARE nbEquipes, premierTour INT;
-	SET nbEquipes = (SELECT Tournoi.nbEquipesMax FROM Tournoi WHERE Tournoi.id = pIdTournoi);
+	SET nbEquipes = (SELECT nbEquipesMax FROM Tournoi WHERE id = pIdTournoi);
 	SET premierTour = calculerNbTours(nbEquipes);
     
-    RETURN POW(2, premierTour)/2 = (SELECT COUNT(1) FROM Serie WHERE Serie.idTournoi = pIdTournoi AND Serie.noTour = premierTour AND acronymeEquipe1 IS NOT NULL AND acronymeEquipe2 IS NOT NULL);
+    RETURN POW(2, premierTour)/2 = (SELECT COUNT(1) FROM Serie WHERE idTournoi = pIdTournoi AND noTour = premierTour AND acronymeEquipe1 IS NOT NULL AND acronymeEquipe2 IS NOT NULL);
 END $$
 
 -- Vérifie que la date en paramètre est plus grande que la date courante.
@@ -1189,16 +1189,16 @@ CREATE PROCEDURE verifierJoueurEstDansEquipeSerie(pIdJoueur INT, pIdSerie INT, p
 BEGIN
     DECLARE e1, e2, equipe VARCHAR(3);
     DECLARE dateTournoi DATETIME;
-	SET dateTournoi = (SELECT Tournoi.dateHeureDebut FROM Tournoi WHERE Tournoi.id = pIdTournoi);
+	SET dateTournoi = (SELECT dateHeureDebut FROM Tournoi WHERE id = pIdTournoi);
 	SET equipe = equipeDuJoueurLorsDu(pIdJoueur, dateTournoi);
     IF equipe IS NULL
     THEN
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Le joueur n\'appartient pas à équipe au moment du tournoi.';
 	END IF;
 	
-    SELECT Serie.acronymeEquipe1, Serie.acronymeEquipe2 INTO e1, e2
+    SELECT acronymeEquipe1, acronymeEquipe2 INTO e1, e2
     FROM Serie
-    WHERE Serie.id = pIdSerie AND Serie.noTour = pNoTour AND Serie.idTournoi = pIdTournoi;
+    WHERE id = pIdSerie AND noTour = pNoTour AND idTournoi = pIdTournoi;
     
     IF  e1 <> equipe AND e2 <> equipe
     THEN
@@ -1258,7 +1258,7 @@ BEGIN
     DECLARE done INT DEFAULT FALSE;
 	DECLARE equipe1Inscrite VARCHAR(3);
     DECLARE equipe2Inscrite VARCHAR(3);
-	DECLARE curInscription CURSOR FOR SELECT Tournoi_Equipe.acronymeEquipe FROM Tournoi_Equipe WHERE Tournoi_Equipe.idTournoi = pIdTournoi ORDER BY Tournoi_Equipe.dateInscription ASC;
+	DECLARE curInscription CURSOR FOR SELECT acronymeEquipe FROM Tournoi_Equipe WHERE idTournoi = pIdTournoi ORDER BY dateInscription ASC;
 	DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
     
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -1280,7 +1280,7 @@ BEGIN
 
 	-- création du seeding 
     SET noSerie = 1; 
-    SET noTour = calculerNbTours( (SELECT Tournoi.nbEquipesMax FROM Tournoi WHERE Tournoi.id = pIdTournoi) );
+    SET noTour = calculerNbTours( (SELECT nbEquipesMax FROM Tournoi WHERE id = pIdTournoi) );
     OPEN curInscription;
     inscription_loop : LOOP
 		FETCH curInscription INTO equipe1Inscrite;
@@ -1305,7 +1305,7 @@ BEGIN
     DECLARE vainqueur VARCHAR(3);
 
 	-- Promotion impossible en finale ou si les 6 joueurs n'ont pas de résultats
-	IF pNoTour <> 1 AND 6 = (SELECT COUNT(1) FROM Match_Joueur WHERE Match_Joueur.idMatch = pIdMatch AND Match_Joueur.idSerie = pIdSerie AND Match_Joueur.noTour = pNoTour AND Match_Joueur.idTournoi = pIdTournoi)
+	IF pNoTour <> 1 AND 6 = (SELECT COUNT(1) FROM Match_Joueur WHERE idMatch = pIdMatch AND idSerie = pIdSerie AND noTour = pNoTour AND idTournoi = pIdTournoi)
     THEN 
 		SET nextSerie = CEIL(pIdSerie / 2);
 		SET vainqueur = vainqueurSerie(pIdSerie, pNoTour, pIdTournoi);
@@ -1486,8 +1486,8 @@ BEGIN
 	DECLARE maxTeam, dernierNoTour INT;
 
 	-- Verification du numéro de tour
-	SET maxTeam = (SELECT Tournoi.nbEquipesMax FROM Tournoi WHERE Tournoi.id = NEW.idTournoi);
-    SET dernierNoTour = (SELECT MAX(Tour.no) FROM Tour WHERE Tour.idTournoi = NEW.idTournoi);
+	SET maxTeam = (SELECT nbEquipesMax FROM Tournoi WHERE id = NEW.idTournoi);
+    SET dernierNoTour = (SELECT MAX(no) FROM Tour WHERE idTournoi = NEW.idTournoi);
 	IF NEW.no <> 1 AND (NEW.no < 0 OR NEW.no > calculerNbTours(maxTeam) OR NEW.no <> dernierNoTour + 1)
 	THEN
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Nouvel id de tour invalide';
@@ -1508,7 +1508,7 @@ BEGIN
 	END IF;
     
 	-- Si le tournoi a débuté on ne modifie pas
-    SET debutTournoi = (SELECT Tournoi.dateHeureDebut FROM Tournoi WHERE Tournoi.id = NEW.idTournoi);
+    SET debutTournoi = (SELECT dateHeureDebut FROM Tournoi WHERE id = NEW.idTournoi);
     IF debutTournoi < NOW()
     THEN
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Mise à jour du tour impossible, le tournoi a débuté';
@@ -1523,7 +1523,7 @@ FOR EACH ROW
 BEGIN
 	-- cas cascade, le tournoi a été supprimé, pas de problème
     -- cas manuel, le tournoi est il encore présent 
-	IF EXISTS (SELECT Tournoi.id FROM Tournoi WHERE Tournoi.id = OLD.idTournoi)
+	IF EXISTS (SELECT id FROM Tournoi WHERE id = OLD.idTournoi)
 	THEN
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Suppression du tour impossible';
 	END IF;
@@ -1535,7 +1535,7 @@ BEFORE INSERT ON serie
 FOR EACH ROW
 BEGIN
 	DECLARE dernierIdSerie INT;
-	SET dernierIdSerie = (SELECT MAX(Serie.id) FROM Serie WHERE Serie.noTour = NEW.noTour AND Serie.idTournoi = NEW.idTournoi);
+	SET dernierIdSerie = (SELECT MAX(id) FROM Serie WHERE noTour = NEW.noTour AND idTournoi = NEW.idTournoi);
 	IF NEW.id <> 1 AND ( NEW.id <= 0 OR NEW.id > POWER(2, NEW.noTour - 1) OR NEW.id <> dernierIdSerie + 1)
 	THEN 
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Nouvel id de série invalide';
@@ -1558,7 +1558,7 @@ BEGIN
 	END IF;
 
 	-- Si la série a déjà commencé, qu'elle a déjà des performances de joueurs
-	IF NEW.noTour <> 1 AND 0 <> (SELECT COUNT(1) FROM Match_Joueur WHERE Match_Joueur.idSerie = NEW.id AND Match_Joueur.noTour = NEW.noTour AND Match_Joueur.idTournoi = NEW.idTournoi)
+	IF NEW.noTour <> 1 AND 0 <> (SELECT COUNT(1) FROM Match_Joueur WHERE idSerie = NEW.id AND noTour = NEW.noTour AND idTournoi = NEW.idTournoi)
     THEN
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = ' Modification de la série impossible, les matchs ont déjà débutés.';
 	END IF;
@@ -1574,7 +1574,7 @@ FOR EACH ROW
 BEGIN
 	-- cas cascade, le tournoi a été supprimé, pas de problème
     -- cas manuel, le tournoi est il encore présent 
-	IF EXISTS (SELECT Tour.no FROM Tour WHERE Tour.no = OLD.noTour AND Tour.idTournoi = OLD.idTournoi)
+	IF EXISTS (SELECT no FROM Tour WHERE no = OLD.noTour AND idTournoi = OLD.idTournoi)
 	THEN
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Suppression de la série impossible';
 	END IF;
@@ -1674,7 +1674,7 @@ BEGIN
 	END IF;
     
     -- Impossible de destituer le responsable
-    IF OLD.idJoueur = (SELECT idResponsable FROM Equipe WHERE Equipe.acronyme = OLD.acronymeEquipe) AND NEW.dateHeureDepart IS NOT NULL
+    IF OLD.idJoueur = (SELECT idResponsable FROM Equipe WHERE acronyme = OLD.acronymeEquipe) AND NEW.dateHeureDepart IS NOT NULL
     THEN 
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Le responsable ne peut pas quitter son équiper, on a besoin de lui.';
 	END IF;
@@ -1690,7 +1690,7 @@ BEGIN
     THEN
 		SET nbJoueur = (SELECT COUNT(1) 
 			            FROM Equipe_Joueur 
-			            WHERE Equipe_Joueur.acronymeEquipe = pAcronymeEquipe AND Equipe_Joueur.dateHeureDepart IS NULL AND Equipe_Joueur.dateHeureArrivee <> '0001-01-01 00:00:00');
+			            WHERE acronymeEquipe = pAcronymeEquipe AND dateHeureDepart IS NULL AND dateHeureArrivee <> '0001-01-01 00:00:00');
 		IF nbJoueur > 3
         THEN
 			SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = ' Le joueur ne peut pas être accepté, équipe pleine.';
@@ -1709,15 +1709,15 @@ BEGIN
 	DECLARE e1 VARCHAR(3);
     DECLARE e2 VARCHAR(3);
     DECLARE maxMatch, noDernierMatch INT;
-    SELECT Serie.AcronymeEquipe1, Serie.AcronymeEquipe2 INTO e1, e2 FROM Serie WHERE Serie.id = NEW.idSerie AND Serie.noTour = NEW.noTour AND Serie.idTournoi = NEW.idTournoi;
+    SELECT AcronymeEquipe1, AcronymeEquipe2 INTO e1, e2 FROM Serie WHERE id = NEW.idSerie AND noTour = NEW.noTour AND idTournoi = NEW.idTournoi;
     IF e1 IS NULL OR e2 IS NULL
     THEN
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Impossible de créer un match tant que la série n\'a pas deux équipes';
 	END IF;
     
     -- Vérification de l'id
-	SET maxMatch = (SELECT Tour.longueurMaxSerie FROM Tour WHERE Tour.idTournoi = NEW.idTournoi AND Tour.no = NEW.noTour);
-	SET noDernierMatch = (SELECT MAX(`Match`.id) FROM `Match` WHERE `Match`.idSerie = NEW.idSerie AND `Match`.noTour = NEW.noTour AND `Match`.idTournoi = NEW.idTournoi);
+	SET maxMatch = (SELECT longueurMaxSerie FROM Tour WHERE idTournoi = NEW.idTournoi AND no = NEW.noTour);
+	SET noDernierMatch = (SELECT MAX(id) FROM `Match` WHERE idSerie = NEW.idSerie AND noTour = NEW.noTour AND idTournoi = NEW.idTournoi);
 	IF NEW.id <> 1 AND ( NEW.id > maxMatch OR NEW.id <= 0 OR NEW.id <> (noDernierMatch + 1) )
 	THEN
  		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Nouvel id de match invalide';
@@ -1743,7 +1743,7 @@ FOR EACH ROW
 BEGIN
 	-- Cas cascade aucun problème.
     -- Cas manuel, blocage si série supprimée, 
-    IF EXISTS (SELECT Serie.id FROM Serie WHERE Serie.id = OLD.idSerie AND Serie.noTour = OLD.noTour AND Serie.idTournoi = OLD.idTournoi)
+    IF EXISTS (SELECT id FROM Serie WHERE id = OLD.idSerie AND noTour = OLD.noTour AND idTournoi = OLD.idTournoi)
     THEN
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Impossible de supprimer un match';
     END IF;
@@ -1764,7 +1764,7 @@ BEGIN
 	-- Est ce que la finale est terminée
 	IF NEW.noTour = 1
  	THEN 
-		IF 6 = (SELECT COUNT(1) FROM Match_Joueur WHERE Match_Joueur.idMatch = NEW.idMatch AND Match_Joueur.idSerie = NEW.idSerie AND Match_Joueur.noTour = NEW.noTour AND Match_Joueur.idTournoi = NEW.idTournoi)
+		IF 6 = (SELECT COUNT(1) FROM Match_Joueur WHERE idMatch = NEW.idMatch AND idSerie = NEW.idSerie AND noTour = NEW.noTour AND idTournoi = NEW.idTournoi)
 		THEN 
  			IF vainqueurSerie(NEW.idSerie, NEW.noTour, NEW.idTournoi) IS NOT NULL
 			THEN
@@ -1790,7 +1790,7 @@ BEGIN
 
 	-- Si la série suivante a déjà commencé on bloque la modification des performances
 	SET serieSuivante = CEIL(NEW.idSerie / 2);
-	IF NEW.noTour <> 1 AND 0 <> (SELECT COUNT(1) FROM Match_Joueur WHERE Match_Joueur.idSerie = serieSuivante AND Match_Joueur.noTour = NEW.noTour - 1 AND Match_Joueur.idTournoi = NEW.idTournoi)
+	IF NEW.noTour <> 1 AND 0 <> (SELECT COUNT(1) FROM Match_Joueur WHERE idSerie = serieSuivante AND noTour = NEW.noTour - 1 AND idTournoi = NEW.idTournoi)
     THEN
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = ' Modification/insertion du score du joueur impossible, la serie suivante a déjà commencée.';
 	END IF;
@@ -1811,10 +1811,11 @@ CREATE EVENT annuler_tournoi
 ON SCHEDULE EVERY 1 HOUR DO
 BEGIN 
 	UPDATE Tournoi 
-    SET Tournoi.dateHeureFin = Tournoi.dateHeureDebut
-    WHERE Tournoi.dateHeureFin IS NULL AND Tournoi.dateHeureDebut < NOW() 
-		  AND Tournoi.nbEquipesMax > (SELECT COUNT(1) FROM Tournoi_Equipe
-									  WHERE Tournoi_Equipe = Tournoi.id);
+    SET dateHeureFin = dateHeureDebut
+    WHERE dateHeureFin IS NULL AND dateHeureDebut < NOW() 
+		  AND nbEquipesMax > (SELECT COUNT(1) 
+							  FROM Tournoi_Equipe
+							  WHERE idTournoi = Tournoi.id);
 END $$
 
 -- Chaque 7 jour vérifie si le un tournoi de plus de 7 jour peut être supprimé.
@@ -1823,7 +1824,7 @@ ON SCHEDULE EVERY 7 DAY STARTS NOW() + INTERVAL 15 MINUTE DO
 
 BEGIN 
 	DELETE FROM Tournoi 
-    WHERE Tournoi.dateHeureFin = Tournoi.dateHeureDebut AND DATEDIFF(NOW(), Tournoi.dateHeureDebut) >= 7;
+    WHERE dateHeureFin = dateHeureDebut AND DATEDIFF(NOW(), dateHeureDebut) >= 7;
 END $$
 
 DELIMITER ;
