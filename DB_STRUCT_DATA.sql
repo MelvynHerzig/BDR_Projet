@@ -1354,6 +1354,14 @@ BEGIN
 	CALL verifierEquipeComplete(pAcronymeEquipe); 
 END $$
 
+CREATE PROCEDURE verifierPrixNegatif(pPrix DOUBLE(10,2))
+BEGIN
+	IF NEW.montantArgent < 0
+    THEN
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Le prix ne peux pas être négatif';
+	END IF;
+END $$
+
 -----------------------------------------------------
 -- TRIGGER
 -----------------------------------------------------
@@ -1803,14 +1811,18 @@ BEGIN
 	CALL tenterPromotion(NEW.idMatch, NEW.idSerie, NEW.noTour, NEW.idTournoi);
 END $$
 
+CREATE TRIGGER before_insert_prix
+BEFORE INSERT ON Prix
+FOR EACH ROW
+BEGIN
+	CALL verifierPrixNegatif(NEW.montantArgent);
+END $$
+
 CREATE TRIGGER before_update_prix
 BEFORE UPDATE ON Prix
 FOR EACH ROW
 BEGIN
-	IF NEW.montantArgent < 0
-    THEN
-		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Le prix ne peux pas être négatif';
-	END IF;
+	CALL verifierPrixNegatif(NEW.montantArgent);
 END $$
 
 -----------------------------------------------------
