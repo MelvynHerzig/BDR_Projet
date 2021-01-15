@@ -29,9 +29,9 @@ namespace GestionnaireTournois.Models
             IdResponsable = idResponsable;
         }
 
-        public List<Joueur> GetJoueursFromTournoi(int idTournoi)
+        public List<Joueur> GetJoueursFromTournoi(Tournoi tournoi)
         {
-            return DataBaseConnector.GetJoueursEquipeTournoi(this, idTournoi);
+            return DataBaseConnector.GetJoueursEquipeTournoi(this, tournoi);
         }
 
         public List<Joueur> GetJoueursActuels()
@@ -39,10 +39,26 @@ namespace GestionnaireTournois.Models
             return DataBaseConnector.GetJoueursEquipeActuels(this);
         }
 
+        public List<Joueur> GetAnciensJoueurs()
+        {
+            return DataBaseConnector.GetAnciensJoueursEquipe(this);
+        }
+
+        public List<Joueur> GetJoueursEnAttente()
+        {
+            return DataBaseConnector.GetJoueursEnAttenteEquipe(this);
+        }
+
         public void SupprimerJoueur(Joueur joueur)
         {
             DataBaseConnector.SupprimerJoueurEquipe(this, joueur);
         }
+
+        public void AccepterJoueur(Joueur joueur)
+        {
+            DataBaseConnector.AccepterJoueurDansEquipe(this, joueur);
+        }
+
 
         public override string ToString()
         {
@@ -52,6 +68,11 @@ namespace GestionnaireTournois.Models
         public static List<Equipe> GetEquipes()
         {
             return DataBaseConnector.GetAllEquipes();
+        }
+
+        public static void Ajouter(Equipe equipe)
+        {
+            
         }
     }
 }

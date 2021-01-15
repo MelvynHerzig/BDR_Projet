@@ -11,7 +11,7 @@ using System.Windows.Forms;
 
 namespace GestionnaireTournois.Views.Admin
 {
-    public partial class frmEditionSerie : Form
+    public partial class frmSerie : Form
     {
 
         private Serie serie;
@@ -20,10 +20,17 @@ namespace GestionnaireTournois.Views.Admin
         public Serie Serie { get => serie; set => serie = value; }
         public List<List<List<TextBox>>> EquipeJoueurTextBoxes { get => equipeJoueurTextBoxes; set => equipeJoueurTextBoxes = value; }
 
-        public frmEditionSerie(Serie serie)
+        public frmSerie(Serie serie, bool editON)
         {
             Serie = serie;
+
+
             InitializeComponent();
+            
+            btnAjoutMatch.Visible = editON;
+            btnModifier.Visible = editON;
+
+            
         }
 
         private void btnAjoutMatch_Click(object sender, EventArgs e)
@@ -61,15 +68,29 @@ namespace GestionnaireTournois.Views.Admin
 
             EquipeJoueurTextBoxes = new List<List<List<TextBox>>>() { e1, e2 };
 
-            List<Joueur> joueursE1 = equipes[0].GetJoueursFromTournoi(Serie.IdTournoi);
-            List<Joueur> joueursE2 = equipes[1].GetJoueursFromTournoi(Serie.IdTournoi);
+            Tournoi tournoi = Tournoi.GetTournoiById(Serie.IdTournoi);
+
+            List<Joueur> joueursE1 = equipes[0].GetJoueursFromTournoi(tournoi);
+            List<Joueur> joueursE2 = equipes[1].GetJoueursFromTournoi(tournoi);
 
             for(int noEquipe = 0;noEquipe < equipes.Count; ++noEquipe)
             {
-                List<Joueur> joueurs = equipes[noEquipe].GetJoueursFromTournoi(Serie.IdTournoi);
+                List<Joueur> joueurs = equipes[noEquipe].GetJoueursFromTournoi(tournoi);
                 for(int noJoueur = 0; noJoueur < joueurs.Count; ++noJoueur)
                 {
                     LoadInformationsJoueurs(joueurs[noJoueur], null, EquipeJoueurTextBoxes[noEquipe][noJoueur]);
+                }
+            }
+
+            foreach (List<List<TextBox>> equipesTextbox in equipeJoueurTextBoxes)
+            {
+                foreach (List<TextBox> joueursTextBox in equipesTextbox)
+                {
+                    joueursTextBox[1].Enabled = btnAjoutMatch.Visible;
+                    joueursTextBox[1].ReadOnly = !btnAjoutMatch.Visible;
+
+                    joueursTextBox[2].Enabled = btnAjoutMatch.Visible;
+                    joueursTextBox[2].ReadOnly = !btnAjoutMatch.Visible;
                 }
             }
         }
@@ -136,9 +157,11 @@ namespace GestionnaireTournois.Views.Admin
 
             List<Joueur> joueurs;
 
+            Tournoi tournoi = Tournoi.GetTournoiById(m.IdTournoi);
+
             #region Equipe 1
 
-            joueurs = equipes[0].GetJoueursFromTournoi(m.IdTournoi);
+            joueurs = equipes[0].GetJoueursFromTournoi(Tournoi.GetTournoiById(Serie.IdTournoi));
             LoadInformationsJoueurs(joueurs[0], m, EquipeJoueurTextBoxes[0][0]);
             LoadInformationsJoueurs(joueurs[1], m, EquipeJoueurTextBoxes[0][1]);
             LoadInformationsJoueurs(joueurs[2], m, EquipeJoueurTextBoxes[0][2]);
@@ -147,7 +170,7 @@ namespace GestionnaireTournois.Views.Admin
 
             #region Equipe 2
 
-            joueurs = equipes[1].GetJoueursFromTournoi(m.IdTournoi);
+            joueurs = equipes[1].GetJoueursFromTournoi(Tournoi.GetTournoiById(Serie.IdTournoi));
             LoadInformationsJoueurs(joueurs[0], m, EquipeJoueurTextBoxes[1][0]);
             LoadInformationsJoueurs(joueurs[1], m, EquipeJoueurTextBoxes[1][1]);
             LoadInformationsJoueurs(joueurs[2], m, EquipeJoueurTextBoxes[1][2]);

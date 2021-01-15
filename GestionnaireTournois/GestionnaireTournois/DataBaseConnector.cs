@@ -144,6 +144,106 @@ namespace GestionnaireTournois
             return tournois;
         }
 
+        public static List<Tournoi> GetTournoisRejoignables()
+        {
+            List<Tournoi> tournois = new List<Tournoi>();
+
+            MySqlConnection myConnection = new MySqlConnection(connection);
+
+
+            myConnection.Open();
+
+            MySqlCommand cmd = myConnection.CreateCommand();
+
+            try
+            {
+                cmd.CommandText = "SELECT id, dateHeureDebut, dateHeureFin, nom, nbEquipesMax, idPrixPremier, idPrixSecond FROM tournoi WHERE NOT estComplet(id) AND estEnAttente(id);";
+
+                cmd.Prepare();
+
+                MySqlDataReader rdr = cmd.ExecuteReader();
+
+                while (rdr.Read())
+                {
+
+                    DateTime fin = DateTime.MinValue;
+                    int idPrixPremier = 0;
+                    int idPrixDeuxieme = 0;
+
+                    if (!rdr.IsDBNull(2))
+                        fin = rdr.GetDateTime("dateHeureFin");
+                    if (!rdr.IsDBNull(5))
+                        idPrixPremier = rdr.GetInt32("idPrixPremier");
+                    if (!rdr.IsDBNull(6))
+                        idPrixPremier = rdr.GetInt32("idPrixSecond");
+
+                    tournois.Add(new Tournoi(rdr.GetInt32("id"), rdr.GetDateTime("dateHeureDebut"), fin, rdr.GetString("nom"), rdr.GetInt32("nbEquipesMax"), idPrixPremier, idPrixDeuxieme));
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("An exception of type " + e.Message +
+                " was encountered.");
+            }
+            finally
+            {
+                myConnection.Close();
+            }
+
+            return tournois;
+        }
+
+        public static List<Tournoi> GetTournoisParticipesParEquipe(Equipe equipe)
+        {
+            List<Tournoi> tournois = new List<Tournoi>();
+
+            MySqlConnection myConnection = new MySqlConnection(connection);
+
+
+            myConnection.Open();
+
+            MySqlCommand cmd = myConnection.CreateCommand();
+
+            try
+            {
+                cmd.CommandText = "SELECT id, dateHeureDebut, dateHeureFin, nom, nbEquipesMax, idPrixPremier, idPrixSecond FROM tournoi JOIN tournoi_equipe ON tournoi_equipe.idTournoi = tournoi.id WHERE tournoi_equipe.acronymeEquipe = @acronyme;";
+
+                cmd.Parameters.AddWithValue("acronyme", equipe.Acronyme);
+
+                cmd.Prepare();
+
+                MySqlDataReader rdr = cmd.ExecuteReader();
+
+                while (rdr.Read())
+                {
+
+                    DateTime fin = DateTime.MinValue;
+                    int idPrixPremier = 0;
+                    int idPrixDeuxieme = 0;
+
+                    if (!rdr.IsDBNull(2))
+                        fin = rdr.GetDateTime("dateHeureFin");
+                    if (!rdr.IsDBNull(5))
+                        idPrixPremier = rdr.GetInt32("idPrixPremier");
+                    if (!rdr.IsDBNull(6))
+                        idPrixPremier = rdr.GetInt32("idPrixSecond");
+
+                    tournois.Add(new Tournoi(rdr.GetInt32("id"), rdr.GetDateTime("dateHeureDebut"), fin, rdr.GetString("nom"), rdr.GetInt32("nbEquipesMax"), idPrixPremier, idPrixDeuxieme));
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("An exception of type " + e.Message +
+                " was encountered.");
+            }
+            finally
+            {
+                myConnection.Close();
+            }
+
+            return tournois;
+        }
+
         public static Tournoi GetTournoiById(int idTournoi)
         {
             Tournoi result = null;
@@ -187,7 +287,7 @@ namespace GestionnaireTournois
             return result;
         }
 
-        public static int GetNbToursTournoi(int idTournoi)
+        public static int GetNbToursTournoi(Tournoi tournoi)
         {
 
             int nbTours = 0;
@@ -201,7 +301,7 @@ namespace GestionnaireTournois
             try
             {
                 cmd.CommandText = "SELECT COUNT(*) FROM tour WHERE idTournoi = @idTournoi;";
-                cmd.Parameters.AddWithValue("@idTournoi", idTournoi);
+                cmd.Parameters.AddWithValue("@idTournoi", tournoi.Id);
 
                 nbTours = Convert.ToInt32(cmd.ExecuteScalar().ToString());
             }
@@ -256,7 +356,7 @@ namespace GestionnaireTournois
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.Message);
+                MessageBox.Show(e.Message, "Impossible d'effectuer votre requête", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Console.WriteLine("An exception of type " + e.Message +
                " was encountered.");
             }
@@ -266,6 +366,39 @@ namespace GestionnaireTournois
             }
 
             return idTournoi;
+        }
+
+        public static void InscrireEquipeTournoi(Tournoi tournoi, Equipe equipe)
+        {
+            MySqlConnection myConnection = new MySqlConnection(connection);
+
+            myConnection.Open();
+
+            MySqlCommand cmd = myConnection.CreateCommand();
+
+            try
+            {
+
+                cmd.CommandText = "INSERT INTO tournoi_equipe(idTournoi, acronymeEquipe, dateInscription) VALUES (@idTournoi, @acronyme, NOW());";
+
+                cmd.Parameters.AddWithValue("idTournoi", tournoi.Id);
+                cmd.Parameters.AddWithValue("acronyme", equipe.Acronyme);
+
+                cmd.Prepare();
+
+                cmd.ExecuteNonQuery();
+
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message, "Impossible d'effectuer votre requête", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Console.WriteLine("An exception of type " + e.Message +
+               " was encountered.");
+            }
+            finally
+            {
+                myConnection.Close();
+            }
         }
 
         public static void ModifierProprietesTournoi(Tournoi t, string nouveauNom, DateTime nouveauDebut)
@@ -300,7 +433,7 @@ namespace GestionnaireTournois
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.Message);
+                MessageBox.Show(e.Message, "Impossible d'effectuer votre requête", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Console.WriteLine("An exception of type " + e.Message +
                " was encountered.");
             }
@@ -333,7 +466,7 @@ namespace GestionnaireTournois
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.Message);
+                MessageBox.Show(e.Message, "Impossible d'effectuer votre requête", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Console.WriteLine("An exception of type " + e.Message +
                " was encountered.");
             }
@@ -508,7 +641,7 @@ namespace GestionnaireTournois
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.Message);
+                MessageBox.Show(e.Message, "Impossible d'effectuer votre requête", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 try
                 {
                     myTrans.Rollback();
@@ -756,7 +889,7 @@ namespace GestionnaireTournois
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.Message);
+                MessageBox.Show(e.Message, "Impossible d'effectuer votre requête", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 try
                 {
                     myTrans.Rollback();
@@ -808,7 +941,7 @@ namespace GestionnaireTournois
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.Message);
+                MessageBox.Show(e.Message, "Impossible d'effectuer votre requête", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Console.WriteLine("An exception of type " + e.Message + " was encountered.");
             }
             finally
@@ -862,7 +995,7 @@ namespace GestionnaireTournois
             return data;
         }
 
-        
+
 
         #endregion
 
@@ -921,6 +1054,46 @@ namespace GestionnaireTournois
                 equipes.Add(GetEquipeByAcronyme(acronymes[1]));
             }
             return equipes;
+        }
+
+        public static Equipe GetEquipeJoueurDurantTournoi(Joueur joueur, Tournoi tournoi)
+        {
+            Equipe equipe = null;
+
+            MySqlConnection myConnection = new MySqlConnection(connection);
+
+            myConnection.Open();
+
+            MySqlCommand cmd = myConnection.CreateCommand();
+
+            try
+            {
+                cmd.CommandText = "SELECT acronyme, nom, idResponsable FROM equipe WHERE acronyme = equipeDuJoueurLorsDu(@idJoueur, @dateDebutTournoi);";
+
+                cmd.Parameters.AddWithValue("@dateDebutTournoi", tournoi.DateHeureDebut.ToString("yyyy-MM-dd HH:mm:ss"));
+
+                cmd.Parameters.AddWithValue("@idJoueur", joueur.Id);
+
+                cmd.Prepare();
+
+                MySqlDataReader reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    equipe = new Equipe(reader.GetString("acronyme"), reader.GetString("nom"), reader.GetInt32("idResponsable"));
+                }
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("An exception of type " + e.Message + " was encountered.");
+            }
+            finally
+            {
+                myConnection.Close();
+            }
+
+            return equipe;
         }
 
         public static Equipe GetEquipeByAcronyme(string acronyme)
@@ -998,6 +1171,37 @@ namespace GestionnaireTournois
             return result;
         }
 
+        public static void PostulerDansEquipe(Equipe equipe, Joueur joueur)
+        {
+            MySqlConnection myConnection = new MySqlConnection(connection);
+
+            myConnection.Open();
+
+            MySqlCommand cmd = myConnection.CreateCommand();
+
+            try
+            {
+                cmd.CommandText = "INSERT INTO equipe_joueur(acronymeEquipe, idJoueur, dateHeureArrivee, dateHeureDepart) VALUES (@acronyme, @idJoueur, '0001-01-01 00:00:00', NULL);";
+                
+                cmd.Parameters.AddWithValue("@idJoueur", joueur.Id);
+                cmd.Parameters.AddWithValue("acronyme", equipe.Acronyme);
+
+                cmd.Prepare();
+
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message, "Impossible d'effectuer votre requête", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Console.WriteLine("An exception of type " + e.Message +
+                " was encountered.");
+            }
+            finally
+            {
+                myConnection.Close();
+            }
+        }
+
         public static void SupprimerJoueurEquipe(Equipe equipe, Joueur joueur)
         {
             MySqlConnection myConnection = new MySqlConnection(connection);
@@ -1021,7 +1225,7 @@ namespace GestionnaireTournois
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.Message);
+                MessageBox.Show(e.Message, "Impossible d'effectuer votre requête", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Console.WriteLine("An exception of type " + e.Message + " was encountered.");
             }
             finally
@@ -1067,6 +1271,8 @@ namespace GestionnaireTournois
 
             return equipes;
         }
+
+
 
         #endregion
 
@@ -1154,7 +1360,7 @@ namespace GestionnaireTournois
             return joueur;
         }
 
-        public static List<Joueur> GetJoueursEquipeTournoi(Equipe equipe, int idTournoi)
+        public static List<Joueur> GetJoueursEquipeTournoi(Equipe equipe, Tournoi tournoi)
         {
             List<Joueur> joueurs = new List<Joueur>();
 
@@ -1172,7 +1378,7 @@ namespace GestionnaireTournois
                                   "JOIN tournoi_equipe ON tournoi_equipe.acronymeEquipe = equipe_joueur.acronymeEquipe " +
                                   "WHERE tournoi_equipe.idTournoi = @idTournoi  AND equipeDuJoueurLorsDu(joueur.id, tournoi_equipe.dateInscription) = @acronyme;";
 
-                cmd.Parameters.AddWithValue("@idTournoi", idTournoi);
+                cmd.Parameters.AddWithValue("@idTournoi", tournoi.Id);
 
                 cmd.Parameters.AddWithValue("@acronyme", equipe.Acronyme);
 
@@ -1239,6 +1445,121 @@ namespace GestionnaireTournois
             return joueurs;
         }
 
+        public static List<Joueur> GetAnciensJoueursEquipe(Equipe equipe)
+        {
+            List<Joueur> joueurs = new List<Joueur>();
+
+            MySqlConnection myConnection = new MySqlConnection(connection);
+
+            myConnection.Open();
+
+            MySqlCommand cmd = myConnection.CreateCommand();
+
+            try
+            {
+
+                cmd.CommandText = "SELECT DISTINCT id, nom, prenom, email, pseudo, dateNaissance FROM joueur JOIN equipe_joueur ON equipe_joueur.idJoueur = joueur.id WHERE equipe_joueur.acronymeEquipe = @acronyme AND equipe_joueur.dateHeureDepart IS NOT NULL;";
+
+                cmd.Parameters.AddWithValue("acronyme", equipe.Acronyme);
+
+                cmd.Prepare();
+
+                MySqlDataReader reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+
+                    joueurs.Add(new Joueur(reader.GetInt32("id"), reader.GetString("nom"), reader.GetString("prenom"), reader.GetString("email"), reader.GetString("pseudo"), reader.GetDateTime("dateNaissance")));
+
+                }
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("An exception of type " + e.Message + " was encountered.");
+            }
+            finally
+            {
+                myConnection.Close();
+            }
+
+            return joueurs;
+        }
+
+        public static List<Joueur> GetJoueursEnAttenteEquipe(Equipe equipe)
+        {
+            List<Joueur> joueurs = new List<Joueur>();
+
+            MySqlConnection myConnection = new MySqlConnection(connection);
+
+            myConnection.Open();
+
+            MySqlCommand cmd = myConnection.CreateCommand();
+
+            try
+            {
+
+                cmd.CommandText = "SELECT DISTINCT id, nom, prenom, email, pseudo, dateNaissance FROM joueur JOIN equipe_joueur ON equipe_joueur.idJoueur = joueur.id WHERE equipe_joueur.acronymeEquipe = @acronyme AND equipe_joueur.dateHeureArrivee = '0001-01-01 00:00:00';";
+
+                cmd.Parameters.AddWithValue("acronyme", equipe.Acronyme);
+
+                cmd.Prepare();
+
+                MySqlDataReader reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+
+                    joueurs.Add(new Joueur(reader.GetInt32("id"), reader.GetString("nom"), reader.GetString("prenom"), reader.GetString("email"), reader.GetString("pseudo"), reader.GetDateTime("dateNaissance")));
+
+                }
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("An exception of type " + e.Message + " was encountered.");
+            }
+            finally
+            {
+                myConnection.Close();
+            }
+
+            return joueurs;
+        }
+
+        public static void AccepterJoueurDansEquipe(Equipe equipe, Joueur joueur)
+        {
+            MySqlConnection myConnection = new MySqlConnection(connection);
+
+            myConnection.Open();
+
+            MySqlCommand cmd = myConnection.CreateCommand();
+
+            try
+            {
+
+                cmd.CommandText = "UPDATE equipe_joueur SET dateHeureArrivee = NOW() WHERE acronymeEquipe = @acronyme AND idJoueur = @idJoueur";
+
+                cmd.Parameters.AddWithValue("idJoueur", joueur.Id);
+                cmd.Parameters.AddWithValue("acronyme", equipe.Acronyme);
+
+                cmd.Prepare();
+
+                cmd.ExecuteNonQuery();
+
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message, "Impossible d'effectuer votre requête", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Console.WriteLine("An exception of type " + e.Message +
+               " was encountered.");
+            }
+            finally
+            {
+                myConnection.Close();
+            }
+        }
+
         public static int AjouterJoueur(Joueur joueur)
         {
             int id = 0;
@@ -1268,7 +1589,7 @@ namespace GestionnaireTournois
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.Message);
+                MessageBox.Show(e.Message, "Impossible d'effectuer votre requête", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Console.WriteLine("An exception of type " + e.Message +
                " was encountered.");
             }
@@ -1280,60 +1601,6 @@ namespace GestionnaireTournois
             return id;
         }
 
-        /*
-        public static List<Joueur> GetJoueursDeEquipe(Equipe equipe)
-        {
-            List<Joueur> joueurs = new List<Joueur>();
-
-
-            MySqlConnection myConnection = new MySqlConnection(connection);
-
-            myConnection.Open();
-
-            MySqlCommand cmd = myConnection.CreateCommand();
-
-            try
-            {
-                cmd.CommandText = "SELECT acronymeEquipe1, acronymeEquipe2 FROM serie WHERE idTournoi = @idTournoi AND noTour = @noTour AND id = @idSerie;";
-
-                cmd.Parameters.AddWithValue("@idSerie", s.Id);
-                cmd.Parameters.AddWithValue("@noTour", s.NoTour);
-                cmd.Parameters.AddWithValue("@idTournoi", s.IdTournoi);
-
-                cmd.Prepare();
-
-                MySqlDataReader reader = cmd.ExecuteReader();
-
-                while (reader.Read())
-                {
-
-                    string acronyme1 = reader.GetString("acronymeEquipe1");
-                    string acronyme2 = reader.GetString("acronymeEquipe2");
-
-
-                    acronymes.Add(acronyme1);
-                    acronymes.Add(acronyme2);
-                }
-
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("An exception of type " + e.Message +
-               " was encountered.");
-            }
-            finally
-            {
-                myConnection.Close();
-            }
-
-            if (acronymes.Count > 0)
-            {
-                equipes.Add(GetEquipeByAcronyme(acronymes[0]));
-                equipes.Add(GetEquipeByAcronyme(acronymes[1]));
-            }
-            return equipes;
-        }
-        */
         #endregion
 
         #region Prix
@@ -1489,7 +1756,7 @@ namespace GestionnaireTournois
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.Message);
+                MessageBox.Show(e.Message, "Impossible d'effectuer votre requête", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Console.WriteLine("An exception of type " + e.Message +
                " was encountered.");
             }
@@ -1537,7 +1804,7 @@ namespace GestionnaireTournois
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.Message);
+                MessageBox.Show(e.Message, "Impossible d'effectuer votre requête", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 try
                 {
                     myTrans.Rollback();
@@ -1597,7 +1864,7 @@ namespace GestionnaireTournois
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.Message);
+                MessageBox.Show(e.Message, "Impossible d'effectuer votre requête", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 try
                 {
                     myTrans.Rollback();
@@ -1648,7 +1915,7 @@ namespace GestionnaireTournois
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.Message);
+                MessageBox.Show(e.Message, "Impossible d'effectuer votre requête", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Console.WriteLine("An exception of type " + e.Message +
                " was encountered.");
             }
@@ -1681,7 +1948,7 @@ namespace GestionnaireTournois
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.Message);
+                MessageBox.Show(e.Message, "Impossible d'effectuer votre requête", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Console.WriteLine("An exception of type " + e.Message +
                " was encountered.");
             }
@@ -1714,7 +1981,7 @@ namespace GestionnaireTournois
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.Message);
+                MessageBox.Show(e.Message, "Impossible d'effectuer votre requête", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Console.WriteLine("An exception of type " + e.Message +
                " was encountered.");
             }
@@ -1747,7 +2014,7 @@ namespace GestionnaireTournois
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.Message);
+                MessageBox.Show(e.Message, "Impossible d'effectuer votre requête", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Console.WriteLine("An exception of type " + e.Message +
                " was encountered.");
             }
@@ -1799,7 +2066,40 @@ namespace GestionnaireTournois
 
             return nbEquipes;
         }
-        
+
+        public static long GetVitesseInscriptionEnSecTournoiDe(int nbEquipes)
+        {
+            long vitesse = 0;
+
+            MySqlConnection myConnection = new MySqlConnection(connection);
+
+            myConnection.Open();
+
+            MySqlCommand cmd = myConnection.CreateCommand();
+
+            try
+            {
+
+                cmd.CommandText = "SELECT TIMESTAMPDIFF(SECOND, MIN(Tournoi_Equipe.dateInscription), MAX(Tournoi_Equipe.dateInscription)) AS ecart FROM Tournoi INNER JOIN Tournoi_Equipe ON Tournoi_Equipe.idTournoi = Tournoi.id WHERE Tournoi.nbEquipesMax = (SELECT COUNT(1) FROM Tournoi_Equipe WHERE Tournoi_Equipe.idTournoi = Tournoi.id) AND Tournoi.nbEquipesMax = @nbEquipesMax GROUP BY Tournoi.id; ";
+
+                cmd.Parameters.AddWithValue("nbEquipesMax", nbEquipes);
+
+                cmd.Prepare();
+
+                vitesse = Convert.ToInt64(cmd.ExecuteScalar());
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("An exception of type " + e.Message + " was encountered.");
+            }
+            finally
+            {
+                myConnection.Close();
+            }
+
+            return vitesse;
+        }
+
         public static double GetMoyenneNbEquipesDesJoueurs()
         {
             double moyenne = 0;
@@ -1832,7 +2132,156 @@ namespace GestionnaireTournois
 
             return moyenne;
         }
-        
+
+        public static int[] GetStatsTotal(Joueur joueur)
+        {
+            int[] stats = new int[2];
+
+            MySqlConnection myConnection = new MySqlConnection(connection);
+
+            myConnection.Open();
+
+            MySqlCommand cmd = myConnection.CreateCommand();
+
+            try
+            {
+
+                cmd.CommandText = "SELECT SUM(nbButs) nbButsTot, SUM(nbArrets) nbArretsTot, COUNT(1) nbMatchsTot FROM match_joueur WHERE idJoueur = @idJoueur;";
+
+                cmd.Parameters.AddWithValue("idJoueur", joueur.Id);
+
+                cmd.Prepare();
+
+                MySqlDataReader rdr = cmd.ExecuteReader();
+
+                while (rdr.Read())
+                {
+                    stats[0] = rdr.GetInt32("nbButsTot");
+                    stats[1] = rdr.GetInt32("nbArretsTot");
+                }
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("An exception of type " + e.Message + " was encountered.");
+            }
+            finally
+            {
+                myConnection.Close();
+            }
+
+            return stats;
+        }
+
+        public static double[] GetMoyenneStats(Joueur joueur)
+        {
+            double[] moyenneStats = new double[2];
+
+            MySqlConnection myConnection = new MySqlConnection(connection);
+
+            myConnection.Open();
+
+            MySqlCommand cmd = myConnection.CreateCommand();
+
+            try
+            {
+
+                cmd.CommandText = "SELECT AVG(nbButs) moyenneButs, AVG(nbArrets) moyenneArrets FROM match_joueur WHERE idJoueur = @idJoueur";
+
+                cmd.Parameters.AddWithValue("idJoueur", joueur.Id);
+
+                cmd.Prepare();
+
+                MySqlDataReader rdr = cmd.ExecuteReader();
+
+                while (rdr.Read())
+                {
+                    moyenneStats[0] = rdr.GetDouble("moyenneButs");
+                    moyenneStats[1] = rdr.GetDouble("moyenneArrets");
+                }
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("An exception of type " + e.Message + " was encountered.");
+            }
+            finally
+            {
+                myConnection.Close();
+            }
+
+            return moyenneStats;
+        }
+
+        public static int GetNbSerieGagnee(Joueur joueur)
+        {
+            int nbSerie = 0;
+
+            MySqlConnection myConnection = new MySqlConnection(connection);
+
+            myConnection.Open();
+
+            MySqlCommand cmd = myConnection.CreateCommand();
+
+            try
+            {
+
+                cmd.CommandText = "SELECT COUNT(1) as nbVictoire FROM serie JOIN tournoi ON tournoi.id = serie.idTournoi WHERE vainqueurSerie(serie.id, serie.noTour, serie.idTournoi) = equipeDuJoueurLorsDu(@idJoueur, tournoi.dateHeureDebut)";
+
+                cmd.Parameters.AddWithValue("idJoueur", joueur.Id);
+
+                cmd.Prepare();
+
+                nbSerie = Convert.ToInt32(cmd.ExecuteScalar());
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("An exception of type " + e.Message + " was encountered.");
+            }
+            finally
+            {
+                myConnection.Close();
+            }
+
+            return nbSerie;
+        }
+
+        public static int GetNbSerieJouee(Joueur joueur)
+        {
+            int nbSerie = 0;
+
+            MySqlConnection myConnection = new MySqlConnection(connection);
+
+            myConnection.Open();
+
+
+            MySqlCommand cmd = myConnection.CreateCommand();
+
+            try
+            {
+
+                cmd.CommandText = "SELECT COUNT(DISTINCT idSerie, noTour, idTournoi) as nbMatch FROM match_joueur WHERE idJoueur = @idJoueur;";
+
+                cmd.Parameters.AddWithValue("idJoueur", joueur.Id);
+
+                cmd.Prepare();
+
+                nbSerie = Convert.ToInt32(cmd.ExecuteScalar());
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("An exception of type " + e.Message + " was encountered.");
+            }
+            finally
+            {
+                myConnection.Close();
+            }
+
+            return nbSerie;
+        }
+
         #endregion
 
     }

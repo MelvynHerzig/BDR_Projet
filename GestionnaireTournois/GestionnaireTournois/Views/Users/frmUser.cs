@@ -15,10 +15,10 @@ namespace GestionnaireTournois
     public partial class frmUser : Form
     {
         private Joueur joueur;
-        private List<Tournoi> tournois;
+        private List<Tournoi> tounroisAffiches;
 
         public Joueur Joueur { get => joueur; set => joueur = value; }
-        public List<Tournoi> Tournois { get => tournois; set => tournois = value; }
+        public List<Tournoi> TournoisAffiches { get => tounroisAffiches; set => tounroisAffiches = value; }
 
         public frmUser(Joueur j)
         {
@@ -26,104 +26,104 @@ namespace GestionnaireTournois
             InitializeComponent();
         }
 
-        private void ChargeTournois()
-        {
-            dgvTournois.Rows.Clear();
-
-            Tournois = Tournoi.GetTournoiParEtat((Tournoi.EtatTournoi)cbxTournois.SelectedIndex);
-
-            foreach (Tournoi t in Tournois)
-            {
-                dgvTournois.Rows.Add(t.Nom, t.DateHeureDebut, t.DateHeureFin, t.NbEquipesMax);
-            }
-        }
-
         private void frmUser_Load(object sender, EventArgs e)
         {
-            cbxTournois.Items.AddRange(Tournoi.EtatTournoiNom);
-            cbxTournois.SelectedIndex = 0;
-
-            ConstruireDataGridView();
-            ChargeTournois();
-
-            // id responsable == id joueur
-            // get equipe
-
-            /*if(estResposable)
+            if(Joueur.GetEquipe() == null || Joueur.Id != Joueur.GetEquipe().IdResponsable)
             {
-                btnEquipe.Text = "Gérer équipe";
-            }*/
-        }
-
-        private void btnStats_Click(object sender, EventArgs e)
-        {
-            frmStats stats = new frmStats(Joueur);
-            stats.ShowDialog();
-        }
-
-        private void btnEquipe_Click(object sender, EventArgs e)
-        {
-
-            frmEquipe equipe = new frmEquipe(Joueur);
-            equipe.ShowDialog();
-
-            /*if(estResponsable)
-            {
-                frmEquipe equipe = new frmEquipe(joueur);
-                equipe.ShowDialog();
+                lblTypeTournoi.Visible = false;
+                cbxTypeTournois.Visible = false;
             }
-            else if(napasdequipe)
-            {
-                
-            }
-            else
-            {
-                
-                frmGestionEquipe equipe = new frmGestionEquipe(joueur);
-                equipe.ShowDialog();
-            }*/
+
+            cbxTypeTournois.SelectedIndex = 0;
         }
 
-        private void cbxTournois_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            ChargeTournois();
-        }
-
-        private void ConstruireDataGridView()
-        {
-            dgvTournois.ColumnCount = 4;
-            dgvTournois.Columns[0].Name = "Nom tournoi";
-            dgvTournois.Columns[1].Name = "Date début";
-            dgvTournois.Columns[2].Name = "Date fin";
-            dgvTournois.Columns[3].Name = "Nombre d'équipe";
-
-            dgvTournois.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            
-
-            DataGridViewButtonColumn btn = new DataGridViewButtonColumn();
-            btn.HeaderText = "Actions";
-            btn.Text = "Voir";
-            btn.Name = "btnVoir";
-            btn.UseColumnTextForButtonValue = true;
-            dgvTournois.Columns.Add(btn);
-        }
 
         private void dgvTournois_CellClick(object sender, DataGridViewCellEventArgs e)
         {
 
-            if (e.ColumnIndex == 4 & e.RowIndex < Tournois.Count)
+            if (e.ColumnIndex == dgvTournois.Columns.Count - 1 && e.RowIndex < TournoisAffiches.Count && e.RowIndex != -1)
             {
-                Tournoi tournoiSelectionne = Tournois[e.RowIndex];
+                Tournoi tournoiSelectionne = TournoisAffiches[e.RowIndex];
 
-                MessageBox.Show("tournoi sélectionné : " + tournoiSelectionne.Nom);
+                switch (cbxTypeTournois.SelectedItem)
+                {
+                    case "Tournois participés":
+                        frmTournoi frm = new frmTournoi(Joueur, tournoiSelectionne);
+                        frm.ShowDialog();
+                        break;
+                    case "Tournois rejoignables":
+                        Equipe equipe = Joueur.GetEquipe();
+                        if(equipe != null)
+                            tournoiSelectionne.Inscrire(equipe);
+                        break;
+                }
 
-            }   
+            }
         }
 
         private void tsmiChoixMode_Click(object sender, EventArgs e)
         {
             this.DialogResult = DialogResult.OK;
             this.Close();
+        }
+
+        private void tsmiStats_Click(object sender, EventArgs e)
+        {
+            frmStats stats = new frmStats(Joueur);
+            stats.ShowDialog();
+        }
+
+        private void tsmiEquipes_Click(object sender, EventArgs e)
+        {
+            if (Joueur.GetEquipe() == null)
+            {
+                frmRechercheEquipe frm = new frmRechercheEquipe(Joueur);
+
+                frm.ShowDialog();
+            }
+            else
+            {
+                frmEquipe frm = new frmEquipe(Joueur);
+                frm.ShowDialog();
+            }
+        }
+
+        private void cbxTypeTournois_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+            switch (cbxTypeTournois.SelectedItem)
+            {
+                case "Tournois participés":
+                    ChargeTournoisParticipes();
+                    break;
+                case "Tournois rejoignables":
+                    ChargeTournoisRejoignables();
+                    break;
+            }
+        }
+
+        private void ChargeTournoisParticipes()
+        {
+            dgvTournois.Rows.Clear();
+
+            TournoisAffiches = Tournoi.GetTournoisParticipes(Joueur.GetEquipe());
+
+            foreach (Tournoi t in TournoisAffiches)
+            {
+                dgvTournois.Rows.Add(t.Nom, t.DateHeureDebut, t.DateHeureFin, t.NbEquipesMax, "Voir");
+            }
+        }
+
+        private void ChargeTournoisRejoignables()
+        {
+            dgvTournois.Rows.Clear();
+
+            TournoisAffiches = Tournoi.GetTournoisRejoignables();
+
+            foreach (Tournoi t in TournoisAffiches)
+            {
+                dgvTournois.Rows.Add(t.Nom, t.DateHeureDebut, t.DateHeureFin, t.NbEquipesMax, "S'inscrire");
+            }
         }
     }
 }

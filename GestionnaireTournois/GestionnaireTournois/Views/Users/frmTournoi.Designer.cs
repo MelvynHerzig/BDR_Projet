@@ -30,69 +30,85 @@ namespace GestionnaireTournois.Views.Users
         private void InitializeComponent()
         {
             this.wbrTreeStruct = new System.Windows.Forms.WebBrowser();
-            this.lbxJoueursEquipe = new System.Windows.Forms.ListBox();
-            this.lblJoueurs = new System.Windows.Forms.Label();
-            this.lblTournoi = new System.Windows.Forms.Label();
+            this.gbxEquipe = new System.Windows.Forms.GroupBox();
+            this.lblJ1 = new System.Windows.Forms.Label();
+            this.lblJ2 = new System.Windows.Forms.Label();
+            this.lblJ3 = new System.Windows.Forms.Label();
+            this.gbxEquipe.SuspendLayout();
             this.SuspendLayout();
             // 
             // wbrTreeStruct
             // 
-            this.wbrTreeStruct.Location = new System.Drawing.Point(12, 64);
+            this.wbrTreeStruct.Location = new System.Drawing.Point(12, 9);
             this.wbrTreeStruct.MinimumSize = new System.Drawing.Size(20, 20);
             this.wbrTreeStruct.Name = "wbrTreeStruct";
-            this.wbrTreeStruct.Size = new System.Drawing.Size(487, 506);
+            this.wbrTreeStruct.Size = new System.Drawing.Size(487, 395);
             this.wbrTreeStruct.TabIndex = 8;
             // 
-            // lbxJoueursEquipe
+            // gbxEquipe
             // 
-            this.lbxJoueursEquipe.FormattingEnabled = true;
-            this.lbxJoueursEquipe.Location = new System.Drawing.Point(602, 59);
-            this.lbxJoueursEquipe.Name = "lbxJoueursEquipe";
-            this.lbxJoueursEquipe.Size = new System.Drawing.Size(239, 511);
-            this.lbxJoueursEquipe.TabIndex = 9;
+            this.gbxEquipe.Controls.Add(this.lblJ3);
+            this.gbxEquipe.Controls.Add(this.lblJ2);
+            this.gbxEquipe.Controls.Add(this.lblJ1);
+            this.gbxEquipe.Location = new System.Drawing.Point(12, 414);
+            this.gbxEquipe.Name = "gbxEquipe";
+            this.gbxEquipe.Size = new System.Drawing.Size(487, 87);
+            this.gbxEquipe.TabIndex = 10;
+            this.gbxEquipe.TabStop = false;
+            this.gbxEquipe.Text = "Membres de votre équipe";
             // 
-            // lblJoueurs
+            // lblJ1
             // 
-            this.lblJoueurs.AutoSize = true;
-            this.lblJoueurs.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblJoueurs.Location = new System.Drawing.Point(598, 9);
-            this.lblJoueurs.Name = "lblJoueurs";
-            this.lblJoueurs.Size = new System.Drawing.Size(225, 24);
-            this.lblJoueurs.TabIndex = 12;
-            this.lblJoueurs.Text = "Joueurs de votre équipe :";
+            this.lblJ1.AutoSize = true;
+            this.lblJ1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblJ1.Location = new System.Drawing.Point(57, 40);
+            this.lblJ1.Name = "lblJ1";
+            this.lblJ1.Size = new System.Drawing.Size(11, 15);
+            this.lblJ1.TabIndex = 0;
+            this.lblJ1.Text = " ";
             // 
-            // lblTournoi
+            // lblJ2
             // 
-            this.lblTournoi.AutoSize = true;
-            this.lblTournoi.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTournoi.Location = new System.Drawing.Point(8, 9);
-            this.lblTournoi.Name = "lblTournoi";
-            this.lblTournoi.Size = new System.Drawing.Size(86, 24);
-            this.lblTournoi.TabIndex = 13;
-            this.lblTournoi.Text = "Tournoi :";
+            this.lblJ2.AutoSize = true;
+            this.lblJ2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblJ2.Location = new System.Drawing.Point(206, 40);
+            this.lblJ2.Name = "lblJ2";
+            this.lblJ2.Size = new System.Drawing.Size(11, 15);
+            this.lblJ2.TabIndex = 1;
+            this.lblJ2.Text = " ";
+            // 
+            // lblJ3
+            // 
+            this.lblJ3.AutoSize = true;
+            this.lblJ3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblJ3.Location = new System.Drawing.Point(371, 40);
+            this.lblJ3.Name = "lblJ3";
+            this.lblJ3.Size = new System.Drawing.Size(0, 15);
+            this.lblJ3.TabIndex = 2;
             // 
             // frmTournoi
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(909, 582);
-            this.Controls.Add(this.lblTournoi);
-            this.Controls.Add(this.lblJoueurs);
-            this.Controls.Add(this.lbxJoueursEquipe);
+            this.ClientSize = new System.Drawing.Size(517, 513);
+            this.Controls.Add(this.gbxEquipe);
             this.Controls.Add(this.wbrTreeStruct);
             this.Name = "frmTournoi";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "frmTournoi";
             this.Load += new System.EventHandler(this.frmTournoi_Load);
+            this.gbxEquipe.ResumeLayout(false);
+            this.gbxEquipe.PerformLayout();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
         #endregion
 
         private System.Windows.Forms.WebBrowser wbrTreeStruct;
-        private System.Windows.Forms.ListBox lbxJoueursEquipe;
-        private System.Windows.Forms.Label lblJoueurs;
-        private System.Windows.Forms.Label lblTournoi;
+        private System.Windows.Forms.GroupBox gbxEquipe;
+        private System.Windows.Forms.Label lblJ3;
+        private System.Windows.Forms.Label lblJ2;
+        private System.Windows.Forms.Label lblJ1;
     }
 }

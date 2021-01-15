@@ -189,6 +189,7 @@ namespace GestionnaireTournois.Views.Admin
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.MaximizeBox = false;
             this.Name = "frmEditionPrix";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Editions des prix";
             this.Load += new System.EventHandler(this.frmEditionPrix_Load);
             this.groupBox1.ResumeLayout(false);

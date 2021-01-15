@@ -43,7 +43,7 @@ namespace GestionnaireTournois
 
         private void btnSignIn_Click(object sender, EventArgs e)
         {
-            Joueur j = Joueur.GetJoueurByEmail("melvyn.herzig@heig-vd.ch");
+            Joueur j = Joueur.GetJoueurByEmail(tbxEmail.Text);
             // Check dans la base de donnée l'email
             // Si dans la base :
             if(j != null)

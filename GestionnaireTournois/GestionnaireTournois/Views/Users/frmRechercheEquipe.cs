@@ -14,9 +14,12 @@ namespace GestionnaireTournois.Views.Users
     public partial class frmRechercheEquipe : Form
     {
         private Joueur joueur;
+
+        public Joueur Joueur { get => joueur; set => joueur = value; }
+
         public frmRechercheEquipe(Joueur j)
         {
-            joueur = j;
+            Joueur = j;
             InitializeComponent();
         }
 
@@ -27,24 +30,31 @@ namespace GestionnaireTournois.Views.Users
 
         private void btnRejoindre_Click(object sender, EventArgs e)
         {
-            if (lbxEquipes.SelectedItem != null)
+            if (lbxRecherche.SelectedItem != null)
             {
-                Equipe equipe = (Equipe)lbxEquipes.SelectedItem;
-                // requête 
-                // INSERT INTO equipe_joueur (acronymeEquipe, idJoueur, dateHeureArrivee) VALUES (equipe.Acronyme, joueur.Id, "0001-01-01");
+                Equipe equipe = (Equipe)lbxRecherche.SelectedItem;
+
+                Joueur.PostulerDansEquipe(equipe);
             }
 
         }
 
         private void ChargeEquipes()
         {
-            lbxEquipes.Items.Clear();
+            lbxRecherche.Items.Clear();
 
 
             foreach (Equipe e in Equipe.GetEquipes())
             {
-                lbxEquipes.Items.Add(e);
+                lbxRecherche.Items.Add(e);
             }
+        }
+
+        private void btnCreer_Click(object sender, EventArgs e)
+        {
+            Equipe equipe = new Equipe(tbxAcronyme.Text, tbxNom.Text, Joueur.Id);
+
+            Equipe.Ajouter(equipe);
         }
     }
 }

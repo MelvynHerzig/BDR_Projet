@@ -52,7 +52,7 @@ namespace GestionnaireTournois.Models
         // Méthodes..
         public int GetNbTours()
         {
-            return DataBaseConnector.GetNbToursTournoi(this.Id);
+            return DataBaseConnector.GetNbToursTournoi(this);
         }
 
         public Equipe GetGagnant()
@@ -102,27 +102,43 @@ namespace GestionnaireTournois.Models
 
         public void AjouterPremierPrix(Prix prix)
         {
-            if (IdPremierPrix != 0) return;
+            if (IdPremierPrix != 0 || prix == null || prix.Id == 0) return;
             DataBaseConnector.AjouterPremierPrix(this, prix);
             IdPremierPrix = prix.Id;
         }
 
         public void AjouterDeuxiemePrix(Prix prix)
         {
-            if (IdDeuxiemePrix != 0) return;
+            if (IdDeuxiemePrix != 0 || prix == null || prix.Id == 0) return;
             DataBaseConnector.AjouterDeuxiemePrix(this,prix);
             IdDeuxiemePrix = prix.Id;
         }
 
+
+        public void Inscrire(Equipe equipe)
+        {
+            DataBaseConnector.InscrireEquipeTournoi(this, equipe);
+        }
 
         public static Tournoi GetTournoiById(int idTournoi)
         {
             return DataBaseConnector.GetTournoiById(idTournoi);
         }
 
-        public static List<Tournoi> GetTournoiParEtat(Tournoi.EtatTournoi etat)
+        public static List<Tournoi> GetTournoisParEtat(Tournoi.EtatTournoi etat)
         {
             return DataBaseConnector.GetTournoisFiltres(etat);
+        }
+
+        public static List<Tournoi> GetTournoisRejoignables()
+        {
+            return DataBaseConnector.GetTournoisRejoignables();
+        }
+
+        public static List<Tournoi> GetTournoisParticipes(Equipe equipe)
+        {
+            if (equipe == null) return new List<Tournoi>();
+            return DataBaseConnector.GetTournoisParticipesParEquipe(equipe);
         }
 
         public static void Ajouter(Tournoi t)

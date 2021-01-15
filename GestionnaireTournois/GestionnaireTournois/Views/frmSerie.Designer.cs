@@ -1,7 +1,7 @@
 ﻿
 namespace GestionnaireTournois.Views.Admin
 {
-    partial class frmEditionSerie
+    partial class frmSerie
     {
         /// <summary>
         /// Required designer variable.

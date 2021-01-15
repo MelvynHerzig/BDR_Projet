@@ -181,6 +181,7 @@ namespace GestionnaireTournois.Views.Users
             this.Controls.Add(this.lblMoyenneButs);
             this.Controls.Add(this.lblTtitreMoyenneButs);
             this.Name = "frmStats";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "frmStats";
             this.Load += new System.EventHandler(this.frmStats_Load);
             this.ResumeLayout(false);

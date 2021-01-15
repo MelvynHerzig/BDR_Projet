@@ -25,18 +25,20 @@ namespace GestionnaireTournois
 
             lbxTournament.Items.Clear();
 
-            foreach (Tournoi t in Tournoi.GetTournoiParEtat((Tournoi.EtatTournoi)cbxFilter.SelectedIndex))
+            foreach (Tournoi t in Tournoi.GetTournoisParEtat((Tournoi.EtatTournoi)cbxFilter.SelectedIndex))
             {
 
                 lbxTournament.Items.Add(t);
             }
 
-            lbxTournament.SelectedIndex = index >= lbxTournament.Items.Count ? 0 : index;
+            lbxTournament.SelectedIndex = index >= lbxTournament.Items.Count ? -1 : index;
             ChargeStatistiques();
         }
 
         private void ChargeStatistiques()
         {
+            int index = cbxStatVitesseInscription.SelectedIndex == -1 ? 0 : cbxStatVitesseInscription.SelectedIndex;
+
             cbxStatVitesseInscription.Items.Clear();
             foreach(int i in DataBaseConnector.GetNbEquipesParTournoi())
             {
@@ -44,6 +46,8 @@ namespace GestionnaireTournois
             }
 
             tbxEquipesJoueur.Text = DataBaseConnector.GetMoyenneNbEquipesDesJoueurs().ToString();
+
+            cbxStatVitesseInscription.SelectedIndex = index >= cbxStatVitesseInscription.Items.Count ? -1 : index;
         }
 
         private void tsmiModeChoice_Click(object sender, EventArgs e)
@@ -61,6 +65,7 @@ namespace GestionnaireTournois
             wbrTreeStruct.Document.Click += Document_Click;
 
             ChargeStatistiques();
+
 
         }
 
@@ -83,7 +88,7 @@ namespace GestionnaireTournois
                 
                 Serie s = tour.GetSerieById(Convert.ToInt32(split[2]));
 
-                frmEditionSerie frm = new frmEditionSerie(s);
+                frmSerie frm = new frmSerie(s, true);
                 frm.ShowDialog();
                 ShowArborescence();
             }
@@ -144,6 +149,16 @@ namespace GestionnaireTournois
 
             ChargeTournois();
 
+        }
+
+        private void cbxStatVitesseInscription_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            TimeSpan t = TimeSpan.FromSeconds(DataBaseConnector.GetVitesseInscriptionEnSecTournoiDe(Convert.ToInt32(cbxStatVitesseInscription.SelectedItem)));
+            tbxVitesseInscription.Text = string.Format("{0} jours, {1:D2}h:{2:D2}m:{3:D2}s",
+                                                        t.Days,
+                                                        t.Hours,
+                                                        t.Minutes,
+                                                        t.Seconds);
         }
     }
 }

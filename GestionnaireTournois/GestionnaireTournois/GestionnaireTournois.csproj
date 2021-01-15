@@ -85,11 +85,11 @@
     <Compile Include="Views\Admin\frmEditionPrix.Designer.cs">
       <DependentUpon>frmEditionPrix.cs</DependentUpon>
     </Compile>
-    <Compile Include="Views\Admin\frmEditionSerie.cs">
+    <Compile Include="Views\frmSerie.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\Admin\frmEditionSerie.Designer.cs">
-      <DependentUpon>frmEditionSerie.cs</DependentUpon>
+    <Compile Include="Views\frmSerie.Designer.cs">
+      <DependentUpon>frmSerie.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\frmMain.cs">
       <SubType>Form</SubType>
@@ -102,12 +102,6 @@
     </Compile>
     <Compile Include="Views\Users\frmEquipe.Designer.cs">
       <DependentUpon>frmEquipe.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Users\frmGestionEquipe.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Views\Users\frmGestionEquipe.Designer.cs">
-      <DependentUpon>frmGestionEquipe.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\Users\frmRechercheEquipe.cs">
       <SubType>Form</SubType>
@@ -163,17 +157,14 @@
     <EmbeddedResource Include="Views\Admin\frmEditionPrix.resx">
       <DependentUpon>frmEditionPrix.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\Admin\frmEditionSerie.resx">
-      <DependentUpon>frmEditionSerie.cs</DependentUpon>
+    <EmbeddedResource Include="Views\frmSerie.resx">
+      <DependentUpon>frmSerie.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\frmMain.resx">
       <DependentUpon>frmMain.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Users\frmEquipe.resx">
       <DependentUpon>frmEquipe.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\Users\frmGestionEquipe.resx">
-      <DependentUpon>frmGestionEquipe.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Users\frmRechercheEquipe.resx">
       <DependentUpon>frmRechercheEquipe.cs</DependentUpon>

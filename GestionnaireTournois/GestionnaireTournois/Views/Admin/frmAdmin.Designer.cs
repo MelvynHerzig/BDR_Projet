@@ -184,6 +184,7 @@ namespace GestionnaireTournois
             this.cbxStatVitesseInscription.Name = "cbxStatVitesseInscription";
             this.cbxStatVitesseInscription.Size = new System.Drawing.Size(42, 21);
             this.cbxStatVitesseInscription.TabIndex = 0;
+            this.cbxStatVitesseInscription.SelectedIndexChanged += new System.EventHandler(this.cbxStatVitesseInscription_SelectedIndexChanged);
             // 
             // frmAdmin
             // 
@@ -201,7 +202,7 @@ namespace GestionnaireTournois
             this.MainMenuStrip = this.mstrpAdmin;
             this.MaximizeBox = false;
             this.Name = "frmAdmin";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Administration";
             this.Load += new System.EventHandler(this.frmAdmin_Load);
             this.mstrpAdmin.ResumeLayout(false);

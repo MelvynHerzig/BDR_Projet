@@ -47,6 +47,36 @@ namespace GestionnaireTournois.Models
             return DataBaseConnector.GetEquipeJoueur(this);
         }
 
+        public Equipe GetEquipeDurantTournoi(Tournoi tournoi)
+        {
+            return DataBaseConnector.GetEquipeJoueurDurantTournoi(this, tournoi);
+        }
+
+        public int[] GetStatsTotal()
+        {
+            return DataBaseConnector.GetStatsTotal(this);
+        }
+
+        public double[] GetMoyenneStats()
+        {
+            return DataBaseConnector.GetMoyenneStats(this);
+        }
+
+        public int GetNbSerieJouee()
+        {
+            return DataBaseConnector.GetNbSerieJouee(this);
+        }
+
+        public int GetNbSerieGagnee()
+        {
+            return DataBaseConnector.GetNbSerieGagnee(this);
+        }
+
+        public void PostulerDansEquipe(Equipe equipe)
+        {
+            DataBaseConnector.PostulerDansEquipe(equipe, this);
+        }
+
         public static Joueur GetJoueurById(int idJoueur)
         {
             return DataBaseConnector.GetJoueurById(idJoueur);
