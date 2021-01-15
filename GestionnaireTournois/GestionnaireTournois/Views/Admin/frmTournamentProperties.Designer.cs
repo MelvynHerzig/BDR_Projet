@@ -29,6 +29,7 @@ namespace GestionnaireTournois
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmTournamentProperties));
             this.lblId = new System.Windows.Forms.Label();
             this.gbxInfos = new System.Windows.Forms.GroupBox();
             this.lblHeureFin = new System.Windows.Forms.Label();
@@ -350,6 +351,7 @@ namespace GestionnaireTournois
             this.Controls.Add(this.gbxTours);
             this.Controls.Add(this.gbxInfos);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "frmTournamentProperties";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;

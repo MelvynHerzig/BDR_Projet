@@ -124,7 +124,14 @@ namespace GestionnaireTournois
 
             foreach (Tournoi t in TournoisAffiches)
             {
-                dgvTournois.Rows.Add(t.Nom, t.DateHeureDebut, t.DateHeureFin, t.NbEquipesMax, "S'inscrire");
+                if(t.DateHeureFin == DateTime.MinValue)
+                {
+                    dgvTournois.Rows.Add(t.Nom, t.DateHeureDebut, "non terminé", t.NbEquipesMax, "S'inscrire");
+                }
+                else
+                {
+                    dgvTournois.Rows.Add(t.Nom, t.DateHeureDebut, t.DateHeureFin, t.NbEquipesMax, "S'inscrire");
+                }
             }
         }
     }

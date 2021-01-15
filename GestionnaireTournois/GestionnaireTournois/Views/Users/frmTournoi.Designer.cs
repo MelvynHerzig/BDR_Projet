@@ -29,6 +29,7 @@ namespace GestionnaireTournois.Views.Users
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmTournoi));
             this.wbrTreeStruct = new System.Windows.Forms.WebBrowser();
             this.gbxEquipe = new System.Windows.Forms.GroupBox();
             this.lblJ3 = new System.Windows.Forms.Label();
@@ -106,6 +107,7 @@ namespace GestionnaireTournois.Views.Users
             this.Controls.Add(this.btnAbandonnerTournoi);
             this.Controls.Add(this.gbxEquipe);
             this.Controls.Add(this.wbrTreeStruct);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "frmTournoi";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "frmTournoi";

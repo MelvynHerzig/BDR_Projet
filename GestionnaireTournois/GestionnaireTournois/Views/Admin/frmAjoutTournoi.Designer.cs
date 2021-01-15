@@ -29,6 +29,7 @@ namespace GestionnaireTournois
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmAjoutTournoi));
             this.btnAjouterTournoi = new System.Windows.Forms.Button();
             this.dtpDateDebut = new System.Windows.Forms.DateTimePicker();
             this.dtpHeureDebut = new System.Windows.Forms.DateTimePicker();
@@ -150,6 +151,7 @@ namespace GestionnaireTournois
             this.Controls.Add(this.dtpDateDebut);
             this.Controls.Add(this.btnAjouterTournoi);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "frmAjoutTournoi";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;

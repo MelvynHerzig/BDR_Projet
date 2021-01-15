@@ -29,6 +29,7 @@ namespace GestionnaireTournois
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmSignUp));
             this.lblSignUp = new System.Windows.Forms.Label();
             this.tbxName = new System.Windows.Forms.TextBox();
             this.gbxInfo = new System.Windows.Forms.GroupBox();
@@ -194,6 +195,7 @@ namespace GestionnaireTournois
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.gbxInfo);
             this.Controls.Add(this.lblSignUp);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "frmSignUp";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Inscription";

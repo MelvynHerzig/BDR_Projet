@@ -29,6 +29,7 @@ namespace GestionnaireTournois.Views.Admin
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmSerie));
             this.gbxEquipe1 = new System.Windows.Forms.GroupBox();
             this.tbxE1J3Arrets = new System.Windows.Forms.TextBox();
             this.tbxE1J3Buts = new System.Windows.Forms.TextBox();
@@ -335,7 +336,7 @@ namespace GestionnaireTournois.Views.Admin
             this.btnAjoutMatch.UseVisualStyleBackColor = true;
             this.btnAjoutMatch.Click += new System.EventHandler(this.btnAjoutMatch_Click);
             // 
-            // frmEditionSerie
+            // frmSerie
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -347,8 +348,9 @@ namespace GestionnaireTournois.Views.Admin
             this.Controls.Add(this.gbxEquipe2);
             this.Controls.Add(this.gbxEquipe1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
-            this.Name = "frmEditionSerie";
+            this.Name = "frmSerie";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Edition de la série";
             this.Load += new System.EventHandler(this.frmEditionSerie_Load);
