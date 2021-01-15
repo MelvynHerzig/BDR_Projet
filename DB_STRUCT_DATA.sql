@@ -1547,17 +1547,6 @@ BEGIN
     
     CALL verifierDatePlusPetite(NEW.dateHeureArrivee,NEW.dateHeureDepart);
     
-    -- Le joueur rejoint l'équipe, supression des autres demandes
-    IF(OLD.dateHeureArrivee = '0001-01-01 00:00:00' AND NEW.dateHeureArrivee <> OLD.dateHeureArrivee)
-    THEN
-		IF estComplete(NEW.acronymeEquipe)
-        THEN
-			SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = ' Le joueur ne peut pas être accepté, équipe pleine.';
-		ELSE
-			DELETE FROM Equipe_Joueur WHERE Equipe_Joueur.dateHeureArrivee = '0001-01-01 00:00:00' AND Equipe_Joueur.idJoueur = NEW.idJoueur;
-		END IF;
-    END IF;
-    
     -- Si on tente de lui le re-refaire rejoindre l'équipe avec le même enregistrement
     IF (NEW.dateHeureDepart IS NULL AND OLD.dateHeureDepart IS NOT NULL) 
 	THEN 
@@ -1580,6 +1569,22 @@ BEGIN
     THEN 
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Le responsable ne peut pas quitter son équiper, on a besoin de lui.';
 	END IF;
+END $$
+
+CREATE TRIGGER after_update_equipe_joueur
+AFTER UPDATE ON Equipe_Joueur
+FOR EACH ROW
+BEGIN
+	-- Le joueur rejoint l'équipe, supression des autres demandes
+    IF(OLD.dateHeureArrivee = '0001-01-01 00:00:00' AND NEW.dateHeureArrivee <> OLD.dateHeureArrivee)
+    THEN
+		IF estComplete(NEW.acronymeEquipe)
+        THEN
+			SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = ' Le joueur ne peut pas être accepté, équipe pleine.';
+		ELSE
+			DELETE FROM Equipe_Joueur WHERE Equipe_Joueur.dateHeureArrivee = '0001-01-01 00:00:00' AND Equipe_Joueur.idJoueur = NEW.idJoueur;
+		END IF;
+    END IF;
 END $$
 
 ------------------------- MATCH --------------------
