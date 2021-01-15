@@ -21,58 +21,6 @@ namespace GestionnaireTournois
                                                         ConfigurationManager.AppSettings["user"],
                                                         ConfigurationManager.AppSettings["password"]);
 
-        private void templateTransaction()
-        {
-            MySqlConnection myConnection = new MySqlConnection(connection);
-
-            myConnection.Open();
-
-            MySqlCommand myCommand = myConnection.CreateCommand();
-            MySqlTransaction myTrans;
-
-            // Start a local transaction
-            myTrans = myConnection.BeginTransaction();
-            // Must assign both transaction object and connection
-            // to Command object for a pending local transaction
-            myCommand.Connection = myConnection;
-            myCommand.Transaction = myTrans;
-
-            try
-            {
-                myCommand.CommandText = "insert into Test (id, desc) VALUES (100, 'Description')";
-                myCommand.ExecuteNonQuery();
-
-                myCommand.CommandText = "insert into Test (id, desc) VALUES (101, 'Description')";
-                myCommand.ExecuteNonQuery();
-
-                myTrans.Commit();
-
-            }
-            catch (Exception e)
-            {
-                try
-                {
-                    myTrans.Rollback();
-                }
-                catch (SqlException ex)
-                {
-                    if (myTrans.Connection != null)
-                    {
-                        Console.WriteLine("An exception of type " + ex.GetType() +
-                        " was encountered while attempting to roll back the transaction.");
-                    }
-                }
-
-                Console.WriteLine("An exception of type " + e.Message +
-                " was encountered while inserting the data.");
-                Console.WriteLine("Neither record was written to database.");
-
-            }
-            finally
-            {
-                myConnection.Close();
-            }
-        }
 
         #region Tournois
 
@@ -500,6 +448,80 @@ namespace GestionnaireTournois
             }
             catch (Exception e)
             {
+                Console.WriteLine("An exception of type " + e.Message +
+               " was encountered.");
+            }
+            finally
+            {
+                myConnection.Close();
+            }
+        }
+
+        public static bool IsTournoiEnAttente(Tournoi t)
+        {
+            bool enAttente = false;
+
+            MySqlConnection myConnection = new MySqlConnection(connection);
+
+            myConnection.Open();
+
+            MySqlCommand cmd = myConnection.CreateCommand();
+
+            try
+            {
+                cmd.CommandText = "estEnAttente";
+                cmd.CommandType = CommandType.StoredProcedure;
+
+
+                cmd.Parameters.AddWithValue("ireturnvalue", true);
+                cmd.Parameters["ireturnvalue"].Direction = ParameterDirection.ReturnValue;
+
+                cmd.Parameters.AddWithValue("pIdTournoi", t.Id);
+
+                cmd.Prepare();
+
+                cmd.ExecuteScalar();
+
+                enAttente = Convert.ToBoolean(cmd.Parameters["ireturnvalue"].Value);
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("An exception of type " + e.Message +
+               " was encountered.");
+            }
+            finally
+            {
+                myConnection.Close();
+            }
+
+            return enAttente;
+        }
+
+        public static void DesinscrireEquipeTournoi(Tournoi tournoi, Equipe equipe)
+        {
+            MySqlConnection myConnection = new MySqlConnection(connection);
+
+            myConnection.Open();
+
+            MySqlCommand cmd = myConnection.CreateCommand();
+
+            try
+            {
+
+                cmd.CommandText = "DELETE FROM tournoi_equipe WHERE idTournoi = @idTournoi AND acronymeEquipe = @acronyme";
+
+                cmd.Parameters.AddWithValue("idTournoi", tournoi.Id);
+                cmd.Parameters.AddWithValue("acronyme", equipe.Acronyme);
+
+                cmd.Prepare();
+
+                cmd.ExecuteNonQuery();
+
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message, "Impossible d'effectuer votre requête", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Console.WriteLine("An exception of type " + e.Message +
                " was encountered.");
             }
@@ -2283,6 +2305,53 @@ namespace GestionnaireTournois
         }
 
         #endregion
+
+        public static Serie GetDerniereSerieParticipeParEquipeTournoi(Tournoi tournoi, Equipe equipe)
+        {
+            Serie s = null;
+
+
+            MySqlConnection myConnection = new MySqlConnection(connection);
+
+            myConnection.Open();
+
+            MySqlCommand cmd = myConnection.CreateCommand();
+
+            try
+            {
+
+                cmd.CommandText = "SELECT Serie.id as id, Serie.noTour as noTour, Serie.idTournoi as idTournoi, Serie.acronymeEquipe1, Serie.acronymeEquipe2, MIN(Serie.noTour) FROM Serie WHERE Serie.idTournoi = @idTournoi AND (Serie.acronymeEquipe1 = @acronyme OR Serie.acronymeEquipe2 = @acronyme); ";
+
+                cmd.Parameters.AddWithValue("@idTournoi", tournoi.Id);
+                cmd.Parameters.AddWithValue("@acronyme", equipe.Acronyme);
+
+                cmd.Prepare();
+
+                MySqlDataReader reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    string e1 = reader.IsDBNull(3) ? null : reader.GetString(3);
+                    string e2 = reader.IsDBNull(4) ? null : reader.GetString(4); ;
+
+
+
+                    s = new Serie(reader.GetInt32("id"), reader.GetInt32("idTournoi"), reader.GetInt32("noTour"), e1, e2);
+                }
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("An exception of type " + e.Message +
+               " was encountered.");
+            }
+            finally
+            {
+                myConnection.Close();
+            }
+
+            return s;
+        }
 
     }
 }

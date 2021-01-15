@@ -71,6 +71,10 @@ namespace GestionnaireTournois.Models
             return DataBaseConnector.GetTourByNo(this, noTour);
         }
 
+        public bool EstEnAttente()
+        {
+            return DataBaseConnector.IsTournoiEnAttente(this);
+        }
 
         public void StartTournoi()
         {
