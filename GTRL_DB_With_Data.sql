@@ -949,7 +949,7 @@ BEGIN
 		END IF;
         
         -- Pour la dernière série trouvé dans l'arbre du trounoi
-        SELECT idSerie, noTour, idTournoi INTO vIdSerie, vNoTour, vIdTournoi
+        SELECT id, noTour, idTournoi INTO vIdSerie, vNoTour, vIdTournoi
         FROM Serie WHERE noTour = ( SELECT MIN(noTour) FROM SERIE
 									WHERE acronymeEquipe1 = pAcronymeEquipe OR acronymeEquipe2 = pAcronymeEquipe);
                
@@ -1892,13 +1892,12 @@ BEGIN
     WHERE dateHeureFin IS NULL AND dateHeureDebut < NOW() 
 		  AND nbEquipesMax > (SELECT COUNT(1) 
 							  FROM Tournoi_Equipe
-							  WHERE idTournoi = Tournoi.id);
+							  WHERE idTournoi = id);
 END $$
 
 -- Chaque 7 jour vérifie si le un tournoi de plus de 7 jour peut être supprimé.
 CREATE EVENT supprimer_tournoi_annule
 ON SCHEDULE EVERY 2 MINUTE DO
-
 BEGIN 
 	DELETE FROM Tournoi 
     WHERE dateHeureFin = dateHeureDebut;
