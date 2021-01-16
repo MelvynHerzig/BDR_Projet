@@ -929,40 +929,38 @@ CREATE FUNCTION aUneInscriptionEnCours(pAcronymeEquipe VARCHAR(3))
 RETURNS BOOLEAN
 DETERMINISTIC
 BEGIN
-    -- Curseurs
-    DECLARE done INT DEFAULT FALSE;
-	DECLARE vIdSerie, vNoTour, vIdTournoi INT;
-    -- Récupère le(s) tournoi qui n'ont pas encore de date de fin.
-	DECLARE curDernieresSeries CURSOR FOR SELECT (SELECT Tournoi.id FROM Tournoi
-													INNER JOIN Tournoi_Equipe
-												  ON Tournoi.id = Tournoi_Equipe.idTournoi
-												  WHERE Tournoi_Equipe.acronymeEquipe = pAcronymeEquipe AND Tournoi.dateHeureFin IS NULL AND Tournoi.dateHeureDebut < NOW());
-	DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
 
-	-- Vérification si la dernière série du tournoi est perdue.
-    OPEN curDernieresSeries;
-    inscription_loop : LOOP
-		FETCH curDernieresSeries INTO vIdTournoi;
+	DECLARE vIdSerie, vNoTour, vIdtournoi INT;
+    
+	SELECT Tournoi.id  INTO  vIdtournoi
+    FROM Tournoi 
+    INNER JOIN Tournoi_Equipe
+		ON Tournoi.id = Tournoi_Equipe.idTournoi
+	WHERE Tournoi_Equipe.acronymeEquipe = pAcronymeEquipe AND Tournoi.dateHeureFin IS NULL;
+
         
-        IF done 
-			THEN LEAVE inscription_loop; 
-		END IF;
-        
-        -- Pour la dernière série trouvé dans l'arbre du trounoi
-        SELECT id, noTour, idTournoi INTO vIdSerie, vNoTour, vIdTournoi
-        FROM Serie WHERE noTour = ( SELECT MIN(noTour) FROM SERIE
-									WHERE acronymeEquipe1 = pAcronymeEquipe OR acronymeEquipe2 = pAcronymeEquipe);
-               
-		-- Si il n'y a pas de vainqueur la serie est en cours et l'équipe participe donc toujours à un torunoi.
-		IF vainqueurSerie(vIdSerie, vNoTour, vIdTournoi, FALSE) IS NULL
+	-- Pour la dernière série trouvé dans l'arbre du tournoi
+	IF vIdtournoi IS NOT NULL
+	THEN      
+		IF NOT estEnAttente(vIdtournoi)
         THEN
+			SELECT id, noTour, idTournoi INTO vIdSerie, vNoTour, vIdTournoi
+			FROM Serie WHERE idTournoi = vIdTournoi AND noTour = ( SELECT MIN(noTour) 
+										                           FROM Serie
+																   WHERE acronymeEquipe1 = pAcronymeEquipe OR acronymeEquipe2 = pAcronymeEquipe AND idTournoi = vIdTournoi);
+                                        
+			-- Si il n'y a pas de vainqueur la serie est en cours et l'équipe participe donc toujours à un tournoi.
+			IF vainqueurSerie(vIdSerie, vNoTour, vIdTournoi, FALSE) IS NULL
+			THEN
+				RETURN TRUE;
+			END IF;
+		ELSE
 			RETURN TRUE;
-		END IF;
-	
-    END LOOP;
-    CLOSE curDernieresSeries;
+        END IF;
+	END IF;
 
 	RETURN FALSE;
+
 END $$
 
 
@@ -1474,7 +1472,7 @@ BEGIN
 			SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Impossiblede retirer la date de fin d\'un tournoi terminé.';
         END IF;
     ELSE
-		IF  NEW.dateHeureFin IS NOT NULL 
+		IF  NEW.dateHeureFin IS NOT NULL AND NEW.dateHeureFin <> NEW.dateHeureDebut 
         THEN
 			SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Impossible de terminer le tournoi tant que la finale n\'a pas de vainqueur.';
         END IF;
@@ -1884,24 +1882,24 @@ END $$
 -- EVENTS
 -----------------------------------------------------
 -- Chaque 6 heure, vérifie si la date de début d'un tournoi a été dépassée, si c'est le cas termine le tournoi.alter
-CREATE EVENT annuler_tournoi
-ON SCHEDULE EVERY 1 MINUTE DO
-BEGIN 
-	UPDATE Tournoi 
-    SET dateHeureFin = dateHeureDebut
-    WHERE dateHeureFin IS NULL AND dateHeureDebut < NOW() 
-		  AND nbEquipesMax > (SELECT COUNT(1) 
-							  FROM Tournoi_Equipe
-							  WHERE idTournoi = id);
-END $$
+-- CREATE EVENT annuler_tournoi
+-- ON SCHEDULE EVERY 1 MINUTE DO
+-- BEGIN 
+-- 	UPDATE Tournoi 
+--     SET dateHeureFin = dateHeureDebut
+--     WHERE dateHeureFin IS NULL AND dateHeureDebut < NOW() 
+-- 		  AND nbEquipesMax > (SELECT COUNT(1) 
+-- 							  FROM Tournoi_Equipe
+-- 							  WHERE idTournoi = id);
+-- END $$
 
--- Chaque 7 jour vérifie si le un tournoi de plus de 7 jour peut être supprimé.
-CREATE EVENT supprimer_tournoi_annule
-ON SCHEDULE EVERY 2 MINUTE DO
-BEGIN 
-	DELETE FROM Tournoi 
-    WHERE dateHeureFin = dateHeureDebut;
-END $$
+-- -- Chaque 7 jour vérifie si le un tournoi de plus de 7 jour peut être supprimé.
+-- CREATE EVENT supprimer_tournoi_annule
+-- ON SCHEDULE EVERY 2 MINUTE DO
+-- BEGIN 
+-- 	DELETE FROM Tournoi 
+--     WHERE dateHeureFin = dateHeureDebut;
+-- END $$
 
 DELIMITER ;
 
