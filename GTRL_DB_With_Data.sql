@@ -1942,5 +1942,5 @@ DELIMITER ;
 
 DROP USER IF EXISTS 'GDTRL_Manager';
 CREATE USER 'GDTRL_Manager' IDENTIFIED BY 'P@$$w0rd1sHArDt0F1nd';
-GRANT DELETE, INSERT, SELECT, UPDATE ON GestionnaireDeTournoisRocketLeague.* TO 'GDTRL_Manager';
+GRANT DELETE, INSERT, SELECT, UPDATE, EXECUTE ON GestionnaireDeTournoisRocketLeague.* TO 'GDTRL_Manager';
 
