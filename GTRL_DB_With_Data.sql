@@ -360,42 +360,42 @@ VALUES
 ( 'Gabin', 'Jean', 'gabin@sansequipe.com', 'gabin', '1990-04-01' ),
 ( 'Berset', 'Alain', 'theking@sansequipe.com', 'theking', '1980-04-01' ),
 ( 'Maxime', 'Berthoud', 'max@sansequipe.com', 'max', '2005-04-01' ),
-( 'Madden', 'Adrian', 'dictum.Phasellus.in@mattis.net', 'Lucy', '1997-07-04 15' ),
-( 'Cohen','Cairo', 'velit@turpis.edu', 'Kimberley', '1995-01-26 23' ),
-( 'Ray', 'Patricia', 'Curabitur.ut@arcuVestibulumante.org', 'Skyler', '2003-01-10 11' ),
-( 'Petty', 'Sandra','nec.leo.Morbi@interdumfeugiatSed.co.uk', 'Rooney','2003-12-31 05' ),
-( 'Pratt', 'Nola', 'amet.diam@egestasrhoncus.ca', 'Samson', '2005-08-24 15' ),
-( 'Baird', 'Porter', 'ipsum.leo@euismod.org', 'Conan', '2005-10-26 03' ),
-( 'Singleton', 'Latifah', 'sociis.natoque.penatibus@a.net', 'Thor', '2002-08-19 18' ),
-( 'Mccray', 'Adam', 'risus.varius@tinciduntnequevitae.edu', 'Bradley', '1990-04-01 22' ),
-( 'Wilson', 'Petra','dolor.Quisque@facilisiSed.co.uk','Brenden','1997-10-28 04' ),
-( 'Delacruz', 'John', 'aliquet@purusDuiselementum.org', 'Phillip', '1998-09-20 15') ,
-( 'Sellers', 'Iliana', 'neque@malesuadaInteger.co.uk', 'Kiona', '1996-08-16 15' ),
-( 'Orr','Lucy', 'nibh@necmetus.com', 'Rosalyn', '1999-12-03 06' ),
-( 'Wagner','Joy', 'risus@Nuncut.net', 'Illana', '2000-04-17 22' ),
-( 'Carey', 'Amir', 'Morbi@accumsanlaoreet.com', 'Channing', '1995-04-24 22' ),
-( 'Contreras','Isadora','nibh.lacinia@neque.org','Abbot','1992-02-11 16' ),
-( 'Yang', 'Bernard', 'sociis@estNunc.com', 'Colin', '1994-08-09 00' ),
-( 'Guzman', 'Odysseus', 'non.magna.Nam@duiCraspellentesque.edu', 'Christine', '1999-04-27 11' ),
-( 'Sharp', 'Uriel', 'molestie.arcu.Sed@Nunc.edu', 'Alyssa', '1993-01-11 12' ),
-( 'Cantu', 'Moses', 'nisl@non.net', 'Linus', '1990-01-04 22' ),
-( 'Hawkins','Hilary','Phasellus.nulla.Integer@velitegestas.org','Cole','2004-02-10 00' ),
-( 'Steele', 'Courtney', 'nisi.a.odio@ipsumPhasellus.com', 'Germane', '1990-08-17 17' ),
-( 'Dudley','Howard','non.dapibus@eleifendnecmalesuada.co.uk','Ignatius','2001-06-05 09' ),
-( 'Tran', 'Laura', 'Mauris.vel@leoinlobortis.co.uk', 'Declan', '1990-08-04 20' ),
-( 'Lara', 'Wesley', 'est@erat.co.uk', 'Shaeleigh', '1990-03-14 22' ),
-( 'Harrington', 'Alden', 'ornare.lectus.justo@ProinultricesDuis.edu', 'Illana', '2000-02-19 22' ),
-( 'Powers', 'Yardley', 'Quisque.tincidunt.pede@ornare.org', 'Sara', '2003-04-12 15' ),
-( 'Shaw','Mark','rutrum.justo@diamPellentesque.co.uk','Hedy','1997-01-02 18' ),
-( 'Dotson', 'Xyla', 'metus@Suspendissetristique.ca', 'Samuel', '2000-12-02 09' ),
-( 'Hardin', 'Adrian', 'id.magna.et@dolorFusce.edu', 'Blair', '1997-11-18 13' ),
-( 'Carney','Dora','nec.urna.et@dictumProineget.net','Maxwell','2005-07-16 01' ),
-( 'Douglas', 'Mariam', 'aliquam.enim.nec@semperauctorMauris.ca', 'Lawrence', '1995-01-25 05' ),
-( 'Mercado', 'Joy', 'lorem.vehicula@lorem.edu', 'Jason', '1997-08-15 23' ),
-( 'Sullivan', 'Blair', 'ante@enimcommodo.co.uk', 'Peter', '2004-06-16 02' ),
-( 'Pennington','Neil','convallis.est.vitae@consectetuereuismod.ca','Joseph','1997-05-09 00' ),
-( 'Owens', 'Kenyon', 'at.lacus@sitamet.edu', 'Mufutau', '1993-04-12 01' ),
-( 'Wolfe', 'Xaviera', 'Suspendisse.aliquet.sem@Fusce.co.uk', 'Kalia', '1991-07-25 05' );
+( 'Madden', 'Adrian', 'dictum.Phasellus.in@mattis.net', 'Lucy', '1997-07-04' ),
+( 'Cohen','Cairo', 'velit@turpis.edu', 'Kimberley', '1995-01-26' ),
+( 'Ray', 'Patricia', 'Curabitur.ut@arcuVestibulumante.org', 'Skyler', '2003-01-10' ),
+( 'Petty', 'Sandra','nec.leo.Morbi@interdumfeugiatSed.co.uk', 'Rooney','2003-12-31' ),
+( 'Pratt', 'Nola', 'amet.diam@egestasrhoncus.ca', 'Samson', '2005-08-24' ),
+( 'Baird', 'Porter', 'ipsum.leo@euismod.org', 'Conan', '2005-10-26' ),
+( 'Singleton', 'Latifah', 'sociis.natoque.penatibus@a.net', 'Thor', '2002-08-19' ),
+( 'Mccray', 'Adam', 'risus.varius@tinciduntnequevitae.edu', 'Bradley', '1990-04-01' ),
+( 'Wilson', 'Petra','dolor.Quisque@facilisiSed.co.uk','Brenden','1997-10-28' ),
+( 'Delacruz', 'John', 'aliquet@purusDuiselementum.org', 'Phillip', '1998-09-20') ,
+( 'Sellers', 'Iliana', 'neque@malesuadaInteger.co.uk', 'Kiona', '1996-08-16' ),
+( 'Orr','Lucy', 'nibh@necmetus.com', 'Rosalyn', '1999-12-03' ),
+( 'Wagner','Joy', 'risus@Nuncut.net', 'Illana', '2000-04-17' ),
+( 'Carey', 'Amir', 'Morbi@accumsanlaoreet.com', 'Channing', '1995-04-24' ),
+( 'Contreras','Isadora','nibh.lacinia@neque.org','Abbot','1992-02-11' ),
+( 'Yang', 'Bernard', 'sociis@estNunc.com', 'Colin', '1994-08-09' ),
+( 'Guzman', 'Odysseus', 'non.magna.Nam@duiCraspellentesque.edu', 'Christine', '1999-04-27' ),
+( 'Sharp', 'Uriel', 'molestie.arcu.Sed@Nunc.edu', 'Alyssa', '1993-01-11' ),
+( 'Cantu', 'Moses', 'nisl@non.net', 'Linus', '1990-01-04' ),
+( 'Hawkins','Hilary','Phasellus.nulla.Integer@velitegestas.org','Cole','2004-02-10' ),
+( 'Steele', 'Courtney', 'nisi.a.odio@ipsumPhasellus.com', 'Germane', '1990-08-17' ),
+( 'Dudley','Howard','non.dapibus@eleifendnecmalesuada.co.uk','Ignatius','2001-06-05' ),
+( 'Tran', 'Laura', 'Mauris.vel@leoinlobortis.co.uk', 'Declan', '1990-08-04' ),
+( 'Lara', 'Wesley', 'est@erat.co.uk', 'Shaeleigh', '1990-03-14' ),
+( 'Harrington', 'Alden', 'ornare.lectus.justo@ProinultricesDuis.edu', 'Illana', '2000-02-19' ),
+( 'Powers', 'Yardley', 'Quisque.tincidunt.pede@ornare.org', 'Sara', '2003-04-12' ),
+( 'Shaw','Mark','rutrum.justo@diamPellentesque.co.uk','Hedy','1997-01-02' ),
+( 'Dotson', 'Xyla', 'metus@Suspendissetristique.ca', 'Samuel', '2000-12-02' ),
+( 'Hardin', 'Adrian', 'id.magna.et@dolorFusce.edu', 'Blair', '1997-11-18' ),
+( 'Carney','Dora','nec.urna.et@dictumProineget.net','Maxwell','2005-07-16' ),
+( 'Douglas', 'Mariam', 'aliquam.enim.nec@semperauctorMauris.ca', 'Lawrence', '1995-01-25' ),
+( 'Mercado', 'Joy', 'lorem.vehicula@lorem.edu', 'Jason', '1997-08-15' ),
+( 'Sullivan', 'Blair', 'ante@enimcommodo.co.uk', 'Peter', '2004-06-16' ),
+( 'Pennington','Neil','convallis.est.vitae@consectetuereuismod.ca','Joseph','1997-05-09' ),
+( 'Owens', 'Kenyon', 'at.lacus@sitamet.edu', 'Mufutau', '1993-04-12' ),
+( 'Wolfe', 'Xaviera', 'Suspendisse.aliquet.sem@Fusce.co.uk', 'Kalia', '1991-07-25' );
 
 
 INSERT INTO Equipe
@@ -925,17 +925,44 @@ VALUES
 -----------------------------------------------------
 -- Vérifie si l'équipe en paramètre est inscrite à un trounoi
 DELIMITER $$
-CREATE FUNCTION aUneInscriptionEnCours(pAcronymeParam VARCHAR(3))
+CREATE FUNCTION aUneInscriptionEnCours(pAcronymeEquipe VARCHAR(3))
 RETURNS BOOLEAN
 DETERMINISTIC
 BEGIN
-	 IF EXISTS (SELECT Tournoi.id FROM Tournoi
-				INNER JOIN Tournoi_Equipe
-					ON Tournoi.id = Tournoi_Equipe.idTournoi AND Tournoi_Equipe.acronymeEquipe = pAcronymeParam
-				WHERE Tournoi.dateHeureFin IS NULL)
-	THEN RETURN 1;
-    ELSE RETURN 0;
-    END IF;
+    -- Curseurs
+    DECLARE done INT DEFAULT FALSE;
+	DECLARE vIdSerie, vNoTour, vIdTournoi INT;
+    -- Récupère le(s) tournoi qui n'ont pas encore de date de fin.
+	DECLARE curDernieresSeries CURSOR FOR SELECT (SELECT Tournoi.id FROM Tournoi
+													INNER JOIN Tournoi_Equipe
+												  ON Tournoi.id = Tournoi_Equipe.idTournoi
+												  WHERE Tournoi_Equipe.acronymeEquipe = pAcronymeEquipe AND Tournoi.dateHeureFin IS NULL AND Tournoi.dateHeureDebut < NOW());
+	DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+
+	-- Vérification si la dernière série du tournoi est perdue.
+    OPEN curDernieresSeries;
+    inscription_loop : LOOP
+		FETCH curDernieresSeries INTO vIdTournoi;
+        
+        IF done 
+			THEN LEAVE inscription_loop; 
+		END IF;
+        
+        -- Pour la dernière série trouvé dans l'arbre du trounoi
+        SELECT idSerie, noTour, idTournoi INTO vIdSerie, vNoTour, vIdTournoi
+        FROM Serie WHERE noTour = ( SELECT MIN(noTour) FROM SERIE
+									WHERE acronymeEquipe1 = pAcronymeEquipe OR acronymeEquipe2 = pAcronymeEquipe);
+               
+		-- Si il n'y a pas de vainqueur la serie est en cours et l'équipe participe donc toujours à un torunoi.
+		IF vainqueurSerie(vIdSerie, vNoTour, vIdTournoi, FALSE) IS NULL
+        THEN
+			RETURN TRUE;
+		END IF;
+	
+    END LOOP;
+    CLOSE curDernieresSeries;
+
+	RETURN FALSE;
 END $$
 
 
@@ -944,7 +971,7 @@ CREATE FUNCTION calculerNbTours(pNbEquipeMax INT)
 RETURNS INT
 DETERMINISTIC
 BEGIN
-	DECLARE nbTour INT;
+	DECLARE nbTour DOUBLE;
     SET nbTour = LOG2(pNbEquipeMax);
      
     -- Vérification si nombre entier et valeur correcte. 
@@ -1019,11 +1046,18 @@ BEGIN
 	DECLARE equipe1OK BOOLEAN DEFAULT FALSE;
     DECLARE equipe2OK BOOLEAN DEFAULT FALSE;
     DECLARE nbEquipe INT;
-	-- Si premier tour du tournoi aucune vérification n'est nécessaire
+	-- Si premier tour du tournoi on vérifie que l'équipe ne soit pas déjà inscrite dans le tour.
     SET nbEquipe = (SELECT nbEquipesMax FROM Tournoi WHERE id = pIdTournoi);
     IF  calculerNbTours(nbEquipe) = pNoTour
     THEN
-		RETURN TRUE;
+		IF NOT EXISTS (SELECT id FROM Serie WHERE noTour = pNoTour AND idTournoi = pIdTournoi AND
+												 ( acronymeEquipe1 = pAcronymeEquipe1 OR acronymeEquipe2 = pAcronymeEquipe1 OR
+												   acronymeEquipe1 = pAcronymeEquipe2 OR acronymeEquipe2 = pAcronymeEquipe2 ))
+		THEN
+			RETURN TRUE;
+		ELSE
+			RETURN FALSE;
+		END IF;
 	END IF;
    
     IF  pAcronymeEquipe1 IS NULL OR pAcronymeEquipe1 = vainqueurSerie( (pIdSerie * 2) - 1, pNoTour + 1, pIdTournoi, TRUE)
@@ -1238,7 +1272,7 @@ END $$
 -- Vérifie si le seeding est correct sinon lève une exception.
 CREATE PROCEDURE verifierSeedingIncorrect(pAcronymeEquipe1 VARCHAR(3), pAcronymeEquipe2 VARCHAR(3), pIdSerie INT, pNoTour INT, pIdTournoi INT)
 BEGIN
-	IF seedingCorrect(pAcronymeEquipe1, pAcronymeEquipe2, pIdSerie, pNoTour, pIdTournoi ) = FALSE
+	IF NOT seedingCorrect(pAcronymeEquipe1, pAcronymeEquipe2, pIdSerie, pNoTour, pIdTournoi )
     THEN
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'L\'équipe ne peut pas occuper cette position dans cette série';
 	END IF;
@@ -1264,7 +1298,7 @@ END $$
 -- Démarre le tournoi
 CREATE PROCEDURE demarrerTournoi(pIdTournoi INT)
 BEGIN
-	DECLARE noSerie, noTour INT;
+	DECLARE vIdSerie, vNoTour INT;
 	-- Curseurs
     DECLARE done INT DEFAULT FALSE;
 	DECLARE equipe1Inscrite VARCHAR(3);
@@ -1290,8 +1324,8 @@ BEGIN
 	END IF; 
 
 	-- création du seeding 
-    SET noSerie = 1; 
-    SET noTour = calculerNbTours( (SELECT nbEquipesMax FROM Tournoi WHERE id = pIdTournoi) );
+    SET vIdSerie = 1; 
+    SET vNoTour = calculerNbTours( (SELECT nbEquipesMax FROM Tournoi WHERE id = pIdTournoi) );
     OPEN curInscription;
     inscription_loop : LOOP
 		FETCH curInscription INTO equipe1Inscrite;
@@ -1301,8 +1335,8 @@ BEGIN
 			THEN LEAVE inscription_loop; 
 		END IF;
         
-        UPDATE Serie SET acronymeEquipe1 = equipe1Inscrite,  acronymeEquipe2 = equipe2Inscrite WHERE id = noSerie AND noTour = noTour AND idTournoi = pIdTournoi;
-        SET noSerie = noSerie + 1;
+        UPDATE Serie SET acronymeEquipe1 = equipe1Inscrite,  acronymeEquipe2 = equipe2Inscrite WHERE id = vIdSerie AND noTour = vNoTour AND idTournoi = pIdTournoi;
+        SET vIdSerie = vIdSerie + 1;
         
     END LOOP;
     CLOSE curInscription;
@@ -1367,7 +1401,7 @@ END $$
 
 CREATE PROCEDURE verifierPrixNegatif(pPrix DOUBLE)
 BEGIN
-	IF NEW.montantArgent < 0
+	IF pPrix < 0
     THEN
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Le prix ne peux pas être négatif';
 	END IF;
@@ -1831,6 +1865,7 @@ BEGIN
 	CALL tenterPromotion(NEW.idMatch, NEW.idSerie, NEW.noTour, NEW.idTournoi);
 END $$
 
+----------------------- PRIX --------------------
 CREATE TRIGGER before_insert_prix
 BEFORE INSERT ON Prix
 FOR EACH ROW
@@ -1850,7 +1885,7 @@ END $$
 -----------------------------------------------------
 -- Chaque 6 heure, vérifie si la date de début d'un tournoi a été dépassée, si c'est le cas termine le tournoi.alter
 CREATE EVENT annuler_tournoi
-ON SCHEDULE EVERY 1 HOUR STARTS NOW() + INTERVAL 2 MINUTE DO
+ON SCHEDULE EVERY 1 MINUTE DO
 BEGIN 
 	UPDATE Tournoi 
     SET dateHeureFin = dateHeureDebut
@@ -1862,7 +1897,7 @@ END $$
 
 -- Chaque 7 jour vérifie si le un tournoi de plus de 7 jour peut être supprimé.
 CREATE EVENT supprimer_tournoi_annule
-ON SCHEDULE EVERY 7 DAY STARTS NOW() + INTERVAL 3 MINUTE DO
+ON SCHEDULE EVERY 2 MINUTE DO
 
 BEGIN 
 	DELETE FROM Tournoi 
