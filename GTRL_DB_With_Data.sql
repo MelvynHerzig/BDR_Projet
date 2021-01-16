@@ -1,5 +1,5 @@
 -- MySQL Script Gestionnaire de tournois rocket League
--- Fri Dec 11 11:16:36 2020
+-- Sat 16 Jan 2021
 -- Model: New Model    Version: 1.0
 -- Berney Alec, Forestier Quentin, Herzig Melvyn
 
