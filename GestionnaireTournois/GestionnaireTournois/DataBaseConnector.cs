@@ -141,7 +141,7 @@ namespace GestionnaireTournois
             return tournois;
         }
 
-        public static List<Tournoi> GetTournoisParticipesParEquipe(Equipe equipe)
+        public static List<Tournoi> GetTournoisParticipesParJoueur(Joueur joueur)
         {
             List<Tournoi> tournois = new List<Tournoi>();
 
@@ -154,9 +154,9 @@ namespace GestionnaireTournois
 
             try
             {
-                cmd.CommandText = "SELECT id, dateHeureDebut, dateHeureFin, nom, nbEquipesMax, idPrixPremier, idPrixSecond FROM tournoi JOIN tournoi_equipe ON tournoi_equipe.idTournoi = tournoi.id WHERE tournoi_equipe.acronymeEquipe = @acronyme;";
+                cmd.CommandText = "SELECT id, dateHeureDebut, dateHeureFin, nom, nbEquipesMax, idPrixPremier, idPrixSecond FROM tournoi JOIN tournoi_equipe ON tournoi_equipe.idTournoi = tournoi.id WHERE tournoi_equipe.acronymeEquipe = equipeDuJoueurLorsDu(@idJoueur, tournoi.dateHeureDebut);";
 
-                cmd.Parameters.AddWithValue("acronyme", equipe.Acronyme);
+                cmd.Parameters.AddWithValue("idJoueur", joueur.Id);
 
                 cmd.Prepare();
 
@@ -215,11 +215,17 @@ namespace GestionnaireTournois
                 while (rdr.Read())
                 {
                     DateTime fin = DateTime.MinValue;
+                    int idPrixPremier = 0;
+                    int idPrixDeuxieme = 0;
 
                     if (!rdr.IsDBNull(2))
                         fin = rdr.GetDateTime("dateHeureFin");
+                    if (!rdr.IsDBNull(5))
+                        idPrixPremier = rdr.GetInt32("idPrixPremier");
+                    if (!rdr.IsDBNull(6))
+                        idPrixPremier = rdr.GetInt32("idPrixSecond");
 
-                    result = new Tournoi(idTournoi, rdr.GetDateTime("dateHeureDebut"), fin, rdr.GetString("nom"), rdr.GetInt32("nbEquipesMax"), rdr.GetInt32("idPrixPremier"), rdr.GetInt32("idPrixSecond"));
+                    result = new Tournoi(idTournoi, rdr.GetDateTime("dateHeureDebut"), fin, rdr.GetString("nom"), rdr.GetInt32("nbEquipesMax"), idPrixPremier, idPrixDeuxieme);
                 }
             }
             catch (Exception e)
@@ -841,6 +847,7 @@ namespace GestionnaireTournois
                 cmd.Parameters.AddWithValue("pIdSerie", s.Id);
                 cmd.Parameters.AddWithValue("pNoTour", s.NoTour);
                 cmd.Parameters.AddWithValue("pIdTournoi", s.IdTournoi);
+                cmd.Parameters.AddWithValue("pSignalerErreurMatch", false);
 
                 cmd.Prepare();
 
@@ -2320,7 +2327,7 @@ namespace GestionnaireTournois
             try
             {
 
-                cmd.CommandText = "SELECT COUNT(1) as nbVictoire FROM serie JOIN tournoi ON tournoi.id = serie.idTournoi WHERE vainqueurSerie(serie.id, serie.noTour, serie.idTournoi) = equipeDuJoueurLorsDu(@idJoueur, tournoi.dateHeureDebut)";
+                cmd.CommandText = "SELECT COUNT(1) as nbVictoire FROM serie JOIN tournoi ON tournoi.id = serie.idTournoi WHERE vainqueurSerie(serie.id, serie.noTour, serie.idTournoi, FALSE) = equipeDuJoueurLorsDu(@idJoueur, tournoi.dateHeureDebut)";
 
                 cmd.Parameters.AddWithValue("idJoueur", joueur.Id);
 

@@ -119,7 +119,7 @@ namespace GestionnaireTournois
         {
             dgvTournois.Rows.Clear();
 
-            TournoisAffiches = Tournoi.GetTournoisParticipes(Joueur.GetEquipe());
+            TournoisAffiches = Tournoi.GetTournoisParticipes(Joueur);
 
             foreach (Tournoi t in TournoisAffiches)
             {

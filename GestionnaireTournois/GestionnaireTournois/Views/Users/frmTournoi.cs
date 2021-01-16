@@ -47,7 +47,7 @@ namespace GestionnaireTournois.Views.Users
                 }
             }
 
-            if(Joueur.Id == Joueur.GetEquipe().IdResponsable && Tournoi.DateHeureFin == DateTime.MinValue)
+            if(Joueur.Id == Joueur.GetEquipeDurantTournoi(Tournoi).IdResponsable && Tournoi.DateHeureFin == DateTime.MinValue)
             {
                 btnAbandonnerTournoi.Visible = true;
             }

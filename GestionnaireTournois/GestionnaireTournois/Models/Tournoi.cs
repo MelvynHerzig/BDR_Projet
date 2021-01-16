@@ -143,10 +143,10 @@ namespace GestionnaireTournois.Models
             return DataBaseConnector.GetTournoisRejoignables();
         }
 
-        public static List<Tournoi> GetTournoisParticipes(Equipe equipe)
+        public static List<Tournoi> GetTournoisParticipes(Joueur joueur)
         {
-            if (equipe == null) return new List<Tournoi>();
-            return DataBaseConnector.GetTournoisParticipesParEquipe(equipe);
+            if (joueur == null) return new List<Tournoi>();
+            return DataBaseConnector.GetTournoisParticipesParJoueur(joueur);
         }
 
         public static void Ajouter(Tournoi t)
