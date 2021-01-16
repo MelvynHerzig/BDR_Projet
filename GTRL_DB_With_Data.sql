@@ -945,8 +945,9 @@ BEGIN
 		IF NOT estEnAttente(vIdtournoi)
         THEN
 			SELECT id, noTour, idTournoi INTO vIdSerie, vNoTour, vIdTournoi
-			FROM Serie WHERE idTournoi = vIdTournoi AND noTour = ( SELECT MIN(noTour) 
-										                           FROM Serie
+			FROM Serie WHERE (acronymeEquipe1 = pAcronymeEquipe OR acronymeEquipe2 = pAcronymeEquipe) AND 
+							 idTournoi = vIdTournoi AND noTour = ( SELECT MIN(noTour) 
+																   FROM Serie
 																   WHERE acronymeEquipe1 = pAcronymeEquipe OR acronymeEquipe2 = pAcronymeEquipe AND idTournoi = vIdTournoi);
                                         
 			-- Si il n'y a pas de vainqueur la serie est en cours et l'équipe participe donc toujours à un tournoi.
@@ -1882,24 +1883,64 @@ END $$
 -- EVENTS
 -----------------------------------------------------
 -- Chaque 6 heure, vérifie si la date de début d'un tournoi a été dépassée, si c'est le cas termine le tournoi.alter
--- CREATE EVENT annuler_tournoi
--- ON SCHEDULE EVERY 1 MINUTE DO
--- BEGIN 
--- 	UPDATE Tournoi 
---     SET dateHeureFin = dateHeureDebut
---     WHERE dateHeureFin IS NULL AND dateHeureDebut < NOW() 
--- 		  AND nbEquipesMax > (SELECT COUNT(1) 
--- 							  FROM Tournoi_Equipe
--- 							  WHERE idTournoi = id);
--- END $$
+CREATE EVENT annuler_tournoi
+ON SCHEDULE EVERY 1 HOUR 
+STARTS CURRENT_TIMESTAMP
+DO
+BEGIN 
+	DECLARE done INT DEFAULT FALSE;
+	DECLARE vIdTournoi INT;
+    DECLARE tournoiCursor CURSOR FOR SELECT id 
+									 FROM Tournoi 
+									 WHERE dateHeureDebut < NOW() AND nbEquipesMax > (SELECT COUNT(1) 
+																					  FROM Tournoi_Equipe
+																					  WHERE idTournoi = id);
+	OPEN tournoiCursor ;
+    read_loop : LOOP
+		
+        FETCH tournoiCursor INTO vIdTournoi;
+		
+        IF done THEN
+			LEAVE read_loop;
+		END IF;
+        
+		UPDATE Tournoi 
+		SET dateHeureFin = dateHeureDebut
+		WHERE id = vIdTournoi;
+    
+	END LOOP;
+    CLOSE tournoiCursor;
+END $$
 
--- -- Chaque 7 jour vérifie si le un tournoi de plus de 7 jour peut être supprimé.
--- CREATE EVENT supprimer_tournoi_annule
--- ON SCHEDULE EVERY 2 MINUTE DO
--- BEGIN 
--- 	DELETE FROM Tournoi 
---     WHERE dateHeureFin = dateHeureDebut;
--- END $$
+-- Chaque 7 jour vérifie si le un tournoi de plus de 7 jour peut être supprimé.
+CREATE EVENT supprimer_tournoi_annule
+ON SCHEDULE EVERY 7 DAY
+STARTS CURRENT_TIMESTAMP
+DO
+BEGIN 
+	DECLARE done INT DEFAULT FALSE;
+	DECLARE vIdTournoi INT;
+    DECLARE tournoiCursor CURSOR FOR SELECT id 
+									 FROM Tournoi 
+									 WHERE dateHeureDebut = dateHeureFin;
+	OPEN tournoiCursor ;
+    read_loop : LOOP
+		
+        FETCH tournoiCursor INTO vIdTournoi;
+		
+        IF done THEN
+			LEAVE read_loop;
+		END IF;
+        
+		DELETE FROM Tournoi WHERE id = vIdTournoi AND DATEDIFF( NOW(), dateHeureFin) >= 7;
+    
+	END LOOP;
+    CLOSE tournoiCursor;
+END $$
 
 DELIMITER ;
+
+DROP USER IF EXISTS 'GDTRL_Manager';
+CREATE USER 'GDTRL_Manager' IDENTIFIED BY 'P@$$w0rd1sHArDt0F1nd';
+GRANT DELETE, INSERT, SELECT, UPDATE ON GestionnaireDeTournoisRocketLeague.* TO 'GDTRL_Manager';
 
