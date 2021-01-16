@@ -1383,7 +1383,7 @@ BEGIN
     END;
 
 	START TRANSACTION;
-	UPDATE Equipe_Joueur SET dateHeureArrivee = NOW() AND dateHeureDepart = NULL WHERE idJoueur = pIdJoueur AND acronymeEquipe = pAcronymeEquipe AND  dateHeureArrivee = '0001-01-01 00:00:00';
+	UPDATE Equipe_Joueur SET dateHeureArrivee = NOW(), dateHeureDepart = NULL WHERE idJoueur = pIdJoueur AND acronymeEquipe = pAcronymeEquipe AND  dateHeureArrivee = '0001-01-01 00:00:00';
     DELETE FROM Equipe_Joueur WHERE idJoueur = pIdJoueur AND dateHeureArrivee = '0001-01-01 00:00:00';
     COMMIT;
 END $$
@@ -1850,7 +1850,7 @@ END $$
 -----------------------------------------------------
 -- Chaque 6 heure, vérifie si la date de début d'un tournoi a été dépassée, si c'est le cas termine le tournoi.alter
 CREATE EVENT annuler_tournoi
-ON SCHEDULE EVERY 1 HOUR DO
+ON SCHEDULE EVERY 1 HOUR STARTS NOW() + INTERVAL 2 MINUTE DO
 BEGIN 
 	UPDATE Tournoi 
     SET dateHeureFin = dateHeureDebut
@@ -1862,11 +1862,11 @@ END $$
 
 -- Chaque 7 jour vérifie si le un tournoi de plus de 7 jour peut être supprimé.
 CREATE EVENT supprimer_tournoi_annule
-ON SCHEDULE EVERY 7 DAY STARTS NOW() + INTERVAL 15 MINUTE DO
+ON SCHEDULE EVERY 7 DAY STARTS NOW() + INTERVAL 3 MINUTE DO
 
 BEGIN 
 	DELETE FROM Tournoi 
-    WHERE dateHeureFin = dateHeureDebut AND DATEDIFF(NOW(), dateHeureDebut) >= 7;
+    WHERE dateHeureFin = dateHeureDebut;
 END $$
 
 DELIMITER ;
