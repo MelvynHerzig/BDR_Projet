@@ -360,42 +360,42 @@ VALUES
 ( 'Gabin', 'Jean', 'gabin@sansequipe.com', 'gabin', '1990-04-01' ),
 ( 'Berset', 'Alain', 'theking@sansequipe.com', 'theking', '1980-04-01' ),
 ( 'Maxime', 'Berthoud', 'max@sansequipe.com', 'max', '2005-04-01' ),
-( 'Keith', 'MaleDaugherty', 'Cum.sociis@luctusaliquet.com', 'Demetrius Ross', '2020-06-04' ), 
-( 'Tiger', 'MaleConner', 'vitae.diam.Proin@justoProin.com', 'David Carrillo', '2021-11-25' ), 
-( 'Jeremy', 'MaleSchultz', 'egestas@diamDuismi.co.uk', 'Jamal Vasquez', '2021-06-02' ), 
-( 'Kasper', 'MaleHopper', 'sed.sapien.Nunc@Sedeu.edu', 'Rafael Perry', '2020-07-28' ), 
-( 'Jamal', 'MaleWilson', 'neque@augueutlacus.ca', 'Driscoll Hubbard', '2021-10-14' ), 
-( 'Barclay', 'MaleEmerson', 'quam.Curabitur.vel@rutrumnonhendrerit.ca', 'Quentin Johnson', '2020-02-02' ), 
-( 'Colt', 'MaleMoore', 'Maecenas.libero@egestasDuis.edu', 'Allen Briggs', '2021-01-08' ), 
-( 'Melvin', 'MaleBooth', 'luctus.felis.purus@massalobortisultrices.co.uk', 'Owen Finley', '2020-05-16' ), 
-( 'Joshua', 'MaleBooker', 'ut@vitae.edu', 'Aladdin Howe', '2021-09-11' ), 
-( 'Dolan', 'MaleManning', 'gravida.Praesent@sitamet.edu', 'Cody Zimmerman', '2020-07-29' ), 
-( 'Clayton', 'MaleWiley', 'ac@convallisligulaDonec.ca', 'Dean Phelps', '2020-01-20' ), 
-( 'Paki', 'MaleRomero', 'gravida@Proinsed.co.uk', 'Brenden Kennedy', '2020-12-26' ), 
-( 'Knox', 'MaleRodriguez', 'in@facilisisloremtristique.com', 'Hu Wilkinson', '2021-02-24' ), 
-( 'Chancellor', 'MaleStout', 'imperdiet.nec@amet.com', 'Carter Heath', '2022-01-02' ), 
-( 'Fuller', 'MaleMcfadden', 'Curabitur.sed@lectussit.org', 'Cairo Kemp', '2020-08-13' ), 
-( 'Rajah', 'MaleHester', 'in@purus.co.uk', 'Peter Hess', '2020-05-28' ), 
-( 'Zachery', 'MaleBeach', 'scelerisque.neque@egestasligula.edu', 'Gray Carey', '2021-02-07' ), 
-( 'Chase', 'MaleBullock', 'suscipit.nonummy.Fusce@maurisidsapien.co.uk', 'Brendan Puckett', '2020-07-04' ), 
-( 'Demetrius', 'MaleSmall', 'eget@loremsit.ca', 'Emerson Mueller', '2021-03-08' ), 
-( 'Steven', 'MaleJordan', 'eget.laoreet@Nullam.com', 'Hamish Bennett', '2020-07-28' ), 
-( 'Paki', 'MaleMcconnell', 'ut@etnetuset.com', 'Lucian Phillips', '2021-04-13' ), 
-( 'Drake', 'MaleRasmussen', 'sit@nullavulputate.com', 'Ishmael Rollins', '2020-03-30' ), 
-( 'Luke', 'MaleConrad', 'erat.volutpat@eleifendnunc.edu', 'Herrod Gentry', '2021-12-18' ), 
-( 'Chester', 'MaleReese', 'consequat.purus.Maecenas@estmollisnon.com', 'Wallace Donaldson', '2021-10-29' ), 
-( 'Ryder', 'MaleWalters', 'ante.Nunc@etpede.org', 'Oleg Wallace', '2021-12-18' ), 
-( 'Nissim', 'MaleAustin', 'arcu.Morbi@lectus.edu', 'Elliott Kinney', '2020-09-17' ), 
-( 'Nicholas', 'MaleLeach', 'vitae.semper@accumsaninterdumlibero.co.uk', 'Quamar Thornton', '2020-05-26' ), 
-( 'Cadman', 'MalePage', 'orci.Phasellus@Cumsociis.co.uk', 'Curran Gardner', '2020-07-19' ), 
-( 'Xavier', 'MaleMoody', 'elit.elit@In.org', 'Malachi Pierce', '2021-12-15' ), 
-( 'Orson', 'MaleJacobs', 'ultricies.ornare@vulputatemaurissagittis.edu', 'Carlos Maynard', '2020-03-20' ), 
-( 'Dorian', 'MaleWebster', 'congue.a.aliquet@lectusCum.ca', 'Drake Berg', '2020-10-10' ), 
-( 'Simon', 'MalePatterson', 'turpis.egestas@vitaemauris.co.uk', 'Akeem Maldonado', '2020-06-22' ), 
-( 'Kasimir', 'MaleFowler', 'sit.amet@mi.edu', 'Sean Greene', '2020-10-09' ), 
-( 'Kyle', 'MaleBradshaw', 'est.mollis@doloregestasrhoncus.com', 'Bruno Clay', '2021-04-26' ), 
-( 'Geoffrey', 'MaleVega', 'Vivamus.non.lorem@mollisvitae.com', 'Michael Freeman', '2021-04-23' ), 
-( 'David', 'MaleMaldonado', 'ac@faucibus.net', 'Colby Bean', '2022-01-03' );
+( 'MaleDaugherty', 'Keith', 'Cum.sociis@luctusaliquet.com', 'Demetrius Ross', '2010-06-04' ), 
+( 'MaleConner', 'Tiger', 'vitae.diam.Proin@justoProin.com', 'David Carrillo', '2011-11-25' ), 
+( 'MaleSchultz', 'Jeremy','egestas@diamDuismi.co.uk', 'Jamal Vasquez', '2011-06-02' ), 
+( 'MaleHopper', 'Kasper', 'sed.sapien.Nunc@Sedeu.edu', 'Rafael Perry', '2010-07-28' ), 
+( 'MaleWilson', 'Jamal', 'neque@augueutlacus.ca', 'Driscoll Hubbard', '2011-10-14' ), 
+( 'MaleEmerson',  'Barclay', 'quam.Curabitur.vel@rutrumnonhendrerit.ca', 'Quentin Johnson', '2010-02-02' ), 
+( 'MaleMoore', 'Colt', 'Maecenas.libero@egestasDuis.edu', 'Allen Briggs', '2011-01-08' ), 
+( 'MaleBooth', 'Melvin',  'luctus.felis.purus@massalobortisultrices.co.uk', 'Owen Finley', '2010-05-16' ), 
+( 'MaleBooker', 'Joshua', 'ut@vitae.edu', 'Aladdin Howe', '2001-09-11' ), 
+( 'MaleManning', 'Dolan', 'gravida.Praesent@sitamet.edu', 'Cody Zimmerman', '2000-07-29' ), 
+( 'MaleWiley', 'Clayton', 'ac@convallisligulaDonec.ca', 'Dean Phelps', '2000-01-20' ), 
+( 'MaleRomero',  'Paki','gravida@Proinsed.co.uk', 'Brenden Kennedy', '2010-12-26' ), 
+( 'MaleRodriguez', 'Knox', 'in@facilisisloremtristique.com', 'Hu Wilkinson', '2001-02-24' ), 
+( 'MaleStout', 'Chancellor', 'imperdiet.nec@amet.com', 'Carter Heath', '2012-01-02' ), 
+( 'MaleMcfadden', 'Fuller', 'Curabitur.sed@lectussit.org', 'Cairo Kemp', '2000-08-13' ), 
+( 'MaleHester', 'Rajah', 'in@purus.co.uk', 'Peter Hess', '1999-05-28' ), 
+( 'MaleBeach', 'Zachery', 'scelerisque.neque@egestasligula.edu', 'Gray Carey', '2001-02-07' ), 
+( 'MaleBullock', 'Chase', 'suscipit.nonummy.Fusce@maurisidsapien.co.uk', 'Brendan Puckett', '1998-07-04' ), 
+( 'MaleSmall',  'Demetrius', 'eget@loremsit.ca', 'Emerson Mueller', '1980-03-08' ), 
+( 'MaleJordan', 'Steven', 'eget.laoreet@Nullam.com', 'Hamish Bennett', '1980-07-28' ), 
+( 'MaleMcconnell', 'Paki', 'ut@etnetuset.com', 'Lucian Phillips', '1990-04-13' ), 
+( 'MaleRasmussen',  'Drake', 'sit@nullavulputate.com', 'Ishmael Rollins', '2000-03-30' ), 
+( 'MaleConrad', 'Luke', 'erat.volutpat@eleifendnunc.edu', 'Herrod Gentry', '200-12-18' ), 
+( 'MaleReese', 'Chester', 'consequat.purus.Maecenas@estmollisnon.com', 'Wallace Donaldson', '2000-10-29' ), 
+( 'MaleWalters', 'Ryder', 'ante.Nunc@etpede.org', 'Oleg Wallace', '1998-12-18' ), 
+( 'MaleAustin', 'Nissim', 'arcu.Morbi@lectus.edu', 'Elliott Kinney', '1996-09-17' ), 
+( 'MaleLeach', 'Nicholas', 'vitae.semper@accumsaninterdumlibero.co.uk', 'Quamar Thornton', '1995-05-26' ), 
+( 'MalePage', 'Cadman', 'orci.Phasellus@Cumsociis.co.uk', 'Curran Gardner', '1994-07-19' ), 
+( 'MaleMoody',  'Xavier', 'elit.elit@In.org', 'Malachi Pierce', '1993-12-15' ), 
+( 'MaleJacobs',  'Orson', 'ultricies.ornare@vulputatemaurissagittis.edu', 'Carlos Maynard', '1992-03-20' ), 
+( 'MaleWebster', 'Dorian','congue.a.aliquet@lectusCum.ca', 'Drake Berg', '1991-10-10' ), 
+( 'MalePatterson', 'Simon', 'turpis.egestas@vitaemauris.co.uk', 'Akeem Maldonado', '1990-06-22' ), 
+( 'MaleFowler', 'Kasimir', 'sit.amet@mi.edu', 'Sean Greene', '1980-10-09' ), 
+( 'MaleBradshaw', 'Kyle','est.mollis@doloregestasrhoncus.com', 'Bruno Clay', '1968-04-26' ), 
+( 'MaleVega', 'Geoffrey', 'Vivamus.non.lorem@mollisvitae.com', 'Michael Freeman', '1980-04-23' ), 
+( 'MaleMaldonado',  'David', 'ac@faucibus.net', 'Colby Bean', '1972-01-03' );
 
 
 INSERT INTO Equipe
@@ -1383,7 +1383,7 @@ BEGIN
     END;
 
 	START TRANSACTION;
-	UPDATE Equipe_Joueur SET dateHeureArrivee = NOW() WHERE idJoueur = pIdJoueur AND acronymeEquipe = pAcronymeEquipe;
+	UPDATE Equipe_Joueur SET dateHeureArrivee = NOW() AND dateHeureDepart = NULL WHERE idJoueur = pIdJoueur AND acronymeEquipe = pAcronymeEquipe AND  dateHeureArrivee = '0001-01-01 00:00:00';
     DELETE FROM Equipe_Joueur WHERE idJoueur = pIdJoueur AND dateHeureArrivee = '0001-01-01 00:00:00';
     COMMIT;
 END $$
@@ -1626,10 +1626,11 @@ FOR EACH ROW
 BEGIN
 	-- La vérification qui affirme que le responsable n''est pas déjà dans une équie s'effectue au moment de l'insertion dans equipe_joueur.
 	INSERT INTO Equipe_Joueur (acronymeEquipe, idJoueur, dateHeureArrivee, dateHeureDepart)
-    VALUE(NEW.acronyme, NEW.idResponsable, NOW(), NULL);
+    VALUE(NEW.acronyme, NEW.idResponsable, '0001-01-01 00:00:00', NULL);
 	
-	-- Suppression de ses demandes
-	DELETE FROM Equipe_Joueur WHERE dateHeureArrivee = '0001-01-01 00:00:00' AND idJoueur = NEW.idResponsable;
+    -- Comme call accepterJoueur();
+	UPDATE Equipe_Joueur SET dateHeureArrivee = NOW(), dateHeureDepart = NULL WHERE idJoueur = NEW.idResponsable AND acronymeEquipe = NEW.acronyme AND  dateHeureArrivee = '0001-01-01 00:00:00';
+    DELETE FROM Equipe_Joueur WHERE idJoueur = NEW.idResponsable AND dateHeureArrivee = '0001-01-01 00:00:00';
 END $$
 
 CREATE TRIGGER before_update_equipe
@@ -1665,11 +1666,11 @@ CREATE TRIGGER before_insert_equipe_joueur
 BEFORE INSERT ON Equipe_Joueur
 FOR EACH ROW
 BEGIN
-    CALL  verifierDatePlusPetite(NEW.dateHeureArrivee,NEW.dateHeureDepart);
-    IF NEW.dateHeureArrivee <> '0001-01-01 00:00:00' AND estComplete(NEW.acronymeEquipe) 
-    THEN 
-		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Impossible de rejoindre l\'equipe, elle est complète';
-    END IF;
+	IF NEW.dateHeureArrivee <> '0001-01-01 00:00:00'
+    THEN
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Seul une demande peut être insérée dans la table equipe_joueur.';
+	END IF;
+    
     CALL verifierDejaDansUneEquipe(NEW.idJoueur);
 END $$
 
@@ -1687,7 +1688,10 @@ BEGIN
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Impossible de modifier l\'équipe du joueur dans un enregistrement Equipe_joueur';
 	END IF;
     
-    CALL verifierDatePlusPetite(NEW.dateHeureArrivee,NEW.dateHeureDepart);
+    IF OLD.dateHeureArrivee <> NEW.dateHeureArrivee AND OLD.dateHeureArrivee <> '0001-01-01 00:00:00'
+    THEN
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Impossible de modifier la date d\'arrivée, risque d\'incohérence.';
+	END IF;
     
     -- Si on tente de lui le re-refaire rejoindre l'équipe avec le même enregistrement
     IF NEW.dateHeureDepart IS NULL AND OLD.dateHeureDepart IS NOT NULL 
@@ -1695,12 +1699,15 @@ BEGIN
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Impossible de rejoindre a nouveau l\'équipe avec le même enregistrement';
 	END IF;
     
+    CALL verifierDatePlusPetite(NEW.dateHeureArrivee,NEW.dateHeureDepart);
+    
 	IF OLD.dateHeureArrivee = '0001-01-01 00:00:00' AND NEW.dateHeureArrivee <> OLD.dateHeureArrivee
     THEN
 		IF estComplete(NEW.acronymeEquipe)
         THEN
 			SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = ' Le joueur ne peut pas être accepté, équipe pleine.';
 		END IF;
+        SET NEW.dateHeureArrivee = NOW();
     END IF;
     
     -- Si on tente de lui faire quitter l'équipe
