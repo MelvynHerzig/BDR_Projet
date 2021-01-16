@@ -33,11 +33,6 @@ namespace GestionnaireTournois
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmUser));
             this.dgvTournois = new System.Windows.Forms.DataGridView();
-            this.colNomTournoi = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colDateDebut = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colDateFin = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colNbEquipes = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colActions = new System.Windows.Forms.DataGridViewButtonColumn();
             this.mstrpUser = new System.Windows.Forms.MenuStrip();
             this.tsmiFIchier = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmiChoixMode = new System.Windows.Forms.ToolStripMenuItem();
@@ -45,6 +40,11 @@ namespace GestionnaireTournois
             this.tsmiEquipes = new System.Windows.Forms.ToolStripMenuItem();
             this.cbxTypeTournois = new System.Windows.Forms.ComboBox();
             this.lblTypeTournoi = new System.Windows.Forms.Label();
+            this.colNomTournoi = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colDateDebut = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colDateFin = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colNbEquipes = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colActions = new System.Windows.Forms.DataGridViewButtonColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dgvTournois)).BeginInit();
             this.mstrpUser.SuspendLayout();
             this.SuspendLayout();
@@ -70,8 +70,7 @@ namespace GestionnaireTournois
             this.colNbEquipes,
             this.colActions});
             this.dgvTournois.Cursor = System.Windows.Forms.Cursors.Default;
-            this.dgvTournois.Location = new System.Drawing.Point(20, 75);
-            this.dgvTournois.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.dgvTournois.Location = new System.Drawing.Point(15, 61);
             this.dgvTournois.Name = "dgvTournois";
             this.dgvTournois.ReadOnly = true;
             dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
@@ -85,50 +84,9 @@ namespace GestionnaireTournois
             this.dgvTournois.RowHeadersVisible = false;
             this.dgvTournois.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.AutoSizeToDisplayedHeaders;
             this.dgvTournois.RowTemplate.ReadOnly = true;
-            this.dgvTournois.Size = new System.Drawing.Size(739, 409);
+            this.dgvTournois.Size = new System.Drawing.Size(554, 332);
             this.dgvTournois.TabIndex = 4;
             this.dgvTournois.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvTournois_CellClick);
-            // 
-            // colNomTournoi
-            // 
-            this.colNomTournoi.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
-            this.colNomTournoi.HeaderText = "Nom Tournoi";
-            this.colNomTournoi.Name = "colNomTournoi";
-            this.colNomTournoi.ReadOnly = true;
-            this.colNomTournoi.Width = 96;
-            // 
-            // colDateDebut
-            // 
-            this.colDateDebut.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
-            this.colDateDebut.HeaderText = "Date de début";
-            this.colDateDebut.Name = "colDateDebut";
-            this.colDateDebut.ReadOnly = true;
-            this.colDateDebut.Width = 104;
-            // 
-            // colDateFin
-            // 
-            this.colDateFin.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
-            this.colDateFin.HeaderText = "Date de fin";
-            this.colDateFin.Name = "colDateFin";
-            this.colDateFin.ReadOnly = true;
-            this.colDateFin.Width = 75;
-            // 
-            // colNbEquipes
-            // 
-            this.colNbEquipes.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
-            this.colNbEquipes.HeaderText = "Nombre d\'équipes";
-            this.colNbEquipes.Name = "colNbEquipes";
-            this.colNbEquipes.ReadOnly = true;
-            this.colNbEquipes.Width = 122;
-            // 
-            // colActions
-            // 
-            this.colActions.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.colActions.HeaderText = "Actions";
-            this.colActions.Name = "colActions";
-            this.colActions.ReadOnly = true;
-            this.colActions.Text = "Voir";
-            this.colActions.ToolTipText = "Voir";
             // 
             // mstrpUser
             // 
@@ -138,8 +96,7 @@ namespace GestionnaireTournois
             this.tsmiEquipes});
             this.mstrpUser.Location = new System.Drawing.Point(0, 0);
             this.mstrpUser.Name = "mstrpUser";
-            this.mstrpUser.Padding = new System.Windows.Forms.Padding(8, 2, 0, 2);
-            this.mstrpUser.Size = new System.Drawing.Size(775, 24);
+            this.mstrpUser.Size = new System.Drawing.Size(581, 24);
             this.mstrpUser.TabIndex = 9;
             this.mstrpUser.Text = "menuStrip1";
             // 
@@ -179,28 +136,67 @@ namespace GestionnaireTournois
             this.cbxTypeTournois.Items.AddRange(new object[] {
             "Tournois participés",
             "Tournois rejoignables"});
-            this.cbxTypeTournois.Location = new System.Drawing.Point(151, 42);
-            this.cbxTypeTournois.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.cbxTypeTournois.Location = new System.Drawing.Point(113, 34);
             this.cbxTypeTournois.Name = "cbxTypeTournois";
-            this.cbxTypeTournois.Size = new System.Drawing.Size(229, 24);
+            this.cbxTypeTournois.Size = new System.Drawing.Size(173, 21);
             this.cbxTypeTournois.TabIndex = 10;
             this.cbxTypeTournois.SelectedIndexChanged += new System.EventHandler(this.cbxTypeTournois_SelectedIndexChanged);
             // 
             // lblTypeTournoi
             // 
             this.lblTypeTournoi.AutoSize = true;
-            this.lblTypeTournoi.Location = new System.Drawing.Point(16, 46);
-            this.lblTypeTournoi.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblTypeTournoi.Location = new System.Drawing.Point(12, 37);
             this.lblTypeTournoi.Name = "lblTypeTournoi";
-            this.lblTypeTournoi.Size = new System.Drawing.Size(115, 16);
+            this.lblTypeTournoi.Size = new System.Drawing.Size(92, 13);
             this.lblTypeTournoi.TabIndex = 11;
             this.lblTypeTournoi.Text = "Type de tournois :";
             // 
+            // colNomTournoi
+            // 
+            this.colNomTournoi.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.colNomTournoi.HeaderText = "Nom Tournoi";
+            this.colNomTournoi.Name = "colNomTournoi";
+            this.colNomTournoi.ReadOnly = true;
+            this.colNomTournoi.Width = 96;
+            // 
+            // colDateDebut
+            // 
+            this.colDateDebut.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
+            this.colDateDebut.HeaderText = "Date de début";
+            this.colDateDebut.Name = "colDateDebut";
+            this.colDateDebut.ReadOnly = true;
+            this.colDateDebut.Width = 104;
+            // 
+            // colDateFin
+            // 
+            this.colDateFin.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
+            this.colDateFin.HeaderText = "Date de fin";
+            this.colDateFin.Name = "colDateFin";
+            this.colDateFin.ReadOnly = true;
+            this.colDateFin.Width = 75;
+            // 
+            // colNbEquipes
+            // 
+            this.colNbEquipes.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
+            this.colNbEquipes.HeaderText = "Nombre d\'équipes";
+            this.colNbEquipes.Name = "colNbEquipes";
+            this.colNbEquipes.ReadOnly = true;
+            this.colNbEquipes.Width = 122;
+            // 
+            // colActions
+            // 
+            this.colActions.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.colActions.HeaderText = "Actions";
+            this.colActions.Name = "colActions";
+            this.colActions.ReadOnly = true;
+            this.colActions.Text = "Voir";
+            this.colActions.ToolTipText = "Voir";
+            // 
             // frmUser
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(775, 498);
+            this.ClientSize = new System.Drawing.Size(581, 405);
             this.Controls.Add(this.lblTypeTournoi);
             this.Controls.Add(this.cbxTypeTournois);
             this.Controls.Add(this.dgvTournois);
@@ -208,7 +204,6 @@ namespace GestionnaireTournois
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.mstrpUser;
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.MaximizeBox = false;
             this.Name = "frmUser";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
