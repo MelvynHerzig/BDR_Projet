@@ -112,7 +112,8 @@ namespace GestionnaireTournois
 
             if(equipe != null)
             {
-                equipe.AbandonnerTournoi(Tournoi);
+                if(Tournoi.EstEnAttente())
+                    equipe.AbandonnerTournoi(Tournoi);
                 LoadInfoTournoi();
             }
         }

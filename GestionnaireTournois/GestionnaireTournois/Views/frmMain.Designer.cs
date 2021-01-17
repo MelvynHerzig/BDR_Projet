@@ -140,6 +140,7 @@ namespace GestionnaireTournois
             this.Name = "frmMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Gestionnaire de tournois";
+            this.Load += new System.EventHandler(this.frmMain_Load);
             this.gbxAdmin.ResumeLayout(false);
             this.gbxUser.ResumeLayout(false);
             this.gbxUser.PerformLayout();

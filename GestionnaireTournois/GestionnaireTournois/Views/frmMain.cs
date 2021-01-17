@@ -46,7 +46,7 @@ namespace GestionnaireTournois
             Joueur j = Joueur.GetJoueurByEmail(tbxEmail.Text);
             // Check dans la base de donnée l'email
             // Si dans la base :
-            if(j != null)
+            if (j != null)
             {
                 frmUser user = new frmUser(j);
                 this.Hide();
@@ -64,5 +64,17 @@ namespace GestionnaireTournois
             btnSignIn.Enabled = tbxEmail.TextLength > 0;
         }
 
+        private void frmMain_Load(object sender, EventArgs e)
+        {
+            try
+            {
+                DataBaseConnector.TestDBConnection();
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show("Impossible de se connecter à la base de données, veuillez consulter le manuel d'installation.", "Connexion à la base impossible", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Application.Exit();
+            }
+        }
     }
 }

@@ -22,6 +22,15 @@ namespace GestionnaireTournois
                                                         ConfigurationManager.AppSettings["password"]);
 
 
+        public static void TestDBConnection()
+        {
+            MySqlConnection myConnection = new MySqlConnection(connection);
+
+            myConnection.Open();
+
+            myConnection.Close();
+        }
+
         #region Tournois
 
         public static List<Tournoi> GetTournoisFiltres(EtatTournoi etat)
