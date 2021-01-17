@@ -515,20 +515,14 @@ namespace GestionnaireTournois
 
             try
             {
-                cmd.CommandText = "estEnAttente";
-                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandText = "SELECT COUNT(id) FROM tournoi WHERE id = @idTournoi AND estEnAttente(@idTournoi)";
 
 
-                cmd.Parameters.AddWithValue("ireturnvalue", true);
-                cmd.Parameters["ireturnvalue"].Direction = ParameterDirection.ReturnValue;
-
-                cmd.Parameters.AddWithValue("pIdTournoi", t.Id);
+                cmd.Parameters.AddWithValue("idTournoi", t.Id);
 
                 cmd.Prepare();
 
-                cmd.ExecuteScalar();
-
-                enAttente = Convert.ToBoolean(cmd.Parameters["ireturnvalue"].Value);
+                enAttente = Convert.ToBoolean(cmd.ExecuteScalar());
 
             }
             catch (Exception e)
@@ -827,7 +821,7 @@ namespace GestionnaireTournois
 
         public static Equipe GetWinnerOfSerie(Serie s)
         {
-            string winner = "";
+            Equipe equipe = null;
 
             MySqlConnection myConnection = new MySqlConnection(connection);
 
@@ -837,23 +831,21 @@ namespace GestionnaireTournois
 
             try
             {
-                cmd.CommandText = "vainqueurSerie";
-                cmd.CommandType = CommandType.StoredProcedure;
 
+                cmd.CommandText = "SELECT acronyme, nom, idResponsable FROM equipe WHERE acronyme = vainqueurSerie(@idSerie, @noTour, @idTournoi, false);";
 
-                cmd.Parameters.Add("@ireturnvalue", MySqlDbType.VarChar);
-                cmd.Parameters["@ireturnvalue"].Direction = ParameterDirection.ReturnValue;
-
-                cmd.Parameters.AddWithValue("pIdSerie", s.Id);
-                cmd.Parameters.AddWithValue("pNoTour", s.NoTour);
-                cmd.Parameters.AddWithValue("pIdTournoi", s.IdTournoi);
-                cmd.Parameters.AddWithValue("pSignalerErreurMatch", false);
+                cmd.Parameters.AddWithValue("idSerie", s.Id);
+                cmd.Parameters.AddWithValue("noTour", s.NoTour);
+                cmd.Parameters.AddWithValue("idTournoi", s.IdTournoi);
 
                 cmd.Prepare();
 
-                cmd.ExecuteScalar();
+                MySqlDataReader reader = cmd.ExecuteReader();
 
-                winner = cmd.Parameters["@ireturnvalue"].Value.ToString();
+                while (reader.Read())
+                {
+                    equipe = new Equipe(reader.GetString("acronyme"), reader.GetString("nom"), reader.GetInt32("idResponsable"));
+                }
 
             }
             catch (Exception e)
@@ -866,7 +858,7 @@ namespace GestionnaireTournois
                 myConnection.Close();
             }
 
-            return GetEquipeByAcronyme(winner);
+            return equipe;
         }
 
         #endregion
@@ -1069,62 +1061,7 @@ namespace GestionnaireTournois
         #endregion
 
         #region Equipes
-
-        public static List<Equipe> GetEquipesFromSerie(Serie s)
-        {
-
-            List<Equipe> equipes = new List<Equipe>();
-
-            List<string> acronymes = new List<string>();
-
-            MySqlConnection myConnection = new MySqlConnection(connection);
-
-            myConnection.Open();
-
-            MySqlCommand cmd = myConnection.CreateCommand();
-
-            try
-            {
-                cmd.CommandText = "SELECT acronymeEquipe1, acronymeEquipe2 FROM serie WHERE idTournoi = @idTournoi AND noTour = @noTour AND id = @idSerie;";
-
-                cmd.Parameters.AddWithValue("@idSerie", s.Id);
-                cmd.Parameters.AddWithValue("@noTour", s.NoTour);
-                cmd.Parameters.AddWithValue("@idTournoi", s.IdTournoi);
-
-                cmd.Prepare();
-
-                MySqlDataReader reader = cmd.ExecuteReader();
-
-                while (reader.Read())
-                {
-
-                    string acronyme1 = reader.GetString("acronymeEquipe1");
-                    string acronyme2 = reader.GetString("acronymeEquipe2");
-
-
-                    acronymes.Add(acronyme1);
-                    acronymes.Add(acronyme2);
-                }
-
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("An exception of type " + e.Message +
-               " was encountered.");
-            }
-            finally
-            {
-                myConnection.Close();
-            }
-
-            if (acronymes.Count > 0)
-            {
-                equipes.Add(GetEquipeByAcronyme(acronymes[0]));
-                equipes.Add(GetEquipeByAcronyme(acronymes[1]));
-            }
-            return equipes;
-        }
-
+        
         public static Equipe GetEquipeJoueurDurantTournoi(Joueur joueur, Tournoi tournoi)
         {
             Equipe equipe = null;

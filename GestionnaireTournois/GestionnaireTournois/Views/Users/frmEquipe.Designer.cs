@@ -49,10 +49,9 @@ namespace GestionnaireTournois.Views.Users
             // 
             // btnQuitter
             // 
-            this.btnQuitter.Location = new System.Drawing.Point(21, 15);
-            this.btnQuitter.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnQuitter.Location = new System.Drawing.Point(16, 12);
             this.btnQuitter.Name = "btnQuitter";
-            this.btnQuitter.Size = new System.Drawing.Size(211, 38);
+            this.btnQuitter.Size = new System.Drawing.Size(158, 31);
             this.btnQuitter.TabIndex = 0;
             this.btnQuitter.Text = "Quitter l\'équipe";
             this.btnQuitter.UseVisualStyleBackColor = true;
@@ -62,8 +61,7 @@ namespace GestionnaireTournois.Views.Users
             // 
             this.lblEquipe.AutoSize = true;
             this.lblEquipe.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblEquipe.Location = new System.Drawing.Point(315, 11);
-            this.lblEquipe.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblEquipe.Location = new System.Drawing.Point(236, 9);
             this.lblEquipe.Name = "lblEquipe";
             this.lblEquipe.Size = new System.Drawing.Size(71, 24);
             this.lblEquipe.TabIndex = 13;
@@ -75,7 +73,7 @@ namespace GestionnaireTournois.Views.Users
             this.dgvAffichage.AllowUserToDeleteRows = false;
             this.dgvAffichage.AllowUserToResizeRows = false;
             this.dgvAffichage.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            this.dgvAffichage.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+            this.dgvAffichage.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvAffichage.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.colPseudo,
             this.colNom,
@@ -87,13 +85,12 @@ namespace GestionnaireTournois.Views.Users
             this.colMoyenneButs,
             this.colMoyenneArrets,
             this.colActions});
-            this.dgvAffichage.Location = new System.Drawing.Point(21, 84);
-            this.dgvAffichage.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.dgvAffichage.Location = new System.Drawing.Point(16, 68);
             this.dgvAffichage.Name = "dgvAffichage";
             this.dgvAffichage.ReadOnly = true;
             this.dgvAffichage.RowHeadersVisible = false;
             this.dgvAffichage.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
-            this.dgvAffichage.Size = new System.Drawing.Size(864, 292);
+            this.dgvAffichage.Size = new System.Drawing.Size(648, 237);
             this.dgvAffichage.TabIndex = 14;
             this.dgvAffichage.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvAffichage_CellClick);
             // 
@@ -165,25 +162,23 @@ namespace GestionnaireTournois.Views.Users
             "Joueurs actuels",
             "Anciens joueurs",
             "Joueurs en attente"});
-            this.cbxInfosJoueur.Location = new System.Drawing.Point(724, 27);
-            this.cbxInfosJoueur.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.cbxInfosJoueur.Location = new System.Drawing.Point(543, 22);
             this.cbxInfosJoueur.Name = "cbxInfosJoueur";
-            this.cbxInfosJoueur.Size = new System.Drawing.Size(160, 24);
+            this.cbxInfosJoueur.Size = new System.Drawing.Size(121, 21);
             this.cbxInfosJoueur.TabIndex = 15;
             this.cbxInfosJoueur.SelectedIndexChanged += new System.EventHandler(this.cbxInfosJoueur_SelectedIndexChanged);
             // 
             // frmEquipe
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(901, 390);
+            this.ClientSize = new System.Drawing.Size(676, 317);
             this.Controls.Add(this.cbxInfosJoueur);
             this.Controls.Add(this.dgvAffichage);
             this.Controls.Add(this.lblEquipe);
             this.Controls.Add(this.btnQuitter);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.MaximizeBox = false;
             this.Name = "frmEquipe";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
