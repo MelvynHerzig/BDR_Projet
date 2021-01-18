@@ -1,4 +1,18 @@
-﻿using System;
+﻿/*
+ -------------------------------------------------------------------------------
+ Projet      : Gestionnaire de tournois Rocket League
+ Fichier     : JoueurMatchData.cs
+ Auteur(s)   : Berney Alec, Forestier Quentin, Herzig Melvyn
+ Version     : 1.0.0
+
+ But         : Modèle représentant les résultats d'un match pour un joueur
+               Elle permet de stocker facilement les informations d'un match
+
+ Remarque(s) : /
+
+ -------------------------------------------------------------------------------
+ */
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -29,7 +43,7 @@ namespace GestionnaireTournois.Models
         public JoueurMatchData(int idJoueur, int idMatch, int idSerie, int noTour, int idTournoi, string nbButs, string nbArrets)
         {
             IdJoueur = idJoueur;
-            
+
             IdMatch = idMatch;
             IdSerie = idSerie;
             NoTour = noTour;
