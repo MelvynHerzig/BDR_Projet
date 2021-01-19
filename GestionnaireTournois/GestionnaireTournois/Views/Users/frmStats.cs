@@ -1,4 +1,18 @@
-﻿using GestionnaireTournois.Models;
+﻿/*
+ -------------------------------------------------------------------------------
+ Projet      : Gestionnaire de tournois Rocket League
+ Fichier     : frmStats.cs
+ Auteur(s)   : Berney Alec, Forestier Quentin, Herzig Melvyn
+ Version     : 1.0.0
+
+ But         : Afficher les statistiques du joueur connectà
+
+ Remarque(s) : /
+
+ -------------------------------------------------------------------------------
+ */
+
+using GestionnaireTournois.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -22,6 +36,9 @@ namespace GestionnaireTournois.Views.Users
             InitializeComponent();
         }
 
+        /// <summary>
+        /// Charge le formulaire et affiche les valeurs dans les label correspondant
+        /// </summary>
         private void frmStats_Load(object sender, EventArgs e)
         {
             // récupérer les valeurs stats via requête

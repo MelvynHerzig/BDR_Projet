@@ -1,4 +1,19 @@
-﻿using GestionnaireTournois.Models;
+﻿/*
+ -------------------------------------------------------------------------------
+ Projet      : Gestionnaire de tournois Rocket League
+ Fichier     : frmAdmin.cs
+ Auteur(s)   : Berney Alec, Forestier Quentin, Herzig Melvyn
+ Version     : 1.0.0
+
+ But         : Formulaire principal de la partie administrateur qui
+                gère les tournois sur tous ces aspects et affiche ces statistiques
+
+ Remarque(s) : /
+
+ -------------------------------------------------------------------------------
+ */
+
+using GestionnaireTournois.Models;
 using GestionnaireTournois.Views.Admin;
 using System;
 using System.Collections.Generic;
@@ -19,6 +34,23 @@ namespace GestionnaireTournois
             InitializeComponent();
         }
 
+        /// <summary>
+        /// Charge le formulaire, règle les paramètres des objets de ce dernier et affiche les données de base
+        /// </summary>
+        private void frmAdmin_Load(object sender, EventArgs e)
+        {
+            cbxFilter.Items.AddRange(Tournoi.EtatTournoiNom);
+            cbxFilter.SelectedIndex = 0;
+
+            wbrTreeStruct.DocumentText = "";
+            wbrTreeStruct.Document.Click += Document_Click;
+
+            ChargeStatistiques();
+        }
+
+        /// <summary>
+        /// Charge et affiche les tournois choisis par l'utilisateur à l'aide de la liste déroulante dans la listBox
+        /// </summary>
         private void ChargeTournois()
         {
             int index = lbxTournament.SelectedIndex == -1 ? 0 : lbxTournament.SelectedIndex;
@@ -35,6 +67,9 @@ namespace GestionnaireTournois
             ChargeStatistiques();
         }
 
+        /// <summary>
+        /// Charge et affiche les statistiques des tournois en fonction du choix de l'utilisateur
+        /// </summary>
         private void ChargeStatistiques()
         {
             int index = cbxStatVitesseInscription.SelectedIndex == -1 ? 0 : cbxStatVitesseInscription.SelectedIndex;
@@ -50,27 +85,19 @@ namespace GestionnaireTournois
             cbxStatVitesseInscription.SelectedIndex = index >= cbxStatVitesseInscription.Items.Count ? -1 : index;
         }
 
+        /// <summary>
+        /// Quitte le formulaire et réaffiche le formulaire de connexion Main
+        /// </summary>
         private void tsmiModeChoice_Click(object sender, EventArgs e)
         {
             this.DialogResult = DialogResult.OK;
             this.Close();
         }
 
-        private void frmAdmin_Load(object sender, EventArgs e)
-        {
-            cbxFilter.Items.AddRange(Tournoi.EtatTournoiNom);
-            cbxFilter.SelectedIndex = 0;
 
-            wbrTreeStruct.DocumentText = "";
-            wbrTreeStruct.Document.Click += Document_Click;
-
-            ChargeStatistiques();
-
-
-        }
-
-
-
+        /// <summary>
+        /// Affiche la série sélectionné dans l'arbre de tournoi dans un nouveau formulaire d'édition
+        /// </summary>
         private void Document_Click(object sender, HtmlElementEventArgs e)
         {
             HtmlDocument doc = (HtmlDocument)sender;
@@ -96,16 +123,25 @@ namespace GestionnaireTournois
 
         }
 
+        /// <summary>
+        /// Récupère le choix de l'utilisateur et affiche les tournois en conséquence
+        /// </summary>
         private void cbxFilter_SelectedIndexChanged(object sender, EventArgs e)
         {
             ChargeTournois();
         }
 
+        /// <summary>
+        /// Récupère le choix de l'utilisateur et affiche l'arbre du tournoi séléctionné
+        /// </summary>
         private void lbxTournament_SelectedIndexChanged(object sender, EventArgs e)
         {
             ShowArborescence();
         }
 
+        /// <summary>
+        /// Affiche le choix de l'utilisateur (tournoi séléctionné) dans l'arbre du tournoi
+        /// </summary>
         private void ShowArborescence()
         {
             try
@@ -125,6 +161,10 @@ namespace GestionnaireTournois
                 MessageBox.Show(error.Message);
             }
         }
+
+        /// <summary>
+        /// Affiche les propriétés du tournoi séléctionné dans un nouveau formulaire d'édition
+        /// </summary>
         private void btnProperties_Click(object sender, EventArgs e)
         {
             Tournoi t = (Tournoi)lbxTournament.SelectedItem;
@@ -141,6 +181,10 @@ namespace GestionnaireTournois
             }
         }
 
+
+        /// <summary>
+        /// Affiche un nouveau formulaire de création de tournoi
+        /// </summary>
         private void tsmiAjoutTournoi_Click(object sender, EventArgs e)
         {
             frmAjoutTournoi frm = new frmAjoutTournoi();
@@ -151,6 +195,9 @@ namespace GestionnaireTournois
 
         }
 
+        /// <summary>
+        /// Récupère le choix de l'utilisateur et affiche la statisitque en conséquence
+        /// </summary>
         private void cbxStatVitesseInscription_SelectedIndexChanged(object sender, EventArgs e)
         {
             TimeSpan t = TimeSpan.FromSeconds(DataBaseConnector.GetVitesseInscriptionEnSecTournoiDe(Convert.ToInt32(cbxStatVitesseInscription.SelectedItem)));
@@ -162,7 +209,3 @@ namespace GestionnaireTournois
         }
     }
 }
-
-
-// https://stackoverflow.com/questions/9732347/c-sharp-how-to-generate-a-tournament-bracket-html-table
-// https://stackoverflow.com/questions/15901997/c-sharp-reach-click-button-in-webbrowser

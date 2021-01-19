@@ -1,4 +1,19 @@
-﻿using GestionnaireTournois.Models;
+﻿/*
+ -------------------------------------------------------------------------------
+ Projet      : Gestionnaire de tournois Rocket League
+ Fichier     : frmRechercheEquipe.cs
+ Auteur(s)   : Berney Alec, Forestier Quentin, Herzig Melvyn
+ Version     : 1.0.0
+
+ But         : Recherche / s'inscrire dans une équipe ou en créer une 
+                pour un joueur sans équipe
+
+ Remarque(s) : /
+
+ -------------------------------------------------------------------------------
+ */
+
+using GestionnaireTournois.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -23,11 +38,17 @@ namespace GestionnaireTournois.Views.Users
             InitializeComponent();
         }
 
+        /// <summary>
+        /// Charge le formulaire et les informations à afficher
+        /// </summary>
         private void frmRechercheEquipe_Load(object sender, EventArgs e)
         {
             ChargeEquipes();
         }
 
+        /// <summary>
+        /// Rejoins l'équipe sélectionnée dans la listBox
+        /// </summary>
         private void btnRejoindre_Click(object sender, EventArgs e)
         {
             if (lbxRecherche.SelectedItem != null)
@@ -39,6 +60,9 @@ namespace GestionnaireTournois.Views.Users
 
         }
 
+        /// <summary>
+        /// Charge les équipes de la BD dans la listBox
+        /// </summary>
         private void ChargeEquipes()
         {
             lbxRecherche.Items.Clear();
@@ -50,6 +74,9 @@ namespace GestionnaireTournois.Views.Users
             }
         }
 
+        /// <summary>
+        /// Créer une nouvelle équipe avec les valeurs des champs correspondant
+        /// </summary>
         private void btnCreer_Click(object sender, EventArgs e)
         {
             Equipe equipe = new Equipe(tbxAcronyme.Text, tbxNom.Text, Joueur.Id);
