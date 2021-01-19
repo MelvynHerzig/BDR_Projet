@@ -18,6 +18,9 @@ namespace GestionnaireTournois
             InitializeComponent();
         }
 
+        /// <summary>
+        /// Créer un nouveau tournoi avec les valeurs des champs correspondants
+        /// </summary>
         private void btnAjouterTournoi_Click(object sender, EventArgs e)
         {
 

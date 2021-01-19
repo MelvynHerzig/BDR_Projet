@@ -23,6 +23,18 @@ namespace GestionnaireTournois.Views.Admin
             InitializeComponent();
         }
 
+        /// <summary>
+        /// Charge le formulaire et les données utilisées dans ce dernier
+        /// </summary>
+        private void frmEditionPrix_Load(object sender, EventArgs e)
+        {
+            LoadPrix();
+            LoadObjets();
+        }
+
+        /// <summary>
+        /// Charge et affiche les prix dans la listBox prévu pour
+        /// </summary>
         private void LoadPrix()
         {
             if (Prix == null) return;
@@ -33,29 +45,35 @@ namespace GestionnaireTournois.Views.Admin
             lbxObjets.Items.AddRange(Prix.GetObjets().ToArray());
         }
 
+        /// <summary>
+        /// Charge et affiche tous les objets dans la listBox prévu pour
+        /// </summary>
         private void LoadObjets()
         {
             lbxTousObjets.Items.Clear();
             lbxTousObjets.Items.AddRange(Objet.GetObjets().ToArray());
         }
 
-        private void frmEditionPrix_Load(object sender, EventArgs e)
-        {
-            LoadPrix();
-            LoadObjets();
-        }
-
+        /// <summary>
+        /// Ajoute l'objet séléctionné aux prix du tournoi en cours d'édition
+        /// </summary>
         private void btnAddToPrix_Click(object sender, EventArgs e)
         {
 
             lbxObjets.Items.Add(lbxTousObjets.SelectedItem);
         }
 
+        /// <summary>
+        /// Retire l'objet séléctionné des prix du tournoi en cours d'édition
+        /// </summary>
         private void btnRetirerObjet_Click(object sender, EventArgs e)
         {
             lbxObjets.Items.Remove(lbxObjets.SelectedItem);
         }
 
+        /// <summary>
+        /// Récupère l'objet à ajouter au tournoi et l'ajoute
+        /// </summary>
         private void btnAddObjet_Click(object sender, EventArgs e)
         {
             Objet o = new Objet(0, tbxNouvelObjet.Text);
@@ -65,6 +83,9 @@ namespace GestionnaireTournois.Views.Admin
             LoadObjets();
         }
 
+        /// <summary>
+        /// Enregistre les modifications concernant les prix du tournoi en cours d'édition
+        /// </summary>
         private void btnEnregistrerPrixAssignés_Click(object sender, EventArgs e)
         {
             if (Prix == null)
