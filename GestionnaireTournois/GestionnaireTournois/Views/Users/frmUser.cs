@@ -1,4 +1,21 @@
-﻿using GestionnaireTournois.Models;
+﻿/*
+ -------------------------------------------------------------------------------
+ Projet      : Gestionnaire de tournois Rocket League
+ Fichier     : frmUser.cs
+ Auteur(s)   : Berney Alec, Forestier Quentin, Herzig Melvyn
+ Version     : 1.0.0
+
+ But         : Formulaire principal de la partie utilisateur qui peut
+                Afficher les tournois du joueur connecté
+                Gérer les tournois de l'équipe pour un responsable
+                Naviguer dans divers formulaires concernant le joueur à l'aide du menu
+
+ Remarque(s) : /
+
+ -------------------------------------------------------------------------------
+ */
+
+using GestionnaireTournois.Models;
 using GestionnaireTournois.Views.Users;
 using System;
 using System.Collections.Generic;

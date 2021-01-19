@@ -1,4 +1,18 @@
-﻿using GestionnaireTournois.Models;
+﻿/*
+ -------------------------------------------------------------------------------
+ Projet      : Gestionnaire de tournois Rocket League
+ Fichier     : frmMain.cs
+ Auteur(s)   : Berney Alec, Forestier Quentin, Herzig Melvyn
+ Version     : 1.0.0
+
+ But         : Rejoindre soit la partie utilisateur ou soit la partie administateur
+
+ Remarque(s) : /
+
+ -------------------------------------------------------------------------------
+ */
+
+using GestionnaireTournois.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

@@ -1,4 +1,18 @@
-﻿using GestionnaireTournois.Models;
+﻿/*
+ -------------------------------------------------------------------------------
+ Projet      : Gestionnaire de tournois Rocket League
+ Fichier     : frmSerie.cs
+ Auteur(s)   : Berney Alec, Forestier Quentin, Herzig Melvyn
+ Version     : 1.0.0
+
+ But         : Créer un nouveau tournoi
+
+ Remarque(s) : /
+
+ -------------------------------------------------------------------------------
+ */
+
+using GestionnaireTournois.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -33,6 +47,9 @@ namespace GestionnaireTournois.Views.Admin
             
         }
 
+        /// <summary>
+        /// Créé un nouveau match avec les données entrées dans le formulaire
+        /// </summary>
         private void btnAjoutMatch_Click(object sender, EventArgs e)
         {
             List<JoueurMatchData> datas = CreationInfosMatch(lbxMatchs.Items.Count + 1);
@@ -40,12 +57,14 @@ namespace GestionnaireTournois.Views.Admin
             ChargeMatchs();
 
         }
+
         private void btnModifier_Click(object sender, EventArgs e)
         {
             List<JoueurMatchData> datas = CreationInfosMatch(((Match)lbxMatchs.SelectedItem).Id);
             Serie.ModifierMatch(datas);
             ChargeMatchs();
         }
+
         private void frmEditionSerie_Load(object sender, EventArgs e)
         {
 

@@ -1,4 +1,18 @@
-﻿using GestionnaireTournois.Models;
+﻿/*
+ -------------------------------------------------------------------------------
+ Projet      : Gestionnaire de tournois Rocket League
+ Fichier     : frmAjoutTounoi.cs
+ Auteur(s)   : Berney Alec, Forestier Quentin, Herzig Melvyn
+ Version     : 1.0.0
+
+ But         : Créer un nouveau tournoi
+
+ Remarque(s) : /
+
+ -------------------------------------------------------------------------------
+ */
+
+using GestionnaireTournois.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

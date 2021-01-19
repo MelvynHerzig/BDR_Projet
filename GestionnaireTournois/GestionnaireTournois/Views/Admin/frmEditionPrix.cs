@@ -1,4 +1,19 @@
-﻿using GestionnaireTournois.Models;
+﻿/*
+ -------------------------------------------------------------------------------
+ Projet      : Gestionnaire de tournois Rocket League
+ Fichier     : frmEditionPrix.cs
+ Auteur(s)   : Berney Alec, Forestier Quentin, Herzig Melvyn
+ Version     : 1.0.0
+
+ But         : Gérer, afficher et modifier les prix d'un tournoi choisi 
+                pour une place finale définie (1er ou 2ème)
+
+ Remarque(s) : /
+
+ -------------------------------------------------------------------------------
+ */
+
+using GestionnaireTournois.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

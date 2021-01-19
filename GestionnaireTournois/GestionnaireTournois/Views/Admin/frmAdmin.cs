@@ -1,4 +1,19 @@
-﻿using GestionnaireTournois.Models;
+﻿/*
+ -------------------------------------------------------------------------------
+ Projet      : Gestionnaire de tournois Rocket League
+ Fichier     : frmAdmin.cs
+ Auteur(s)   : Berney Alec, Forestier Quentin, Herzig Melvyn
+ Version     : 1.0.0
+
+ But         : Formulaire principal de la partie administrateur qui
+                gère les tournois sur tous ces aspects et affiche ces statistiques
+
+ Remarque(s) : /
+
+ -------------------------------------------------------------------------------
+ */
+
+using GestionnaireTournois.Models;
 using GestionnaireTournois.Views.Admin;
 using System;
 using System.Collections.Generic;
