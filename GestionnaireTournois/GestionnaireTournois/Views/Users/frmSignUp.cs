@@ -18,11 +18,17 @@ namespace GestionnaireTournois
             InitializeComponent();
         }
 
+        /// <summary>
+        /// Charge le formulaire et conditionne les champs avec des valeurs de base
+        /// </summary>
         private void frmSignUp_Load(object sender, EventArgs e)
         {
             dtpBirthday.MaxDate = DateTime.Now;
         }
 
+        /// <summary>
+        /// Créer le nouveau joueur avec les valeurs des champs correspondant
+        /// </summary>
         private void btnSignUp_Click(object sender, EventArgs e)
         {
 
@@ -31,6 +37,9 @@ namespace GestionnaireTournois
             Joueur.Ajouter(j);
         }
 
+        /// <summary>
+        /// Quitte le formulaire
+        /// </summary>
         private void btnCancel_Click(object sender, EventArgs e)
         {
             this.Close();

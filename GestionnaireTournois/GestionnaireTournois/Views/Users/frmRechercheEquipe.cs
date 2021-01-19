@@ -23,11 +23,17 @@ namespace GestionnaireTournois.Views.Users
             InitializeComponent();
         }
 
+        /// <summary>
+        /// Charge le formulaire et les informations à afficher
+        /// </summary>
         private void frmRechercheEquipe_Load(object sender, EventArgs e)
         {
             ChargeEquipes();
         }
 
+        /// <summary>
+        /// Rejoins l'équipe sélectionnée dans la listBox
+        /// </summary>
         private void btnRejoindre_Click(object sender, EventArgs e)
         {
             if (lbxRecherche.SelectedItem != null)
@@ -39,6 +45,9 @@ namespace GestionnaireTournois.Views.Users
 
         }
 
+        /// <summary>
+        /// Charge les équipes de la BD dans la listBox
+        /// </summary>
         private void ChargeEquipes()
         {
             lbxRecherche.Items.Clear();
@@ -50,6 +59,9 @@ namespace GestionnaireTournois.Views.Users
             }
         }
 
+        /// <summary>
+        /// Créer une nouvelle équipe avec les valeurs des champs correspondant
+        /// </summary>
         private void btnCreer_Click(object sender, EventArgs e)
         {
             Equipe equipe = new Equipe(tbxAcronyme.Text, tbxNom.Text, Joueur.Id);
