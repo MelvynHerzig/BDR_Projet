@@ -18,6 +18,9 @@ namespace GestionnaireTournois
             InitializeComponent();
         }
 
+       	/// <summary>
+        /// Créer et affiche un nouveau formulaire de la partie Admin
+        /// </summary>
         private void btnAdmin_Click(object sender, EventArgs e)
         {
             frmAdmin admin = new frmAdmin();
@@ -32,6 +35,9 @@ namespace GestionnaireTournois
             this.Show();
         }
 
+        /// <summary>
+        /// Créer et affiche un nouveau formulaire de la partie d'inscription
+        /// </summary>
         private void btnSignUp_Click(object sender, EventArgs e)
         {
 
@@ -41,6 +47,10 @@ namespace GestionnaireTournois
 
         }
 
+        /// <summary>
+        /// Créer et affiche un nouveau formulaire de la partie utilisateur
+        /// si l'email entré est valide
+        /// </summary>
         private void btnSignIn_Click(object sender, EventArgs e)
         {
             Joueur j = Joueur.GetJoueurByEmail(tbxEmail.Text);
@@ -59,11 +69,17 @@ namespace GestionnaireTournois
 
         }
 
+        /// <summary>
+        /// Affiche ou non le bouton en fonction de la valeur de l'email
+        /// </summary>
         private void tbxEmail_TextChanged(object sender, EventArgs e)
         {
             btnSignIn.Enabled = tbxEmail.TextLength > 0;
         }
 
+        /// <summary>
+        /// Charge le formulaire et test la connection à la BD
+        /// </summary>
         private void frmMain_Load(object sender, EventArgs e)
         {
             try

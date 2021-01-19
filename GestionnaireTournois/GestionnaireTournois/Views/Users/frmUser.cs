@@ -26,11 +26,17 @@ namespace GestionnaireTournois
             InitializeComponent();
         }
 
+        /// <summary>
+        /// Charge le formulaire
+        /// </summary>
         private void frmUser_Load(object sender, EventArgs e)
         {
             RechargerAffichage();
         }
 
+        /// <summary>
+        /// Affiche les éléments en fonction du type de joueur (responsable ou non)
+        /// </summary>
         private void RechargerAffichage()
         {
             if (Joueur.GetEquipe() == null || Joueur.Id != Joueur.GetEquipe().IdResponsable)
@@ -47,6 +53,9 @@ namespace GestionnaireTournois
             cbxTypeTournois.SelectedIndex = 0;
         }
 
+        /// <summary>
+        /// Effectue l'action réalisée par l'utilisateur (voir le tournoi ou s'y inscrire)
+        /// </summary>
         private void dgvTournois_CellClick(object sender, DataGridViewCellEventArgs e)
         {
 
@@ -72,18 +81,27 @@ namespace GestionnaireTournois
             }
         }
 
+        /// <summary>
+        /// Quitte le formulaire et réaffiche le formulaire de connexion Main
+        /// </summary>
         private void tsmiChoixMode_Click(object sender, EventArgs e)
         {
             this.DialogResult = DialogResult.OK;
             this.Close();
         }
 
+        /// <summary>
+        /// Créer et affiche un formulaire contenant les statistiques du joueur connecté
+        /// </summary>
         private void tsmiStats_Click(object sender, EventArgs e)
         {
             frmStats stats = new frmStats(Joueur);
             stats.ShowDialog();
         }
 
+        /// <summary>
+        /// Créer et affiche un formulaire affichant l'équipe du joueur connecté
+        /// </summary>
         private void tsmiEquipes_Click(object sender, EventArgs e)
         {
             if (Joueur.GetEquipe() == null)
@@ -101,6 +119,9 @@ namespace GestionnaireTournois
             }
         }
 
+        /// <summary>
+        /// Affiche les tournois en fonction du choix de la list déroulante (mode Responsable)
+        /// </summary>
         private void cbxTypeTournois_SelectedIndexChanged(object sender, EventArgs e)
         {
 
@@ -115,6 +136,9 @@ namespace GestionnaireTournois
             }
         }
 
+        /// <summary>
+        /// Affiche les tournois auquels le joueur a participé et participe
+        /// </summary>
         private void ChargeTournoisParticipes()
         {
             dgvTournois.Rows.Clear();
@@ -134,6 +158,9 @@ namespace GestionnaireTournois
             }
         }
 
+        /// <summary>
+        /// Affiche les tournois rejoignables (mode Responsable)
+        /// </summary>
         private void ChargeTournoisRejoignables()
         {
             dgvTournois.Rows.Clear();

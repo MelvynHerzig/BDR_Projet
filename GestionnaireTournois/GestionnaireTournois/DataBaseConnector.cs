@@ -31,8 +31,6 @@ namespace GestionnaireTournois
             myConnection.Close();
         }
 
-        #region Tournois
-
         public static List<Tournoi> GetTournoisFiltres(EtatTournoi etat)
         {
             List<Tournoi> tournois = new List<Tournoi>();
@@ -580,9 +578,7 @@ namespace GestionnaireTournois
             }
         }
 
-        #endregion
 
-        #region Tours
 
         public static List<Tour> GetTours(Tournoi t)
         {
@@ -737,9 +733,6 @@ namespace GestionnaireTournois
             }
         }
 
-        #endregion
-
-        #region Series
 
         public static List<Serie> GetSeries(Tour tour)
         {
@@ -870,9 +863,7 @@ namespace GestionnaireTournois
             return equipe;
         }
 
-        #endregion
 
-        #region Matchs
 
         public static List<Match> GetMatchsFromSerie(Serie serie)
         {
@@ -1066,10 +1057,6 @@ namespace GestionnaireTournois
         }
 
 
-
-        #endregion
-
-        #region Equipes
         
         public static Equipe GetEquipeJoueurDurantTournoi(Joueur joueur, Tournoi tournoi)
         {
@@ -1320,10 +1307,6 @@ namespace GestionnaireTournois
                 myConnection.Close();
             }
         }
-
-        #endregion
-
-        #region Joueurs
 
         public static Joueur GetJoueurById(int idJoueur)
         {
@@ -1585,10 +1568,11 @@ namespace GestionnaireTournois
             try
             {
 
-                cmd.CommandText = "UPDATE equipe_joueur SET dateHeureArrivee = NOW() WHERE acronymeEquipe = @acronyme AND idJoueur = @idJoueur AND dateHeureDepart IS NULL";
+                cmd.CommandText = "accepterJoueur";
+                cmd.CommandType = CommandType.StoredProcedure;
 
-                cmd.Parameters.AddWithValue("idJoueur", joueur.Id);
-                cmd.Parameters.AddWithValue("acronyme", equipe.Acronyme);
+                cmd.Parameters.AddWithValue("pAcronymeEquipe", equipe.Acronyme);
+                cmd.Parameters.AddWithValue("pIdJoueur", joueur.Id);
 
                 cmd.Prepare();
 
@@ -1647,10 +1631,6 @@ namespace GestionnaireTournois
 
             return id;
         }
-
-        #endregion
-
-        #region Prix
 
         public static Prix GetPrixById(int idPrix)
         {
@@ -2071,9 +2051,6 @@ namespace GestionnaireTournois
             }
         }
 
-        #endregion
-
-        #region Statistiques
         public static List<int> GetNbEquipesParTournoi()
         {
             List<int> nbEquipes = new List<int>();
@@ -2127,7 +2104,7 @@ namespace GestionnaireTournois
             try
             {
 
-                cmd.CommandText = "SELECT TIMESTAMPDIFF(SECOND, MIN(Tournoi_Equipe.dateInscription), MAX(Tournoi_Equipe.dateInscription)) AS ecart FROM Tournoi INNER JOIN Tournoi_Equipe ON Tournoi_Equipe.idTournoi = Tournoi.id WHERE Tournoi.nbEquipesMax = (SELECT COUNT(1) FROM Tournoi_Equipe WHERE Tournoi_Equipe.idTournoi = Tournoi.id) AND Tournoi.nbEquipesMax = @nbEquipesMax GROUP BY Tournoi.id; ";
+                cmd.CommandText = "SELECT AVG(ecart.temps) FROM (SELECT TIMESTAMPDIFF(SECOND, MIN(Tournoi_Equipe.dateInscription), MAX(Tournoi_Equipe.dateInscription)) AS temps FROM Tournoi INNER JOIN Tournoi_Equipe ON Tournoi_Equipe.idTournoi = Tournoi.id WHERE Tournoi.nbEquipesMax = (SELECT COUNT(1) FROM Tournoi_Equipe WHERE Tournoi_Equipe.idTournoi = Tournoi.id) AND Tournoi.nbEquipesMax = @nbEquipesMax GROUP BY Tournoi.id) as ecart; ";
 
                 cmd.Parameters.AddWithValue("nbEquipesMax", nbEquipes);
 
@@ -2328,8 +2305,6 @@ namespace GestionnaireTournois
 
             return nbSerie;
         }
-
-        #endregion
 
         public static Serie GetDerniereSerieParticipeParEquipeTournoi(Tournoi tournoi, Equipe equipe)
         {

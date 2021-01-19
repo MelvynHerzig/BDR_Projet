@@ -22,6 +22,9 @@ namespace GestionnaireTournois.Views.Users
             InitializeComponent();
         }
 
+        /// <summary>
+        /// Charge le formulaire et affiche les valeurs dans les label correspondant
+        /// </summary>
         private void frmStats_Load(object sender, EventArgs e)
         {
             // récupérer les valeurs stats via requête
