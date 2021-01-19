@@ -1,4 +1,21 @@
-﻿using System;
+﻿/*
+ -------------------------------------------------------------------------------
+ Projet      : Gestionnaire de tournois Rocket League
+ Fichier     : TournamentArboresceceGenerator.cs
+ Auteur(s)   : Berney Alec, Forestier Quentin, Herzig Melvyn
+ Version     : 1.0.0
+
+ But         : Utilitaire pour créer l'arborescence d'un tournoi
+ 
+Remarque(s) : Code repris et adapté de : 
+              https://stackoverflow.com/questions/9732347/c-sharp-how-to-generate-a-tournament-bracket-html-table
+              
+              Le but du cours n'étant pas l'affichage en C#, nous nous sommes permis 
+              de ne pas approfondir plus que nécessaire la compréhension du code repris
+
+ -------------------------------------------------------------------------------
+ */
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -12,10 +29,14 @@ namespace GestionnaireTournois
     public class TournamentArborescenceGenerator
     {
 
-        public static string Generate(Tournoi t, string infoMatch)
+        /// <summary>
+        /// Génère le code HTML de l'arborescence du tournoi passé en paramètre
+        /// </summary>
+        /// <param name="t">Tournoi dont il faut créer l'arborescence</param>
+        /// <param name="actionSerie">Texte a afficher dans les boutons des séries</param>
+        /// <returns>Le code HTML de l'arborescence sous forme de string</returns>
+        public static string Generate(Tournoi t, string actionSerie)
         {
-
-            // Récupere le tournoi dans la db
 
             int match_white_span;
             int match_span;
@@ -96,7 +117,7 @@ namespace GestionnaireTournois
                                 {
                                     disabled = "disabled";
                                 }
-                                HTMLTable.AppendLine("        <td class=\"vs\" rowspan=\"" + match_white_span + "\"> VS <br><button " + disabled + " name=\"" + t.Id + ";" + noTour + ";" + effective_serie_id + "\">" + infoMatch + "</button></td>");
+                                HTMLTable.AppendLine("        <td class=\"vs\" rowspan=\"" + match_white_span + "\"> VS <br><button " + disabled + " name=\"" + t.Id + ";" + noTour + ";" + effective_serie_id + "\">" + actionSerie + "</button></td>");
                             }
                             else
                             {

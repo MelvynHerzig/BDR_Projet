@@ -121,7 +121,7 @@ namespace GestionnaireTournois.Models
             {
                 Serie derniereSerie = DataBaseConnector.GetDerniereSerieParticipeParEquipeTournoi(tournoi, this);
 
-                if (DataBaseConnector.GetWinnerOfSerie(derniereSerie) == null)
+                if (DataBaseConnector.GetGagnantSerie(derniereSerie) == null)
                 {
                     List<Equipe> equipes = derniereSerie.GetEquipes();
 
@@ -132,7 +132,7 @@ namespace GestionnaireTournois.Models
 
                         int idDernierMatch = matches.Count == 0 ? 0 : matches[matches.Count - 1].Id;
 
-                        while (DataBaseConnector.GetWinnerOfSerie(derniereSerie) == null)
+                        while (DataBaseConnector.GetGagnantSerie(derniereSerie) == null)
                         {
                             DataBaseConnector.AjouterMatch(CreerMatchAbandon(equipes[0], equipes[1], tournoi, derniereSerie, ++idDernierMatch));
                         }

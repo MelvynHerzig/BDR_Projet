@@ -82,7 +82,7 @@ namespace GestionnaireTournois.Models
         public Equipe GetGagnant()
         {
 
-            return DataBaseConnector.GetWinnerOfSerie(new Serie(1, Id, 1, null, null));
+            return DataBaseConnector.GetGagnantSerie(new Serie(1, Id, 1, null, null));
         }
 
         /// <summary>
@@ -206,31 +206,59 @@ namespace GestionnaireTournois.Models
 
         #region Méthodes statiques en rapport avec une/plusieurs équipe(s) quelconque(s)
 
+        /// <summary>
+        /// Récupère le tournoi correspondant à l'id en paramètre
+        /// </summary>
+        /// <param name="idTournoi">Tournoi a récupérer</param>
+        /// <returns>Tournoi souhaité</returns>
         public static Tournoi GetTournoiById(int idTournoi)
         {
             return DataBaseConnector.GetTournoiById(idTournoi);
         }
 
+        /// <summary>
+        /// Obtient la liste des tournois en fonction de l'état souhaité
+        /// </summary>
+        /// <param name="etat">Etat des tournois à récupérer</param>
+        /// <returns>Liste des tournois ayant l'état souhaité</returns>
         public static List<Tournoi> GetTournoisParEtat(Tournoi.EtatTournoi etat)
         {
             return DataBaseConnector.GetTournoisFiltres(etat);
         }
 
+        /// <summary>
+        /// Obtient la liste des tournois rejoignables
+        /// </summary>
+        /// <returns>Liste des tournois rejoignables</returns>
         public static List<Tournoi> GetTournoisRejoignables()
         {
             return DataBaseConnector.GetTournoisRejoignables();
         }
 
+        /// <summary>
+        /// Obtient la liste des tournois auxquels le joueur a participé en paramètre
+        /// </summary>
+        /// <param name="joueur">Joueur dont il faut récupérer les tournois</param>
+        /// <returns>Liste des tournois auxquels le joueur a participé</returns>
         public static List<Tournoi> GetTournoisParticipes(Joueur joueur)
         {
             if (joueur == null) return new List<Tournoi>();
             return DataBaseConnector.GetTournoisParticipesParJoueur(joueur);
         }
 
+        /// <summary>
+        /// Ajoute le tournoi passé en paramètre dans la base de données
+        /// </summary>
+        /// <param name="t">Tournoi a ajouter dans la base de données</param>
         public static void Ajouter(Tournoi t)
         {
             DataBaseConnector.InsertionTournoi(t);
         }
+
+        /// <summary>
+        /// Supprime le tournoi passé en paramètre dans la base de données
+        /// </summary>
+        /// <param name="t">Tournoi a supprimer dans la base de données</param>
         public static void Supprimer(Tournoi t)
         {
             DataBaseConnector.SuppressionTournoi(t);

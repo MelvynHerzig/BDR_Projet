@@ -1,4 +1,19 @@
-﻿using GestionnaireTournois.Models;
+﻿/*
+ -------------------------------------------------------------------------------
+ Projet      : Gestionnaire de tournois Rocket League
+ Fichier     : frmSerie.cs
+ Auteur(s)   : Berney Alec, Forestier Quentin, Herzig Melvyn
+ Version     : 1.0.0
+
+ But         : Vue des détails d'une série
+               Permet l'édition si la forme est appelé avec le boolean editOn a true
+               
+
+ Remarque(s) : /
+
+ -------------------------------------------------------------------------------
+ */
+using GestionnaireTournois.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -33,6 +48,9 @@ namespace GestionnaireTournois.Views.Admin
             
         }
 
+        /// <summary>
+        /// Ajoute le match avec les informations des textboxes dans la base de données
+        /// </summary>
         private void btnAjoutMatch_Click(object sender, EventArgs e)
         {
             List<JoueurMatchData> datas = CreationInfosMatch(lbxMatchs.Items.Count + 1);
@@ -40,12 +58,20 @@ namespace GestionnaireTournois.Views.Admin
             ChargeMatchs();
 
         }
+
+        /// <summary>
+        /// Modifie le match avec les informations des textboxes dans la base de données
+        /// </summary>
         private void btnModifier_Click(object sender, EventArgs e)
         {
             List<JoueurMatchData> datas = CreationInfosMatch(((Match)lbxMatchs.SelectedItem).Id);
             Serie.ModifierMatch(datas);
             ChargeMatchs();
         }
+
+        /// <summary>
+        /// Charge l'affichage ainsi que les textboxes des joueurs
+        /// </summary>
         private void frmEditionSerie_Load(object sender, EventArgs e)
         {
 
@@ -95,17 +121,29 @@ namespace GestionnaireTournois.Views.Admin
             }
         }
 
+        /// <summary>
+        /// Charge les matches dans la listbox
+        /// </summary>
         private void ChargeMatchs()
         {
             lbxMatchs.Items.Clear();
             lbxMatchs.Items.AddRange(Serie.GetMatches().ToArray());
         }
 
+        /// <summary>
+        /// Charge les informations du match séléctionné dans la listebox dans les textboxes
+        /// </summary>
         private void lbxMatchs_SelectedIndexChanged(object sender, EventArgs e)
         {
             LoadMatch((Match)lbxMatchs.SelectedItem);
         }
 
+        /// <summary>
+        /// Créer les données du match. Récupère les informations de chaque textboxes 
+        /// et construit un objet JoueurMatchData pour chaque joueur
+        /// </summary>
+        /// <param name="idMatch">l'id du match a créer</param>
+        /// <returns>Liste contenant toutes les données du match a créer</returns>
         private List<JoueurMatchData> CreationInfosMatch(int idMatch)
         {
             List<JoueurMatchData> datas = new List<JoueurMatchData>();
@@ -150,6 +188,10 @@ namespace GestionnaireTournois.Views.Admin
             return datas;
         }
 
+        /// <summary>
+        /// Charge les données du match dans les textboxes
+        /// </summary>
+        /// <param name="m"></param>
         private void LoadMatch(Match m)
         {
             if (m == null) return;
@@ -178,6 +220,12 @@ namespace GestionnaireTournois.Views.Admin
             #endregion
         }
 
+        /// <summary>
+        /// Charge les informations en paramètre dans les textboxes
+        /// </summary>
+        /// <param name="joueur">Joueur a chargé</param>
+        /// <param name="match">Match a chargé</param>
+        /// <param name="textBoxes">Textboxes a modifier</param>
         private void LoadInformationsJoueurs(Joueur joueur, Match match, List<TextBox> textBoxes)
         {
             textBoxes[0].Text = joueur.Pseudo;
