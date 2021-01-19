@@ -802,7 +802,7 @@ END $$
 -----------------------------------------------------
 
 -------------------- TOURNOI ----------------------
-CREATE TRIGGER before_insert_tournoi
+CREATE TRIGGER before_insert_Tournoi
 BEFORE INSERT ON Tournoi
 FOR EACH ROW
 BEGIN
@@ -820,7 +820,7 @@ BEGIN
     END IF;
 END $$
 
-CREATE TRIGGER before_update_tournoi
+CREATE TRIGGER before_update_Tournoi
 BEFORE UPDATE ON Tournoi
 FOR EACH ROW
 BEGIN
@@ -859,7 +859,7 @@ BEGIN
     CALL verifierDatePlusPetite(NEW.dateHeureDebut, NEW.dateHeureFin);
 END $$
 
-CREATE TRIGGER before_delete_tournoi
+CREATE TRIGGER before_delete_Tournoi
 BEFORE DELETE ON Tournoi
 FOR EACH ROW
 BEGIN
@@ -871,7 +871,7 @@ BEGIN
 	END IF;
 END $$
 
-CREATE TRIGGER generer_arbre_tournoi
+CREATE TRIGGER generer_arbre_Tournoi
 AFTER INSERT ON Tournoi
 FOR EACH ROW
 BEGIN
@@ -893,7 +893,7 @@ BEGIN
 END $$
 
 -------------------- TOURNOI_EQUIPE ----------------------
-CREATE TRIGGER before_insert_tournoi_equipe
+CREATE TRIGGER before_insert_Tournoi_Equipe
 BEFORE INSERT ON Tournoi_Equipe
 FOR EACH ROW
 BEGIN
@@ -901,7 +901,7 @@ BEGIN
 	SET NEW.dateInscription = NOW();
 END $$
 
-CREATE TRIGGER before_update_tournoi_equipe
+CREATE TRIGGER before_update_Tournoi_Equipe
 BEFORE UPDATE ON Tournoi_Equipe
 FOR EACH ROW
 BEGIN
@@ -909,7 +909,7 @@ BEGIN
    SET NEW.dateInscription = NOW();
 END $$
 
-CREATE TRIGGER before_delete_tournoi_equipe
+CREATE TRIGGER before_delete_Tournoi_Equipe
 BEFORE DELETE ON Tournoi_Equipe
 FOR EACH ROW
 BEGIN
@@ -922,7 +922,7 @@ BEGIN
 END $$
 
 -------------------- TOUR ----------------------
-CREATE TRIGGER before_insert_tour
+CREATE TRIGGER before_insert_Tour
 BEFORE INSERT ON Tour
 FOR EACH ROW
 BEGIN
@@ -938,7 +938,7 @@ BEGIN
     CALL verifierLongueurMaxSerie(NEW.longueurMaxSerie);
 END $$
 
-CREATE TRIGGER before_update_tour
+CREATE TRIGGER before_update_Tour
 BEFORE UPDATE ON Tour
 FOR EACH ROW
 BEGIN
@@ -960,7 +960,7 @@ BEGIN
     CALL verifierLongueurMaxSerie(NEW.longueurMaxSerie);
 END $$
 
-CREATE TRIGGER before_delete_tour
+CREATE TRIGGER before_delete_Tour
 BEFORE DELETE ON Tour
 FOR EACH ROW
 BEGIN
@@ -973,7 +973,7 @@ BEGIN
 END $$
 
 ----------------------- SERIE --------------------
-CREATE TRIGGER before_insert_serie
+CREATE TRIGGER before_insert_Serie
 BEFORE INSERT ON serie
 FOR EACH ROW
 BEGIN
@@ -990,7 +990,7 @@ BEGIN
     CALL verifierSeedingIncorrect(NEW.acronymeEquipe1, NEW.acronymeEquipe2, NEW.id, NEW.noTour, NEW.idTournoi);
 END $$
 
-CREATE TRIGGER before_update_serie
+CREATE TRIGGER before_update_Serie
 BEFORE UPDATE ON serie
 FOR EACH ROW
 BEGIN
@@ -1011,7 +1011,7 @@ BEGIN
     CALL verifierSeedingIncorrect(NEW.acronymeEquipe1, NEW.acronymeEquipe2, NEW.id, NEW.noTour, NEW.idTournoi);
 END $$
 
-CREATE TRIGGER before_delete_serie
+CREATE TRIGGER before_delete_Serie
 BEFORE DELETE ON Serie
 FOR EACH ROW
 BEGIN
@@ -1023,14 +1023,14 @@ BEGIN
 	END IF;
 END $$
 ----------------------- EQUIPE --------------------
-CREATE TRIGGER before_insert_equipe
+CREATE TRIGGER before_insert_Equipe
 AFTER INSERT ON Equipe
 FOR EACH ROW
 BEGIN
 	CALL verifierAcronyme(NEW.acronyme);
 END $$
 
-CREATE TRIGGER after_insert_equipe
+CREATE TRIGGER after_insert_Equipe
 AFTER INSERT ON Equipe
 FOR EACH ROW
 BEGIN
@@ -1043,7 +1043,7 @@ BEGIN
     DELETE FROM Equipe_Joueur WHERE idJoueur = NEW.idResponsable AND dateHeureArrivee = '0001-01-01 00:00:00';
 END $$
 
-CREATE TRIGGER before_update_equipe
+CREATE TRIGGER before_update_Equipe
 BEFORE UPDATE ON Equipe
 FOR EACH ROW
 BEGIN
@@ -1055,7 +1055,7 @@ BEGIN
 END $$
 
 ----------------------- JOUEUR --------------------
-CREATE TRIGGER before_insert_joueur
+CREATE TRIGGER before_insert_Joueur
 BEFORE INSERT ON Joueur
 FOR EACH ROW
 BEGIN
@@ -1063,7 +1063,7 @@ BEGIN
     CALL verifierEmail(NEW.email);
 END $$
 
-CREATE TRIGGER before_update_joueur
+CREATE TRIGGER before_update_Joueur
 BEFORE UPDATE ON Joueur
 FOR EACH ROW
 BEGIN
@@ -1072,7 +1072,7 @@ BEGIN
 END $$
 
 ----------------------- EQUIPE_JOUEUR --------------------
-CREATE TRIGGER before_insert_equipe_joueur
+CREATE TRIGGER before_insert_Equipe_Joueur
 BEFORE INSERT ON Equipe_Joueur
 FOR EACH ROW
 BEGIN
@@ -1084,7 +1084,7 @@ BEGIN
     CALL verifierDejaDansUneEquipe(NEW.idJoueur);
 END $$
 
-CREATE TRIGGER before_update_equipe_joueur
+CREATE TRIGGER before_update_Equipe_Joueur
 BEFORE UPDATE ON Equipe_Joueur
 FOR EACH ROW
 BEGIN
@@ -1139,7 +1139,7 @@ BEGIN
 END $$
 
 ------------------------- MATCH --------------------
-CREATE TRIGGER before_insert_match
+CREATE TRIGGER before_insert_Match
 BEFORE INSERT ON `Match`
 FOR EACH ROW
 BEGIN
@@ -1168,14 +1168,14 @@ BEGIN
     END IF;
 END $$
 
-CREATE TRIGGER before_update_match
+CREATE TRIGGER before_update_Match
 BEFORE UPDATE ON `Match`
 FOR EACH ROW
 BEGIN
 	SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Impossible de modifier la clé du tournoi.';
 END $$
 
-CREATE TRIGGER before_delete_match
+CREATE TRIGGER before_delete_Match
 BEFORE DELETE ON `Match`
 FOR EACH ROW
 BEGIN
@@ -1188,14 +1188,14 @@ BEGIN
 END $$
 
 ----------------------- MATCH_JOUEUR --------------------
-CREATE TRIGGER before_insert_match_joueur
+CREATE TRIGGER before_insert_Match_Joueur
 BEFORE INSERT ON Match_Joueur
 FOR EACH ROW
 BEGIN
     CALL verifierJoueurEstDansEquipeSerie(NEW.idJoueur, NEW.idSerie, NEW.noTour, NEW.idTournoi);
 END $$
 
-CREATE TRIGGER after_insert_match_joueur
+CREATE TRIGGER after_insert_Match_Joueur
 AFTER INSERT ON Match_Joueur
 FOR EACH ROW
 BEGIN
@@ -1214,7 +1214,7 @@ BEGIN
     END IF;
 END $$
 
-CREATE TRIGGER before_update_match_joueur
+CREATE TRIGGER before_update_Match_Joueur
 BEFORE UPDATE ON Match_Joueur
 FOR EACH ROW
 BEGIN
@@ -1234,7 +1234,7 @@ BEGIN
 	END IF;
 END $$
 
-CREATE TRIGGER after_update_match_joueur
+CREATE TRIGGER after_update_Match_Joueur
 AFTER UPDATE ON Match_Joueur
 FOR EACH ROW
 BEGIN
@@ -1242,14 +1242,14 @@ BEGIN
 END $$
 
 ----------------------- PRIX --------------------
-CREATE TRIGGER before_insert_prix
+CREATE TRIGGER before_insert_Prix
 BEFORE INSERT ON Prix
 FOR EACH ROW
 BEGIN
 	CALL verifierPrixNegatif(NEW.montantArgent);
 END $$
 
-CREATE TRIGGER before_update_prix
+CREATE TRIGGER before_update_Prix
 BEFORE UPDATE ON Prix
 FOR EACH ROW
 BEGIN
